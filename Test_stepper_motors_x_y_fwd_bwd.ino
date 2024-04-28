@@ -3,7 +3,7 @@
 AccelStepper stepper1(motorInterfaceType, 2, 5);  //STEP-Pin, DIR-Pin
 AccelStepper stepper2(motorInterfaceType, 3, 6);  //STEP-Pin, DIR-Pin
 
-const int enPinX = 8;
+const int enablePin = 8;
 
 void setup() {
   stepper1.setMaxSpeed(800);  // Maximale Geschwindigkeit
@@ -11,8 +11,8 @@ void setup() {
   stepper2.setMaxSpeed(800);  // Maximale Geschwindigkeit
   stepper2.setAcceleration(500);  // Beschleunigung Schritte pro sek.^2
 
-  pinMode(enPinX,OUTPUT);
-  digitalWrite(enPinX,LOW);
+  pinMode(enablePin,OUTPUT);
+  digitalWrite(enablePin,LOW);
 }
 
 void loop() {
