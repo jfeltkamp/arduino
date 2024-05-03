@@ -17,10 +17,14 @@ const int potiY = A2;
 
 const int enablePin = 8;
 
+// control
+const int stepSize = 40;
+const int steeringTolerance = 12;
+
 // constants
 const int acceleration = 500;
 const int maxSpeed = 930;
-const int speedInterval = maxSpeed / 31;
+const int speedInterval = floor(maxSpeed / stepSize);
 
 // variables
 int valueF = 0;
@@ -55,7 +59,7 @@ void setup()
 
 void loop()
 {
-  valueX = getControle(analogRead(potiX));
+  valueX = getControle(analogRead(potiX), holdX);
   if (valueX != holdX) {
     holdX = valueX;
     // lcdOut(0, 0, 'x', holdX, 8);
@@ -63,7 +67,7 @@ void loop()
   }
   stepper1.runSpeed();
 
-  valueY = getControle(analogRead(potiY));
+  valueY = getControle(analogRead(potiY), holdY);
   if (valueY != holdY) {
     holdY = valueY;
     // lcdOut(0, 1, 'y', holdY, 8);
@@ -71,7 +75,7 @@ void loop()
   }
   stepper2.runSpeed();
 
-  valueF = getControle(analogRead(potiF));
+  valueF = getControle(analogRead(potiF), holdF);
   if (valueF != holdF) {
     holdF = valueF;
     lcdOut(8, 0, 'F', holdF, 8);
@@ -79,13 +83,25 @@ void loop()
 
 }
 
-int getControle(int potVal) {
-  int medVal = potVal - 511;
-  int absVal = (abs(medVal)-16)/16;
-  if (medVal < 0) {
-    absVal = -absVal;
+
+/**
+ *
+ */
+int getControle(int analogVal, int currentLevel) {
+  int centeredVal = analogVal - 511;
+  int absCenteredVal = abs(centeredVal);
+  int absLevel = floor(absCenteredVal / stepSize);
+  int remainder = absCenteredVal % (absLevel * stepSize);
+  if (absLevel < currentLevel) {
+    if (remainder > (stepSize - steeringTolerance)) {
+      absLevel = absLevel + 1;
+    }
   }
-  return absVal;
+
+  if (centeredVal < 0) {
+    absLevel = -absLevel;
+  }
+  return absLevel;
 }
 
 void lcdOut(int x, int y, char c, int v, int space) {
