@@ -4,9 +4,11 @@
 #include <AccelStepper.h>
 
 #define motorInterfaceType 1
+const byte focusInterfaceType = 8;
 
 AccelStepper stepper1(motorInterfaceType, 2, 5);  //STEP-Pin, DIR-Pin
 AccelStepper stepper2(motorInterfaceType, 3, 6);  //STEP-Pin, DIR-Pin
+AccelStepper stepperF(focusInterfaceType, 4, 12, 7, 13); // Pins IN1-IN3-IN2-IN4
 
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 
@@ -28,9 +30,6 @@ const int speedInterval = floor(maxSpeed / stepSize);
 const long stepsPerRound = 80000;
 
 // variables
-int valueF = 0;
-int holdF = 1;
-
 int valueX = 0;
 int holdX = 1;
 float speedX = 0.0;
@@ -41,11 +40,15 @@ int holdY = 1;
 float speedY = 0.0;
 bool updatedY = false;
 
+int valueF = 0;
+int holdF = 1;
+
 void setup()
 {
-  Serial.begin(9600);
+  // Serial.begin(9600);
   pinMode(potiX, INPUT);
   pinMode(potiY, INPUT);
+  pinMode(potiF, INPUT);
   lcd.init();
   lcd.backlight();
 
@@ -55,6 +58,9 @@ void setup()
 
   stepper2.setAcceleration(acceleration);
   stepper2.setMaxSpeed(maxSpeed);
+
+  stepperF.setAcceleration(acceleration);
+  stepperF.setMaxSpeed(maxSpeed);
 
   pinMode(enablePin,OUTPUT);
   digitalWrite(enablePin,LOW);
@@ -98,9 +104,9 @@ void loop()
   valueF = getControle(analogRead(potiF), holdF);
   if (valueF != holdF) {
     holdF = valueF;
-    String focus = String(holdF);
-    lcdOut(11, 1, 'F', focus, 5);
+    stepperF.setSpeed(valueF * -1 * speedInterval);
   }
+  stepperF.runSpeed();
 }
 
 /**
