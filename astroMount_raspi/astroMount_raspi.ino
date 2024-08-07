@@ -4,8 +4,8 @@
 #define motorInterfaceType 1
 const byte focusInterfaceType = 8;
 
-AccelStepper stepperX(motorInterfaceType, 2, 5);  //STEP-Pin, DIR-Pin
-AccelStepper stepperY(motorInterfaceType, 3, 6);  //STEP-Pin, DIR-Pin
+AccelStepper stepperX(motorInterfaceType, 3, 6);  //STEP-Pin, DIR-Pin
+AccelStepper stepperY(motorInterfaceType, 2, 5);  //STEP-Pin, DIR-Pin
 AccelStepper stepperF(focusInterfaceType, 4, 12, 7, 13); // Pins IN1-IN3-IN2-IN4
 
 LiquidCrystal_I2C lcd(0x27, 16, 2);
@@ -33,6 +33,9 @@ void setup() {
 
   stepperF.setAcceleration(acceleration);
   stepperF.setMaxSpeed(maxSpeed);
+
+  pinMode(enablePin, OUTPUT);
+  digitalWrite(enablePin, LOW);
 }
 
 /* Write message to LCD display. */
@@ -98,7 +101,7 @@ void resolveResponse() {
 /* CMD up */
 void cmd_up(String value, String await) {
     int steps = getStepsOneDirect(value, "cmd_up");
-    if (steps > 0 && setAwaitedResponse(await, "dir_y", "cmd_up: " + value)) {
+    if (steps > 0 && setAwaitedResponse(await, "dir_y")) {
         stepperY.move(steps);
     }
 }
@@ -106,7 +109,7 @@ void cmd_up(String value, String await) {
 /* CMD down */
 void cmd_down(String value, String await) {
     int steps = getStepsOneDirect(value, "cmd_down");
-    if (steps > 0 && setAwaitedResponse(await, "dir_y", "cmd_down: " + value)) {
+    if (steps > 0 && setAwaitedResponse(await, "dir_y")) {
         stepperY.move(-steps);
     }
 }
@@ -114,16 +117,16 @@ void cmd_down(String value, String await) {
 /* CMD left */
 void cmd_left(String value, String await) {
     int steps = getStepsOneDirect(value, "cmd_left");
-    if (steps > 0 && setAwaitedResponse(await, "dir_x", "cmd_left: " + value)) {
-        stepperX.move(steps);
+    if (steps > 0 && setAwaitedResponse(await, "dir_x")) {
+        stepperX.move(-steps);
     }
 }
 
 /* CMD right */
 void cmd_right(String value, String await) {
     int steps = getStepsOneDirect(value, "cmd_left");
-    if (steps > 0 && setAwaitedResponse(await, "dir_x", "cmd_right: " + value)) {
-        stepperX.move(-steps);
+    if (steps > 0 && setAwaitedResponse(await, "dir_x")) {
+        stepperX.move(steps);
     }
 }
 

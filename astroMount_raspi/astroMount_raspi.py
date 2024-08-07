@@ -34,9 +34,9 @@ def asterix_command(cmd, param, await_resp=False):
 
 commands = {
     "cmd_up": "1000:await",
-    "cmd_left": "1000:await",
+    "cmd_left": "3000:await",
     "cmd_down": "1000:await",
-    "cmd_right": "1000:await",
+    "cmd_right": "3000:await",
 }
 
 # Fires commands.
