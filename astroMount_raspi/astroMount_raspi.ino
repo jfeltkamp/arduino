@@ -1,49 +1,38 @@
 #include <LiquidCrystal_I2C.h>
+#include <AccelStepper.h>
+
+#define motorInterfaceType 1
+const byte focusInterfaceType = 8;
+
+AccelStepper stepperX(motorInterfaceType, 2, 5);  //STEP-Pin, DIR-Pin
+AccelStepper stepperY(motorInterfaceType, 3, 6);  //STEP-Pin, DIR-Pin
+AccelStepper stepperF(focusInterfaceType, 4, 12, 7, 13); // Pins IN1-IN3-IN2-IN4
 
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 
-String sec_str = "0";
-int temperature = random(5,25);
-String state = "on";
+const int enablePin = 8;
 
-unsigned long last_action = millis();
-unsigned long interval = 1000;
+// constants
+const int acceleration = 500;
+const int maxSpeed = 1000;
+
+String awaited_response = "";
 
 void setup() {
   Serial.begin(115200);
   lcd.init();
   lcd.backlight();
   while (!Serial) {}
-}
 
-void loop() {
+  // set acceleration in steps/sec^2
+  stepperX.setAcceleration(acceleration);
+  stepperX.setMaxSpeed(maxSpeed);
 
-  if (Serial.available() > 0) {
-    String message = Serial.readStringUntil('\n');
-    cmd_interpreter(message);
-  }
+  stepperY.setAcceleration(acceleration);
+  stepperY.setMaxSpeed(maxSpeed);
 
-}
-
-void cmd_interpreter(const String& cmd_raw) {
-    if (isCommand(cmd_raw)) {
-        String command = getStringPartial(cmd_raw, ':', 0);
-        String param = getStringPartial(cmd_raw, ':', 1);
-        if (command == "cmd_up") {
-            cmd_up(param.toInt());
-        }
-        if (command == "cmd_down") {
-            cmd_down(param.toInt());
-        }
-        if (command == "cmd_left") {
-            cmd_left(param.toInt());
-        }
-        if (command == "cmd_right") {
-            cmd_right(param.toInt());
-        }
-        delay(1000);
-        Serial.println("success");
-    }
+  stepperF.setAcceleration(acceleration);
+  stepperF.setMaxSpeed(maxSpeed);
 }
 
 /* Write message to LCD display. */
@@ -76,27 +65,97 @@ bool isCommand(String data) {
     return getStringPartial(data, '_', 0) == "cmd";
 }
 
+/* Get steps 1-directional */
+int getStepsOneDirect(String value, String cmd) {
+  int steps = value.toInt();
+  if (steps <= 0) {
+      Serial.println("ERROR: Command '" + cmd + "' is 1-directional. Steps must be greater then 0, but is: " + value);
+      return 0;
+  } else {
+    return steps;
+  }
+}
+
+bool setAwaitedResponse(String await, String dir) {
+    if (await == "await") {
+        if (awaited_response == "") {
+            awaited_response = dir;
+        } else {
+          // Another response is already awaited.
+          return false;
+        }
+    }
+    return true;
+}
+
+void resolveResponse() {
+    if ((awaited_response == "dir_x" && stepperX.distanceToGo() == 0) || (awaited_response == "dir_y" && stepperY.distanceToGo() == 0)) {
+        awaited_response = "";
+        Serial.println("success");
+    }
+}
+
 /* CMD up */
-void cmd_up(int value) {
-    if (value) {
-        lcdOut(0,0, "up " + String(value), 16);
+void cmd_up(String value, String await) {
+    int steps = getStepsOneDirect(value, "cmd_up");
+    if (steps > 0 && setAwaitedResponse(await, "dir_y", "cmd_up: " + value)) {
+        stepperY.move(steps);
     }
 }
+
 /* CMD down */
-void cmd_down(int value) {
-    if (value) {
-        lcdOut(0,0, "down " + String(value), 16);
+void cmd_down(String value, String await) {
+    int steps = getStepsOneDirect(value, "cmd_down");
+    if (steps > 0 && setAwaitedResponse(await, "dir_y", "cmd_down: " + value)) {
+        stepperY.move(-steps);
     }
 }
+
 /* CMD left */
-void cmd_left(int value) {
-    if (value) {
-        lcdOut(0,0, "left " + String(value), 16);
+void cmd_left(String value, String await) {
+    int steps = getStepsOneDirect(value, "cmd_left");
+    if (steps > 0 && setAwaitedResponse(await, "dir_x", "cmd_left: " + value)) {
+        stepperX.move(steps);
     }
 }
+
 /* CMD right */
-void cmd_right(int value) {
-    if (value) {
-        lcdOut(0,0, "right " + String(value), 16);
+void cmd_right(String value, String await) {
+    int steps = getStepsOneDirect(value, "cmd_left");
+    if (steps > 0 && setAwaitedResponse(await, "dir_x", "cmd_right: " + value)) {
+        stepperX.move(-steps);
     }
+}
+
+/* Command interpreter */
+void cmd_interpreter(const String& cmd_raw) {
+    if (isCommand(cmd_raw)) {
+        String command = getStringPartial(cmd_raw, ':', 0);
+        String params = getStringPartial(cmd_raw, ':', 1);
+        String options = getStringPartial(cmd_raw, ':', 2);
+        if (command == "cmd_up") {
+            cmd_up(params, options);
+        }
+        if (command == "cmd_down") {
+            cmd_down(params, options);
+        }
+        if (command == "cmd_left") {
+            cmd_left(params, options);
+        }
+        if (command == "cmd_right") {
+            cmd_right(params, options);
+        }
+    }
+}
+
+void loop() {
+    if (Serial.available() > 0) {
+        String message = Serial.readStringUntil('\n');
+        cmd_interpreter(message);
+    }
+    stepperX.run();
+    stepperY.run();
+    stepperF.run();
+
+    resolveResponse();
 }
