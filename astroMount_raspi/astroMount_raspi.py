@@ -16,6 +16,7 @@ while True:
 
 def asterix_command(cmd, param, await_resp=True):
     cmd_serial = f"{cmd}:{param}\n"
+    print(cmd_serial)
     ser.write(cmd_serial.encode('utf-8'))
     if await_resp:
         fired_time = time.time()
@@ -39,10 +40,11 @@ commands = {
     "cmd_down": 10000,
     "cmd_right": 10000,
 }
+
 # Fires commands.
 try:
-    for command, value in commands:
-        asterix_command(command, value)
+    for command in commands:
+        asterix_command(command, commands[command])
     print("Program finished.")
 except:
     print("Command failed.")
