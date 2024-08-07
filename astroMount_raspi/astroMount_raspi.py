@@ -34,10 +34,10 @@ def asterix_command(cmd, param, await_resp=True):
 
 
 commands = {
-    "m_up": 10000,
-    "m_left": 10000,
-    "m_down": 10000,
-    "m_right": 10000,
+    "cmd_up": 10000,
+    "cmd_left": 10000,
+    "cmd_down": 10000,
+    "cmd_right": 10000,
 }
 # Fires commands.
 try:
