@@ -26,15 +26,40 @@ def asterix_command(cmd, param, await_resp=False):
                 if resp == "success":
                     print(f"Command '{cmd}: {param}' was successful.")
                     break
-                if resp == "error":
+                elif resp == "error":
                     raise Exception(f"Error on executing command '{cmd}: {param}'.")
-            if time.time() - fired_time > 10:
+            if time.time() - fired_time > 20:
                 raise Exception(f"Command '{cmd}: {param}' timed out.")
 
+# Focussing image with camera by repeatedly. asking for value & fire command.
+def prc_focus(params):
+    if params == "manual"
+        print("FOCUS:")
+        print("neg number => nearer")
+        print("pos number => further")
+        print("X => exit + continue")
+        while True:
+            value = input("Enter focussing value:")
+            if value.upper() == "X":
+                break
+            else:
+                try:
+                    num = int(value)
+                    asterix_command("cmd_focus", value)
+                except:
+                    print(f"'{value}' is not a valid number. Enter e.g.: '-200'")
 
+def run_process(prc, params, await_resp=True):
+    if prc == "prc_focus":
+        prc_focus(params)
+
+# Comands pain.
+# "cmd_xxx" => "<params>:<options>" -> Comands with params directly posted to arduino.
+# "prc_xxx" => "<params>:<options>" -> Process of inputs and commands controlled from raspi function.
 commands = {
     "cmd_up": "1000:await",
     "cmd_left": "3000:await",
+    "prc_focus": "manual",
     "cmd_down": "1000:await",
     "cmd_right": "3000:await",
 }
@@ -42,7 +67,11 @@ commands = {
 # Fires commands.
 try:
     for command in commands:
-        asterix_command(command, commands[command], (commands[command].find('await') != -1))
+        if command.startswith("cmd_"):
+            asterix_command(command, commands[command], (commands[command].find('await') != -1))
+        elif command.startswith("prc_"):
+            run_process(command, commands[command])
+            
     print("Program finished.")
 except:
     print("Command failed.")
