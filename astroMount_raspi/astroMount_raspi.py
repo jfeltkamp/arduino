@@ -34,7 +34,8 @@ def asterix_command(cmd, param, await_resp=False):
                 raise Exception(f"Command '{cmd}: {param}' timed out.")
 
 
-# Focussing image with camera by repeatedly. asking for value & fire command.
+# Focussing image with camera
+# repeatedly asking for value & fire command.
 def prc_focus(params):
     if params == "manual":
         print("FOCUS:")
@@ -42,18 +43,19 @@ def prc_focus(params):
         print("pos number => further")
         print("X => exit + continue")
         while True:
-            value = input("Enter focussing value:")
+            value = input("Enter focussing value: ")
             if value.upper() == "X":
                 break
             else:
                 try:
                     num = int(value)
                     if -2000 <= num <= 2000:
-                        asterix_command("cmd_focus", value + ":await")
+                        asterix_command("cmd_focus", value)
                     else:
                         print("Invalid focussing value. Try value between -2000 and 2000.")
                 except:
                     print(f"'{value}' is not a valid number. Enter e.g.: '-200'")
+        print("Focussing finished.")
 
 
 def run_process(prc, params, await_resp=True):

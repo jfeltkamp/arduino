@@ -135,7 +135,7 @@ void cmd_left(String value, String await) {
 
 /* CMD right */
 void cmd_right(String value, String await) {
-    int steps = getStepsOneDirect(value, "cmd_left");
+    int steps = getStepsOneDirect(value, "cmd_right");
     if (steps > 0 && setAwaitedResponse(await, "dir_x")) {
         stepperX.move(steps);
     }
