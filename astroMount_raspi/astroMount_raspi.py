@@ -28,12 +28,15 @@ def asterix_command(cmd, param, await_resp=False):
                     break
                 elif resp == "error":
                     raise Exception(f"Error on executing command '{cmd}: {param}'.")
+                else:
+                    print(resp)
             if time.time() - fired_time > 20:
                 raise Exception(f"Command '{cmd}: {param}' timed out.")
 
+
 # Focussing image with camera by repeatedly. asking for value & fire command.
 def prc_focus(params):
-    if params == "manual"
+    if params == "manual":
         print("FOCUS:")
         print("neg number => nearer")
         print("pos number => further")
@@ -45,13 +48,18 @@ def prc_focus(params):
             else:
                 try:
                     num = int(value)
-                    asterix_command("cmd_focus", value)
+                    if -2000 <= num <= 2000:
+                        asterix_command("cmd_focus", value + ":await")
+                    else:
+                        print("Invalid focussing value. Try value between -2000 and 2000.")
                 except:
                     print(f"'{value}' is not a valid number. Enter e.g.: '-200'")
+
 
 def run_process(prc, params, await_resp=True):
     if prc == "prc_focus":
         prc_focus(params)
+
 
 # Comands pain.
 # "cmd_xxx" => "<params>:<options>" -> Comands with params directly posted to arduino.
@@ -71,7 +79,7 @@ try:
             asterix_command(command, commands[command], (commands[command].find('await') != -1))
         elif command.startswith("prc_"):
             run_process(command, commands[command])
-            
+
     print("Program finished.")
 except:
     print("Command failed.")

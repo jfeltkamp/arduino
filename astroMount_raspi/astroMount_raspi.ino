@@ -79,6 +79,17 @@ int getStepsOneDirect(String value, String cmd) {
   }
 }
 
+/* Get steps 1-directional */
+int getStepsBiDirect(String value, String cmd, int min, int max) {
+  int steps = value.toInt();
+  if (steps<min || steps>max) {
+      Serial.println("WARN: Command '" + cmd + "' min/max value. Steps must be >= "+ String(min) +" and <= "+ String(max) +", but is: " + value);
+      return 0;
+  } else {
+    return steps;
+  }
+}
+
 bool setAwaitedResponse(String await, String dir) {
     if (await == "await") {
         if (awaited_response == "") {
@@ -92,7 +103,7 @@ bool setAwaitedResponse(String await, String dir) {
 }
 
 void resolveResponse() {
-    if ((awaited_response == "dir_x" && stepperX.distanceToGo() == 0) || (awaited_response == "dir_y" && stepperY.distanceToGo() == 0)) {
+    if ((awaited_response == "dir_x" && stepperX.distanceToGo() == 0) || (awaited_response == "dir_y" && stepperY.distanceToGo() == 0) || (awaited_response == "focus" && stepperF.distanceToGo() == 0)) {
         awaited_response = "";
         Serial.println("success");
     }
@@ -130,6 +141,14 @@ void cmd_right(String value, String await) {
     }
 }
 
+/* CMD focus */
+void cmd_focus(String value, String await) {
+    int steps = getStepsBiDirect(value, "cmd_focus", -2000, 2000);
+    if (steps != 0 && setAwaitedResponse(await, "focus")) {
+        stepperF.move(steps);
+    }
+}
+
 /* Command interpreter */
 void cmd_interpreter(const String& cmd_raw) {
     if (isCommand(cmd_raw)) {
@@ -147,6 +166,9 @@ void cmd_interpreter(const String& cmd_raw) {
         }
         if (command == "cmd_right") {
             cmd_right(params, options);
+        }
+        if (command == "cmd_focus") {
+            cmd_focus(params, options);
         }
     }
 }
