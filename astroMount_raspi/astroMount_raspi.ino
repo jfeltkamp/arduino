@@ -36,6 +36,9 @@ void setup() {
 
   pinMode(enablePin, OUTPUT);
   digitalWrite(enablePin, LOW);
+
+  lcdOut(4, 0, "Asterix", 12);
+  lcdOut(6, 1, "1.0", 13);
 }
 
 /* Write message to LCD display. */
@@ -109,6 +112,14 @@ void resolveResponse() {
     }
 }
 
+/* CMD LCD */
+void cmd_lcd(String value, String pos) {
+  int posx = getStringPartial(pos, '_', 0).toInt();
+  int posy = getStringPartial(pos, '_', 1).toInt();
+  lcdOut(posx, posy, value, 16);
+  Serial.println("success");
+}
+
 /* CMD up */
 void cmd_up(String value, String await) {
     int steps = getStepsOneDirect(value, "cmd_up");
@@ -169,6 +180,9 @@ void cmd_interpreter(const String& cmd_raw) {
         }
         if (command == "cmd_focus") {
             cmd_focus(params, options);
+        }
+        if (command == "cmd_lcd") {
+            cmd_lcd(params, options);
         }
     }
 }

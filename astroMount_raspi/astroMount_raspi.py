@@ -1,6 +1,7 @@
 #!/usr/bin/env_python3
 import serial
 import time
+import traceback
 
 while True:
     try:
@@ -66,24 +67,33 @@ def run_process(prc, params, await_resp=True):
 # Comands pain.
 # "cmd_xxx" => "<params>:<options>" -> Comands with params directly posted to arduino.
 # "prc_xxx" => "<params>:<options>" -> Process of inputs and commands controlled from raspi function.
-commands = {
-    "cmd_up": "1000:await",
-    "cmd_left": "3000:await",
-    "prc_focus": "manual",
-    "cmd_down": "1000:await",
-    "cmd_right": "3000:await",
-}
+
+class Commands:
+    def __init__(self, cmd, params, options):
+        self.cmd = cmd
+        self.params = params
+        self.options = options
+
+commands = []
+commands.append(Commands("cmd_lcd", "H 23 17 54", "0_0_await"))
+commands.append(Commands("cmd_lcd", "V 52 23 08", "0_1_await"))
+commands.append(Commands("cmd_up", "1000", "await"))
+commands.append(Commands("cmd_left", "3000", "await"))
+commands.append(Commands("prc_focus", "manual", ""))
+commands.append(Commands("cmd_down", "1000", "await"))
+commands.append(Commands("cmd_right", "3000", "await"))
 
 # Fires commands.
 try:
     for command in commands:
-        if command.startswith("cmd_"):
-            asterix_command(command, commands[command], (commands[command].find('await') != -1))
-        elif command.startswith("prc_"):
-            run_process(command, commands[command])
+        if command.cmd.startswith("cmd_"):
+            asterix_command(command.cmd, command.params + ':' + command.options, (command.options.find('await') != -1))
+        elif command.cmd.startswith("prc_"):
+            run_process(command.cmd, command.params)
 
     print("Program finished.")
-except:
+except Exception:
+    traceback.print_exc()
     print("Command failed.")
 finally:
     ser.close()
