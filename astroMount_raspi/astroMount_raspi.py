@@ -2,6 +2,7 @@
 import serial
 import time
 import traceback
+from astroMount_facet_img import get_snail_moves
 
 while True:
     try:
@@ -75,13 +76,21 @@ class Commands:
         self.options = options
 
 commands = []
-commands.append(Commands("cmd_lcd", "H 23 17 54", "0_0_await"))
-commands.append(Commands("cmd_lcd", "V 52 23 08", "0_1_await"))
-commands.append(Commands("cmd_up", "1000", "await"))
-commands.append(Commands("cmd_left", "3000", "await"))
-commands.append(Commands("prc_focus", "manual", ""))
-commands.append(Commands("cmd_down", "1000", "await"))
-commands.append(Commands("cmd_right", "3000", "await"))
+
+moves = get_snail_moves()
+for move in moves:
+    if move.axis == "x":
+        if move.direction > 0:
+            commands.append(Commands("cmd_right", str(move.steps), "await"))
+        else:
+            commands.append(Commands("cmd_left", str(move.steps), "await"))
+        commands.append(Commands("cmd_lcd", "H " + str(move.diff_x), "0_0_await"))
+    else:
+        if move.direction > 0:
+            commands.append(Commands("cmd_down", str(move.steps), "await"))
+        else:
+            commands.append(Commands("cmd_up", str(move.steps), "await"))
+        commands.append(Commands("cmd_lcd", "V " + str(move.diff_y), "0_1_await"))
 
 # Fires commands.
 try:
