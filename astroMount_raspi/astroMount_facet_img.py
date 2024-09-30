@@ -90,5 +90,3 @@ def get_snail_moves(width = 3200, height = 1800, steps_x = 200, steps_y = 150, d
     except Exception:
         traceback.print_exc()
         print("Command failed.")
-
-get_snail_moves(16, 16, 2, 2, True)

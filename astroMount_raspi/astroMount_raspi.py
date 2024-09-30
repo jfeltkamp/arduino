@@ -80,13 +80,13 @@ commands = []
 moves = get_snail_moves()
 for move in moves:
     if move.axis == "x":
-        if move.direction > 0:
+        if move.direct > 0:
             commands.append(Commands("cmd_right", str(move.steps), "await"))
         else:
             commands.append(Commands("cmd_left", str(move.steps), "await"))
         commands.append(Commands("cmd_lcd", "H " + str(move.diff_x), "0_0_await"))
     else:
-        if move.direction > 0:
+        if move.direct > 0:
             commands.append(Commands("cmd_down", str(move.steps), "await"))
         else:
             commands.append(Commands("cmd_up", str(move.steps), "await"))
