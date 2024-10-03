@@ -6,10 +6,8 @@ from picamera2 import Picamera2, Preview
 class AstroMountCamera:
     def __init__(self):
         self.picam=Picamera2()
-        self.picam.configure(self.picam.create_preview_configuration())
         self.path = None
-        self.set_path(path="$HOME/OBELIX/" + time.strftime("%Y_%m_%d-%H:%M"))
-        self.picam.start()
+        self.set_path(path="~/OBELIX/" + time.strftime("%Y_%m_%d-%H:%M"))
         time.sleep(3)
 
 
@@ -30,7 +28,12 @@ class AstroMountCamera:
         print(f"Captured image {self.path}/{name}.jpg")
 
     def start_preview(self):
-        self.picam.start_preview(Preview.QTGL)
-
-    def stop_preview(self):
-        self.picam.stop_preview()
+        self.picam.configure(self.picam.create_preview_configuration())
+        self.picam.start_preview()
+        self.picam.start()
+        while True:
+            value = input("Enter Q to quit preview: ")
+            if value.upper() == "Q":
+                self.picam.stop_preview()
+                self.picam.stop()
+                break

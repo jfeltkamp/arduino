@@ -41,11 +41,9 @@ def key_press(key):
         asterix_command("cmd_focus", "400")
     elif key == keyboard.Key.page_down:
         asterix_command("cmd_focus", "-400")
-    elif key == "p":
+    elif key == keyboard.Key.ctrl:
         picam.start_preview()
-    elif key == "q":
-        picam.stop_preview()
-    elif key == "i":
+    elif key == keyboard.Key.shift:
         picam.capture_image(name="ksdjhfksjhdfk")
     elif key == keyboard.Key.esc:
         picam.__del__()
