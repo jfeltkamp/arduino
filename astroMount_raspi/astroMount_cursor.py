@@ -36,9 +36,9 @@ def key_press(key):
     elif key == keyboard.Key.down:
         asterix_command("cmd_down", "400")
     elif key == keyboard.Key.page_up:
-        asterix_command("cmd_focus", "-400")
-    elif key == keyboard.Key.page_down:
         asterix_command("cmd_focus", "400")
+    elif key == keyboard.Key.page_down:
+        asterix_command("cmd_focus", "-400")
     elif key == keyboard.Key.esc:
         raise MyException(key)
 
