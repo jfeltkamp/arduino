@@ -29,13 +29,17 @@ def key_press(key):
     print(f"RUN {key}")
     if key == keyboard.Key.left:
         asterix_command("cmd_left", "400")
-    if key == keyboard.Key.right:
+    elif key == keyboard.Key.right:
         asterix_command("cmd_right", "400")
-    if key == keyboard.Key.up:
+    elif key == keyboard.Key.up:
         asterix_command("cmd_up", "400")
-    if key == keyboard.Key.down:
+    elif key == keyboard.Key.down:
         asterix_command("cmd_down", "400")
-    if key == keyboard.Key.esc:
+    elif key == keyboard.Key.page_up:
+        asterix_command("cmd_focus", "-400")
+    elif key == keyboard.Key.page_down:
+        asterix_command("cmd_focus", "400")
+    elif key == keyboard.Key.esc:
         raise MyException(key)
 
 def key_release(key):
@@ -44,6 +48,8 @@ def key_release(key):
         asterix_command("cmd_stop", "x")
     if key in [keyboard.Key.up, keyboard.Key.down]:
         asterix_command("cmd_stop", "y")
+    if key in [keyboard.Key.page_up, keyboard.Key.page_down]:
+        asterix_command("cmd_stop", "f")
 
 # Collect events until released
 with keyboard.Listener(on_press=key_press, on_release=key_release) as listener:

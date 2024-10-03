@@ -14,7 +14,7 @@ const int enablePin = 8;
 
 // constants
 const int acceleration = 500;
-const int maxSpeed = 1000;
+const int maxSpeed = 200;
 
 String awaited_response = "";
 
@@ -152,6 +152,19 @@ void cmd_right(String value, String await) {
     }
 }
 
+/* CMD right */
+void cmd_stop(String value) {
+    if (value == "x") {
+        stepperX.stop();
+    }
+    else if (value == "y") {
+        stepperY.stop();
+    }
+    else if (value == "f") {
+        stepperF.stop();
+    }
+}
+
 /* CMD focus */
 void cmd_focus(String value, String await) {
     int steps = getStepsBiDirect(value, "cmd_focus", -2000, 2000);
@@ -169,19 +182,22 @@ void cmd_interpreter(const String& cmd_raw) {
         if (command == "cmd_up") {
             cmd_up(params, options);
         }
-        if (command == "cmd_down") {
+        else if (command == "cmd_down") {
             cmd_down(params, options);
         }
-        if (command == "cmd_left") {
+        else if (command == "cmd_left") {
             cmd_left(params, options);
         }
-        if (command == "cmd_right") {
+        else if (command == "cmd_right") {
             cmd_right(params, options);
         }
-        if (command == "cmd_focus") {
+        else if (command == "cmd_stop") {
+            cmd_stop(params);
+        }
+        else if (command == "cmd_focus") {
             cmd_focus(params, options);
         }
-        if (command == "cmd_lcd") {
+        else if (command == "cmd_lcd") {
             cmd_lcd(params, options);
         }
     }
