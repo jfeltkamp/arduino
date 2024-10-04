@@ -1,7 +1,7 @@
 #!/usr/bin/env_python3
 import traceback
 
-def get_snail_moves(width = 3200, height = 1800, steps_x = 200, steps_y = 150, debug = False):
+def get_snail_moves(width = 800, height = 600, steps_x = 100, steps_y = 75, debug = False):
 
     class Moves:
         def __init__(self, axis, direct, steps, diff_x, diff_y):
