@@ -3,6 +3,7 @@ import serial
 import time
 import traceback
 from astroMount_facet_img import get_snail_moves
+from astroMount_camera import AstroMountCamera
 
 while True:
     try:
@@ -14,6 +15,9 @@ while True:
     except serial.SerialException:
         print("Could not connect to serial.")
         time.sleep(1)
+
+
+picam=AstroMountCamera()
 
 
 def asterix_command(cmd, param, await_resp=False):
@@ -59,10 +63,14 @@ def prc_focus(params):
                     print(f"'{value}' is not a valid number. Enter e.g.: '-200'")
         print("Focussing finished.")
 
+def prc_capimg(params):
+    picam.capture_image(params)
 
 def run_process(prc, params, await_resp=True):
     if prc == "prc_focus":
         prc_focus(params)
+    elif prc == "prc_capimg":
+        prc_capimg(params)
 
 
 # Comands pain.
@@ -91,6 +99,7 @@ for move in moves:
         else:
             commands.append(Commands("cmd_up", str(move.steps), "await"))
         commands.append(Commands("cmd_lcd", "V " + str(move.diff_y), "0_1_await"))
+    commands.append(Commands("prc_capimg", "img", ""))
 
 # Fires commands.
 try:

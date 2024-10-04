@@ -2,7 +2,7 @@
 from time import sleep
 import serial
 from pynput import keyboard
-from astroMount_raspi.astroMount_camera import AstroMountCamera
+from astroMount_camera import AstroMountCamera
 
 while True:
     try:
@@ -41,10 +41,12 @@ def key_press(key):
         asterix_command("cmd_focus", "400")
     elif key == keyboard.Key.page_down:
         asterix_command("cmd_focus", "-400")
-    elif key == keyboard.Key.ctrl:
+    elif key in [keyboard.Key.ctrl, keyboard.Key.ctrl_r]:
         picam.start_preview()
-    elif key == keyboard.Key.shift:
-        picam.capture_image(name="ksdjhfksjhdfk")
+    elif key == keyboard.Key.alt_gr:
+        picam.stop_preview()
+    elif key == keyboard.Key.shift_r:
+        picam.capture_image(name="img")
     elif key == keyboard.Key.esc:
         picam.__del__()
         raise MyException(key)

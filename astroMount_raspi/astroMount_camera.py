@@ -6,7 +6,10 @@ from picamera2 import Picamera2, Preview
 class AstroMountCamera:
     def __init__(self):
         self.picam=Picamera2()
+        self.still_config = self.picam.create_still_configuration()
+        self.prev_config = self.picam.create_preview_configuration()
         self.path = None
+        self.counter = 0
         self.set_path(path="~/OBELIX/" + time.strftime("%Y_%m_%d-%H:%M"))
         time.sleep(3)
 
@@ -24,17 +27,25 @@ class AstroMountCamera:
                 raise
 
     def capture_image(self, name):
-        self.picam.capture_file(f"{self.path}/{name}.jpg")
-        print(f"Captured image {self.path}/{name}.jpg")
+        self.picam.stop()
+        self.picam.configure(self.still_config)
+        self.picam.start(show_preview=False)
+        image_name = f"{self.path}/{name}_{self.counter}.jpg"
+        self.picam.capture_file(image_name)
+        print(f"Captured image {image_name}")
+        self.counter += 1
+
 
     def start_preview(self):
-        self.picam.configure(self.picam.create_preview_configuration())
-        self.picam.start_preview()
+        self.picam.stop()
+        self.picam.configure(self.prev_config)
+        self.picam.start_preview(Preview.QTGL)
         self.picam.start()
         time.sleep(1)
-        while True:
-            value = input("Enter Q to quit preview: ")
-            if value.upper() == "Q":
-                self.picam.stop_preview()
-                self.picam.stop()
-                break
+
+    def stop_preview(self):
+        try:
+            self.picam.stop()
+            self.picam.stop_preview()
+        except: pass
+
