@@ -37,7 +37,7 @@ void setup() {
   pinMode(enablePin, OUTPUT);
   digitalWrite(enablePin, LOW);
 
-  lcdOut(4, 0, "Asterix", 12);
+  lcdOut(4, 0, "Obelix", 12);
   lcdOut(6, 1, "1.0", 13);
 }
 

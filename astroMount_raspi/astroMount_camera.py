@@ -31,6 +31,7 @@ class AstroMountCamera:
         self.picam.configure(self.picam.create_preview_configuration())
         self.picam.start_preview()
         self.picam.start()
+        time.sleep(1)
         while True:
             value = input("Enter Q to quit preview: ")
             if value.upper() == "Q":
