@@ -85,7 +85,8 @@ class Commands:
 
 commands = []
 
-moves = get_snail_moves()
+moves = get_snail_moves(width=240, height=160, steps_x=60, steps_y=40, debug=False)
+
 for move in moves:
     if move.axis == "x":
         if move.direct > 0:
@@ -99,7 +100,7 @@ for move in moves:
         else:
             commands.append(Commands("cmd_up", str(move.steps), "await"))
         commands.append(Commands("cmd_lcd", "V " + str(move.diff_y), "0_1_await"))
-    commands.append(Commands("prc_capimg", "img", ""))
+    commands.append(Commands("prc_capimg", f"img_{move.diff_x}_{move.diff_y}", ""))
 
 # Fires commands.
 try:

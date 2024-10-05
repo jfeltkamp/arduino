@@ -13,9 +13,14 @@ def get_snail_moves(width = 800, height = 600, steps_x = 100, steps_y = 75, debu
 
     # Fires commands.
     try:
+        # define static image origin.
+        origin_x = round(width/2)
+        origin_y = round(height/2)
         # init relative deviation from origin.
         rel_x = 0
         rel_y = 0
+        o_x = origin_x
+        o_y = origin_y
         # Calc number of facets in each direction
         facet_x_num = round(width / steps_x)
         facet_y_num = round(height / steps_y)
@@ -30,12 +35,14 @@ def get_snail_moves(width = 800, height = 600, steps_x = 100, steps_y = 75, debu
             start_x = facet_format - 1
             start_y = 0
             rel_x = round(start_x * steps_x / -2)
-            snailMoves.append(Moves("x", -1, -rel_x, rel_x, rel_y))
+            o_x = origin_x - rel_x
+            snailMoves.append(Moves("x", -1, -rel_x, o_x, o_y))
         elif facet_format < 0:
             start_x = 0
             start_y = -facet_format - 1
             rel_y = round(start_y * steps_y / -2)
-            snailMoves.append(Moves("y", -1, -rel_y, rel_x, rel_y))
+            o_y = origin_y - rel_y
+            snailMoves.append(Moves("y", -1, -rel_y, o_x, o_y))
         else:
             start_x = 0
             start_y = 0
@@ -47,14 +54,16 @@ def get_snail_moves(width = 800, height = 600, steps_x = 100, steps_y = 75, debu
                     curr_x = curr_x + 1
                     move_x = steps_x * direction
                     rel_x = rel_x + move_x
-                    snailMoves.append(Moves("x", direction, steps_x, rel_x, rel_y))
+                    o_x = origin_x + rel_x
+                    snailMoves.append(Moves("x", direction, steps_x, o_x, o_y))
 
             curr_y = 0
             while curr_y <= start_y:
                 curr_y = curr_y + 1
                 move_y = steps_y * direction
                 rel_y = rel_y + move_y
-                snailMoves.append(Moves("y", direction, steps_x, rel_x, rel_y))
+                o_y = origin_y + rel_y
+                snailMoves.append(Moves("y", direction, steps_y, o_x, o_y))
 
 
             if facet_format < 0:
@@ -63,7 +72,8 @@ def get_snail_moves(width = 800, height = 600, steps_x = 100, steps_y = 75, debu
                     curr_x = curr_x + 1
                     move_x = steps_x * direction
                     rel_x = rel_x + move_x
-                    snailMoves.append(Moves("x", direction, steps_x, rel_x, rel_y))
+                    o_x = origin_x + rel_x
+                    snailMoves.append(Moves("x", direction, steps_x, o_x, o_y))
 
             start_x = start_x + 1
             start_y = start_y + 1
@@ -76,16 +86,20 @@ def get_snail_moves(width = 800, height = 600, steps_x = 100, steps_y = 75, debu
 
         # Return to the origin.
         abs_x = abs(rel_x)
-        dir_x = round(rel_x / abs_x)
-        snailMoves.append(Moves("x", -dir_x, abs_x, 0, rel_y))
+        if abs_x != 0:
+            dir_x = round(rel_x / abs_x)
+            snailMoves.append(Moves("x", -dir_x, abs_x, 0, rel_y))
 
         abs_y = abs(rel_y)
-        dir_y = round(rel_y / abs_y)
-        snailMoves.append(Moves("y", -dir_y, abs_y, 0, 0))
+        if abs_y != 0:
+            dir_y = round(rel_y / abs_y)
+            snailMoves.append(Moves("y", -dir_y, abs_y, 0, 0))
         if debug:
             for move in snailMoves:
                 print(move.axis, move.direct, move.steps, move.diff_x, move.diff_y)
-        return snailMoves
+            return []
+        else:
+            return snailMoves
 
     except Exception:
         traceback.print_exc()

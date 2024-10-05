@@ -10,7 +10,7 @@ class AstroMountCamera:
         self.prev_config = self.picam.create_preview_configuration()
         self.path = None
         self.counter = 0
-        self.set_path(path="~/OBELIX/" + time.strftime("%Y_%m_%d-%H:%M"))
+        self.set_path(path="/home/admin/OBELIX/" + time.strftime("%Y_%m_%d-%H:%M"))
         time.sleep(3)
 
 
