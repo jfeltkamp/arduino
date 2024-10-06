@@ -4,13 +4,14 @@ import os, errno
 from picamera2 import Picamera2, Preview
 
 class AstroMountCamera:
+    path = "/home/admin/OBELIX/"
+
     def __init__(self):
         self.picam=Picamera2()
         self.still_config = self.picam.create_still_configuration()
         self.prev_config = self.picam.create_preview_configuration()
-        self.path = None
         self.counter = 0
-        self.set_path(path="/home/admin/OBELIX/" + time.strftime("%Y_%m_%d-%H:%M"))
+        self.set_path(self.path + time.strftime("%Y_%m_%d-%H:%M"))
         time.sleep(3)
 
 
