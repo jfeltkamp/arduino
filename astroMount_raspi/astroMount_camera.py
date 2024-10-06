@@ -4,15 +4,16 @@ import os, errno
 from picamera2 import Picamera2, Preview
 
 class AstroMountCamera:
-    path = "/home/admin/OBELIX/"
+    base_path = ""
+    path = ""
+    counter = 0
 
-    def __init__(self):
+    def __init__(self, base_path="/home/admin/OBELIX/"):
+        self.base_path = base_path
         self.picam=Picamera2()
         self.still_config = self.picam.create_still_configuration()
         self.prev_config = self.picam.create_preview_configuration()
-        self.counter = 0
-        self.set_path(self.path + time.strftime("%Y_%m_%d-%H:%M"))
-        time.sleep(3)
+        time.sleep(1)
 
 
     def __del__(self):
@@ -28,6 +29,8 @@ class AstroMountCamera:
                 raise
 
     def capture_image(self, name):
+        if self.path == "":
+            self.set_path(self.base_path + time.strftime("%Y_%m_%d-%H:%M"))
         self.picam.stop()
         self.picam.configure(self.still_config)
         self.picam.start(show_preview=False)

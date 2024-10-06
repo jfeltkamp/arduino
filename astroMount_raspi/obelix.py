@@ -34,7 +34,7 @@ class Obelix:
                 time.sleep(0.1)
                 if self.serial.in_waiting > 0:
                     resp = self.serial.readline().decode('utf-8').rstrip()
-                    if resp == "success":
+                    if resp.startswith("success"):
                         print(f"Command '{cmd}: {param}' was successful.")
                         break
                     elif resp == "error":
