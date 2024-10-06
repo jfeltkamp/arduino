@@ -106,9 +106,19 @@ bool setAwaitedResponse(String await, String dir) {
 }
 
 void resolveResponse() {
-    if ((awaited_response == "dir_x" && stepperX.distanceToGo() == 0) || (awaited_response == "dir_y" && stepperY.distanceToGo() == 0) || (awaited_response == "focus" && stepperF.distanceToGo() == 0)) {
+    if ((awaited_response == "dir_x" && stepperX.distanceToGo() == 0) || (awaited_response == "dir_y" && stepperY.distanceToGo() == 0) || (awaited_response == "dir_xy" && stepperX.distanceToGo() == 0 && stepperY.distanceToGo() == 0) || (awaited_response == "focus" && stepperF.distanceToGo() == 0)) {
+        String extend = ""
+        if (awaited_response == "dir_x" || awaited_response == "dir_xy") {
+            extend = "_x:" + stepperX.currentPosition();
+        }
+        if (awaited_response == "dir_y" || awaited_response == "dir_xy") {
+            extend = extend + "_y:" + stepperY.currentPosition();
+        }
+         else {
+            extend = "_f:".concat(stepperF.currentPosition());
+        }
         awaited_response = "";
-        Serial.println("success");
+        Serial.println("success" + extend);
     }
 }
 
@@ -152,6 +162,20 @@ void cmd_right(String value, String await) {
     }
 }
 
+/* CMD goto */
+void cmd_goto(String value, String await) {
+    if (setAwaitedResponse(await, "dir_xy")) {
+        int steps_x = getStringPartial(value, ',', 0).toInt();
+        if (steps_x != 0) {
+            stepperX.moveTo(steps);
+        }
+        int steps_y = getStringPartial(value, ',', 0).toInt();
+        if (steps_x != 0) {
+            stepperY.moveTo(steps);
+        }
+    }
+}
+
 /* CMD right */
 void cmd_stop(String value) {
     if (value == "x") {
@@ -179,7 +203,10 @@ void cmd_interpreter(const String& cmd_raw) {
         String command = getStringPartial(cmd_raw, ':', 0);
         String params = getStringPartial(cmd_raw, ':', 1);
         String options = getStringPartial(cmd_raw, ':', 2);
-        if (command == "cmd_up") {
+        if (command == "cmd_goto") {
+            cmd_goto(params, options);
+        }
+        else if (command == "cmd_up") {
             cmd_up(params, options);
         }
         else if (command == "cmd_down") {

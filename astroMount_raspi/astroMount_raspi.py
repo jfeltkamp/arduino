@@ -1,6 +1,6 @@
 #!/usr/bin/env_python3
 import traceback
-from astroMount_facet_img import get_snail_moves
+# from astroMount_facet_img import get_snail_moves
 from astroMount_camera import AstroMountCamera
 from obelix import Obelix
 
@@ -51,7 +51,10 @@ class Commands:
         self.options = options
 
 commands = []
+commands.append(Commands("cmd_goto", "400,400", "await"))
+commands.append(Commands("cmd_goto", "0,0", "await"))
 
+"""
 moves = get_snail_moves(width=240, height=160, steps_x=60, steps_y=40, debug=False)
 
 for move in moves:
@@ -68,7 +71,7 @@ for move in moves:
             commands.append(Commands("cmd_up", str(move.steps), "await"))
         commands.append(Commands("cmd_lcd", "V " + str(move.diff_y), "0_1_await"))
     commands.append(Commands("prc_capimg", f"img_{move.diff_x}_{move.diff_y}", ""))
-
+"""
 # Fires commands.
 try:
     for command in commands:
