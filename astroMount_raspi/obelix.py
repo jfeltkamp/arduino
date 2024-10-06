@@ -1,16 +1,18 @@
 #!/usr/bin/env_python3
-import serial, time
+import serial
+import time
 
 class Obelix:
     # Serial communication definitions.
-    port = "/dev/ttyUSB0"
+    port = '/dev/ttyACM0'
     baudrate = 115200
     timeout = 1.0
 
     def __init__(self):
         while True:
             try:
-                self.serial = serial.Serial(port=self.port, baudrate=self.baudrate, timeout=self.timeout)
+                print(self.port + " - " + str(self.baudrate) + " - " + str(self.timeout))
+                self.serial = serial.Serial(self.port, self.baudrate, timeout=self.timeout)
                 time.sleep(3)
                 self.serial.reset_input_buffer()
                 print("Serial connection OK.")

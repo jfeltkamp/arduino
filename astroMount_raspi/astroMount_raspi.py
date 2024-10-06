@@ -1,6 +1,4 @@
 #!/usr/bin/env_python3
-import serial
-import time
 import traceback
 from astroMount_facet_img import get_snail_moves
 from astroMount_camera import AstroMountCamera
