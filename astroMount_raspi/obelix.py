@@ -11,7 +11,6 @@ class Obelix:
     def __init__(self):
         while True:
             try:
-                print(self.port + " - " + str(self.baudrate) + " - " + str(self.timeout))
                 self.serial = serial.Serial(self.port, self.baudrate, timeout=self.timeout)
                 time.sleep(3)
                 self.serial.reset_input_buffer()

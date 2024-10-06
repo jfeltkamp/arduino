@@ -40,13 +40,15 @@ class AstroMountCamera:
     def start_preview(self):
         self.picam.stop()
         self.picam.configure(self.prev_config)
-        self.picam.start_preview(Preview.QTGL)
         self.picam.start()
-        time.sleep(1)
+        time.sleep(2)
+        self.picam.stop_preview()
+        self.picam.start_preview(True)
+        time.sleep(2)
 
     def stop_preview(self):
         try:
-            self.picam.stop()
             self.picam.stop_preview()
+            self.picam.stop()
         except: pass
 
