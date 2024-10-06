@@ -15,7 +15,6 @@ while True:
         print("Could not connect to serial.")
         sleep(1)
 
-class MyException(Exception): pass
 picam=AstroMountCamera()
 
 def asterix_command(cmd, param, await_resp=False):
@@ -49,7 +48,7 @@ def key_press(key):
         picam.capture_image(name="img")
     elif key == keyboard.Key.esc:
         picam.__del__()
-        raise MyException(key)
+        return False # stops listener.
 
 def key_release(key):
     print(f"stop {key}")
@@ -64,5 +63,4 @@ def key_release(key):
 with keyboard.Listener(on_press=key_press, on_release=key_release) as listener:
     try:
         listener.join()
-    except MyException as e:
-        print('{0} was pressed'.format(e.args[0]))
+    except: pass
