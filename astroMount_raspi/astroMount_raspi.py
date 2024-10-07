@@ -4,8 +4,6 @@ import traceback
 from astroMount_camera import AstroMountCamera
 from obelix import Obelix
 
-picam = AstroMountCamera()
-obelix = Obelix()
 
 # Focussing image with camera
 # repeatedly asking for value & fire command.
@@ -50,39 +48,45 @@ class Commands:
         self.params = params
         self.options = options
 
-commands = []
-commands.append(Commands("cmd_goto", "5000,5000", "await"))
-commands.append(Commands("cmd_goto", "0,0", "await"))
 
-"""
-moves = get_snail_moves(width=240, height=160, steps_x=60, steps_y=40, debug=False)
+if __name__ == "__main__":
 
-for move in moves:
-    if move.axis == "x":
-        if move.direct > 0:
-            commands.append(Commands("cmd_right", str(move.steps), "await"))
+    picam = AstroMountCamera()
+    obelix = Obelix()
+
+    commands = []
+    commands.append(Commands("cmd_goto", "5000,5000", "await"))
+    commands.append(Commands("cmd_goto", "0,0", "await"))
+
+    """
+    moves = get_snail_moves(width=240, height=160, steps_x=60, steps_y=40, debug=False)
+    
+    for move in moves:
+        if move.axis == "x":
+            if move.direct > 0:
+                commands.append(Commands("cmd_right", str(move.steps), "await"))
+            else:
+                commands.append(Commands("cmd_left", str(move.steps), "await"))
+            commands.append(Commands("cmd_lcd", "H " + str(move.diff_x), "0_0_await"))
         else:
-            commands.append(Commands("cmd_left", str(move.steps), "await"))
-        commands.append(Commands("cmd_lcd", "H " + str(move.diff_x), "0_0_await"))
-    else:
-        if move.direct > 0:
-            commands.append(Commands("cmd_down", str(move.steps), "await"))
-        else:
-            commands.append(Commands("cmd_up", str(move.steps), "await"))
-        commands.append(Commands("cmd_lcd", "V " + str(move.diff_y), "0_1_await"))
-    commands.append(Commands("prc_capimg", f"img_{move.diff_x}_{move.diff_y}", ""))
-"""
-# Fires commands.
-try:
-    for command in commands:
-        if command.cmd.startswith("cmd_"):
-            obelix.command(command.cmd, command.params + ':' + command.options, (command.options.find('await') != -1))
-        elif command.cmd.startswith("prc_"):
-            run_process(command.cmd, command.params)
+            if move.direct > 0:
+                commands.append(Commands("cmd_down", str(move.steps), "await"))
+            else:
+                commands.append(Commands("cmd_up", str(move.steps), "await"))
+            commands.append(Commands("cmd_lcd", "V " + str(move.diff_y), "0_1_await"))
+        commands.append(Commands("prc_capimg", f"img_{move.diff_x}_{move.diff_y}", ""))
+    """
+    # Fires commands.
+    try:
+        for command in commands:
+            if command.cmd.startswith("cmd_"):
+                obelix.command(command.cmd, command.params + ':' + command.options, (command.options.find('await') != -1))
+            elif command.cmd.startswith("prc_"):
+                run_process(command.cmd, command.params)
 
-    print("Program finished.")
-except Exception:
-    traceback.print_exc()
-    print("Command failed.")
-finally:
-    print("Program closed.")
+        print("Program finished.")
+    except Exception:
+        traceback.print_exc()
+        print("Command failed.")
+    finally:
+        print("Program closed.")
