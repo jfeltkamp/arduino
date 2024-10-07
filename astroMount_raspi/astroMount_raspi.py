@@ -51,7 +51,7 @@ class Commands:
         self.options = options
 
 commands = []
-commands.append(Commands("cmd_goto", "400,400", "await"))
+commands.append(Commands("cmd_goto", "5000,5000", "await"))
 commands.append(Commands("cmd_goto", "0,0", "await"))
 
 """

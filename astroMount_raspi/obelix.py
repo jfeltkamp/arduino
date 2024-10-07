@@ -41,5 +41,5 @@ class Obelix:
                         raise Exception(f"Error on executing command '{cmd}: {param}'.")
                     else:
                         print(resp)
-                if time.time() - fired_time > 20:
+                if time.time() - fired_time > 60:
                     raise Exception(f"Command '{cmd}: {param}' timed out.")

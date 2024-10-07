@@ -14,7 +14,7 @@ const int enablePin = 8;
 
 // constants
 const int acceleration = 500;
-const int maxSpeed = 200;
+const int maxSpeed = 500;
 
 String awaited_response = "";
 
@@ -106,16 +106,16 @@ bool setAwaitedResponse(String await, String dir) {
 }
 
 void resolveResponse() {
-    if ((awaited_response == "dir_x" && stepperX.distanceToGo() == 0) || (awaited_response == "dir_y" && stepperY.distanceToGo() == 0) || (awaited_response == "dir_xy" && stepperX.distanceToGo() == 0 && stepperY.distanceToGo() == 0) || (awaited_response == "focus" && stepperF.distanceToGo() == 0)) {
-        String extend = ""
-        if (awaited_response == "dir_x" || awaited_response == "dir_xy") {
+    if ((awaited_response == "dir_x" && stepperX.distanceToGo() == 0) || (awaited_response == "dir_y" && stepperY.distanceToGo() == 0) || ((awaited_response == "dir_xy") && (stepperX.distanceToGo() == 0) && (stepperY.distanceToGo() == 0)) || (awaited_response == "focus" && stepperF.distanceToGo() == 0)) {
+        String extend = "";
+        if ((awaited_response == "dir_x") || (awaited_response == "dir_xy")) {
             extend = "_x:" + stepperX.currentPosition();
         }
-        if (awaited_response == "dir_y" || awaited_response == "dir_xy") {
+        if ((awaited_response == "dir_y") || (awaited_response == "dir_xy")) {
             extend = extend + "_y:" + stepperY.currentPosition();
         }
-         else {
-            extend = "_f:".concat(stepperF.currentPosition());
+        else {
+            extend = "_f:" + stepperF.currentPosition();
         }
         awaited_response = "";
         Serial.println("success" + extend);
@@ -166,13 +166,9 @@ void cmd_right(String value, String await) {
 void cmd_goto(String value, String await) {
     if (setAwaitedResponse(await, "dir_xy")) {
         int steps_x = getStringPartial(value, ',', 0).toInt();
-        if (steps_x != 0) {
-            stepperX.moveTo(steps);
-        }
-        int steps_y = getStringPartial(value, ',', 0).toInt();
-        if (steps_x != 0) {
-            stepperY.moveTo(steps);
-        }
+        stepperX.moveTo(steps_x);
+        int steps_y = getStringPartial(value, ',', 1).toInt();
+        stepperY.moveTo(steps_y);
     }
 }
 
