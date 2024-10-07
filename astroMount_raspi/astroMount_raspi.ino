@@ -13,8 +13,9 @@ LiquidCrystal_I2C lcd(0x27, 16, 2);
 const int enablePin = 8;
 
 // constants
-const int acceleration = 500;
-const int maxSpeed = 500;
+const int acceleration = 100;
+const int axisSpeed = 800;
+const int focusSpeed = 500;
 
 String awaited_response = "";
 
@@ -26,13 +27,13 @@ void setup() {
 
   // set acceleration in steps/sec^2
   stepperX.setAcceleration(acceleration);
-  stepperX.setMaxSpeed(maxSpeed);
+  stepperX.setMaxSpeed(axisSpeed);
 
   stepperY.setAcceleration(acceleration);
-  stepperY.setMaxSpeed(maxSpeed);
+  stepperY.setMaxSpeed(axisSpeed);
 
   stepperF.setAcceleration(acceleration);
-  stepperF.setMaxSpeed(maxSpeed);
+  stepperF.setMaxSpeed(focusSpeed);
 
   pinMode(enablePin, OUTPUT);
   digitalWrite(enablePin, LOW);
@@ -115,7 +116,7 @@ void resolveResponse() {
             extend = extend + "_y:" + stepperY.currentPosition();
         }
         else {
-            extend = "_f:" + stepperF.currentPosition();
+            extend = extend + "_f:" + stepperF.currentPosition();
         }
         awaited_response = "";
         Serial.println("success" + extend);
