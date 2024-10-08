@@ -1,6 +1,7 @@
 #!/usr/bin/env_python3
 
 class ObelixParams:
+
     def __init__(self):
         self.x = 0
         self.y = 0
@@ -27,3 +28,9 @@ class ObelixParams:
                     self.va = int(param_raw[1])
                 elif param_raw[0] == "vf":
                     self.vf = int(param_raw[1])
+
+    def get_lcd(self, param):
+        if param == "x":
+            return f"H {self.x}:0_0"
+        elif param == "y":
+            return f"V {self.y}:0_1"

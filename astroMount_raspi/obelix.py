@@ -47,6 +47,8 @@ class Obelix:
                 resp = self.ser.readline().decode('utf-8').rstrip()
                 self.params.set_params_from_response(resp)
                 if resp.startswith("success") | resp.startswith("error"):
+                    self.command('cmd_lcd', self.params.get_lcd("x"))
+                    self.command('cmd_lcd', self.params.get_lcd("y"))
                     self.cmd_response = resp
                 else:
                     print(resp)
