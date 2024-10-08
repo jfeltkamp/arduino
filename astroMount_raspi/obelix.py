@@ -23,6 +23,7 @@ class Obelix:
                 time.sleep(3)
                 self.ser.reset_input_buffer()
                 print("Obelix: Serial connection OK.")
+                break
             except serial.SerialException:
                 print("Obelix: Could not connect to serial.")
                 time.sleep(1)
@@ -35,7 +36,7 @@ class Obelix:
 
     def run_listener(self):
         self.listener_runs = True
-        self.listener = threading.Thread(target=self.serial_read_listener())
+        self.listener = threading.Thread(target=self.serial_read_listener)
         self.listener.start()
         print("Obelix: Serial listener runs.")
 
