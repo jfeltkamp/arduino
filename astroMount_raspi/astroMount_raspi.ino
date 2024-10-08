@@ -18,6 +18,7 @@ const int axisSpeed = 800;
 const int focusSpeed = 500;
 
 String awaited_response = "";
+bool busy = false;
 
 void setup() {
   Serial.begin(115200);
@@ -95,31 +96,26 @@ int getStepsBiDirect(String value, String cmd, int min, int max) {
 }
 
 bool setAwaitedResponse(String await, String dir) {
-    if (await == "await") {
-        if (awaited_response == "") {
-            awaited_response = dir;
-        } else {
-          // Another response is already awaited.
-          return false;
-        }
+    if (awaited_response != "") {
+        // Another response is already awaited.
+        Serial.println("error");
+        return false;
+    }
+    else if (await == "await") {
+        awaited_response = dir;
     }
     return true;
 }
 
 void resolveResponse() {
-    if ((awaited_response == "dir_x" && stepperX.distanceToGo() == 0) || (awaited_response == "dir_y" && stepperY.distanceToGo() == 0) || ((awaited_response == "dir_xy") && (stepperX.distanceToGo() == 0) && (stepperY.distanceToGo() == 0)) || (awaited_response == "focus" && stepperF.distanceToGo() == 0)) {
-        String extend = "";
-        if ((awaited_response == "dir_x") || (awaited_response == "dir_xy")) {
-            extend = "_x:" + stepperX.currentPosition();
-        }
-        if ((awaited_response == "dir_y") || (awaited_response == "dir_xy")) {
-            extend = extend + "_y:" + stepperY.currentPosition();
-        }
-        else {
-            extend = extend + "_f:" + stepperF.currentPosition();
-        }
-        awaited_response = "";
+    if (busy && !stepperX.isRunning() && !stepperY.isRunning() && !stepperF.isRunning()) {
+        String extend = "success";
+        extend = extend + "_x:" + stepperX.currentPosition();
+        extend = extend + "_y:" + stepperY.currentPosition();
+        extend = extend + "_f:" + stepperF.currentPosition();
         Serial.println("success" + extend);
+        awaited_response = "";
+        busy = false;
     }
 }
 
@@ -134,7 +130,8 @@ void cmd_lcd(String value, String pos) {
 /* CMD up */
 void cmd_up(String value, String await) {
     int steps = getStepsOneDirect(value, "cmd_up");
-    if (steps > 0 && setAwaitedResponse(await, "dir_y")) {
+    if (steps > 0 && setAwaitedResponse(await, "up")) {
+        busy = true;
         stepperY.move(steps);
     }
 }
@@ -142,7 +139,8 @@ void cmd_up(String value, String await) {
 /* CMD down */
 void cmd_down(String value, String await) {
     int steps = getStepsOneDirect(value, "cmd_down");
-    if (steps > 0 && setAwaitedResponse(await, "dir_y")) {
+    if (steps > 0 && setAwaitedResponse(await, "down")) {
+        busy = true;
         stepperY.move(-steps);
     }
 }
@@ -150,7 +148,8 @@ void cmd_down(String value, String await) {
 /* CMD left */
 void cmd_left(String value, String await) {
     int steps = getStepsOneDirect(value, "cmd_left");
-    if (steps > 0 && setAwaitedResponse(await, "dir_x")) {
+    if (steps > 0 && setAwaitedResponse(await, "left")) {
+        busy = true;
         stepperX.move(-steps);
     }
 }
@@ -158,18 +157,44 @@ void cmd_left(String value, String await) {
 /* CMD right */
 void cmd_right(String value, String await) {
     int steps = getStepsOneDirect(value, "cmd_right");
-    if (steps > 0 && setAwaitedResponse(await, "dir_x")) {
+    if (steps > 0 && setAwaitedResponse(await, "right")) {
+        busy = true;
         stepperX.move(steps);
+    }
+}
+
+/* CMD focus */
+void cmd_focus(String value, String await) {
+    int steps = getStepsBiDirect(value, "cmd_focus", -2000, 2000);
+    if (steps != 0 && setAwaitedResponse(await, "focus")) {
+        busy = true;
+        stepperF.move(steps);
     }
 }
 
 /* CMD goto */
 void cmd_goto(String value, String await) {
-    if (setAwaitedResponse(await, "dir_xy")) {
-        int steps_x = getStringPartial(value, ',', 0).toInt();
-        stepperX.moveTo(steps_x);
-        int steps_y = getStringPartial(value, ',', 1).toInt();
-        stepperY.moveTo(steps_y);
+    if (setAwaitedResponse(await, "goto")) {
+        // move X axis to.
+        String target = getStringPartial(value, ',', 0);
+        if (target != "-" && target != "") {
+            stepperX.moveTo(target.toInt());
+            busy = true;
+        }
+
+        // move Y axis to.
+        target = getStringPartial(value, ',', 1);
+        if (target != "-" && target != "") {
+            stepperY.moveTo(target.toInt());
+            busy = true;
+        }
+
+        // move focus to.
+        target = getStringPartial(value, ',', 2);
+        if (target != "-" && target != "") {
+            stepperF.moveTo(target.toInt());
+            busy = true;
+        }
     }
 }
 
@@ -183,14 +208,6 @@ void cmd_stop(String value) {
     }
     else if (value == "f") {
         stepperF.stop();
-    }
-}
-
-/* CMD focus */
-void cmd_focus(String value, String await) {
-    int steps = getStepsBiDirect(value, "cmd_focus", -2000, 2000);
-    if (steps != 0 && setAwaitedResponse(await, "focus")) {
-        stepperF.move(steps);
     }
 }
 

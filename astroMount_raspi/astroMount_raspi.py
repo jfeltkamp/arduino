@@ -55,7 +55,7 @@ if __name__ == "__main__":
     obelix = Obelix()
 
     commands = []
-    commands.append(Commands("cmd_goto", "5000,5000", "await"))
+    commands.append(Commands("cmd_goto", "5000,5000,500", "await"))
     commands.append(Commands("cmd_goto", "0,0", "await"))
 
     """
