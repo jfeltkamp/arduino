@@ -11,11 +11,13 @@ class ObelixParams:
         self.vf = 500
 
     def set_params_from_response(self, response):
+        print('RESP: ' + response)
         params_raw = response.split("_")
         params_raw.pop(0)
         for param in params_raw:
             param_raw = param.split(":")
             if len(param_raw) >= 2:
+                print('param_raw: ' + param_raw[1])
                 if param_raw[0] == "x":
                     self.x = int(param_raw[1])
                 elif param_raw[0] == "y":

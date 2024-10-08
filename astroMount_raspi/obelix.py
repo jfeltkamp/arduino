@@ -60,7 +60,7 @@ class Obelix:
                 time.sleep(0.1)
                 if self.cmd_response != "":
                     if self.cmd_response.startswith("success"):
-                        print(f"Command '{cmd}: {param}' was successful.")
+                        print(f"Command '{cmd}:{param}' was successful.")
                         self.cmd_response = ""
                         break
                     elif self.cmd_response == "error":
