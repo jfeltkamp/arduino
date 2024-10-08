@@ -17,7 +17,6 @@ class ObelixParams:
         for param in params_raw:
             param_raw = param.split(":")
             if len(param_raw) >= 2:
-                print('param_raw: ' + param_raw[1])
                 if param_raw[0] == "x":
                     self.x = int(param_raw[1])
                 elif param_raw[0] == "y":

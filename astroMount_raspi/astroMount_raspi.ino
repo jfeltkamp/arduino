@@ -13,7 +13,7 @@ LiquidCrystal_I2C lcd(0x27, 16, 2);
 const int enablePin = 8;
 
 // constants
-const int acceleration = 100;
+const int acceleration = 1000;
 const int axisSpeed = 800;
 const int focusSpeed = 500;
 
@@ -109,11 +109,11 @@ bool setAwaitedResponse(String await, String dir) {
 
 void resolveResponse() {
     if (busy && !stepperX.isRunning() && !stepperY.isRunning() && !stepperF.isRunning()) {
-        String extend = "success";
-        extend = extend + "_x:" + stepperX.currentPosition();
-        extend = extend + "_y:" + stepperY.currentPosition();
-        extend = extend + "_f:" + stepperF.currentPosition();
-        Serial.println("success" + extend);
+        String resp = "success";
+        resp = resp + "_x:" + stepperX.currentPosition();
+        resp = resp + "_y:" + stepperY.currentPosition();
+        resp = resp + "_f:" + stepperF.currentPosition();
+        Serial.println(resp);
         awaited_response = "";
         busy = false;
     }
