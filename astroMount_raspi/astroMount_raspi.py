@@ -53,6 +53,7 @@ if __name__ == "__main__":
 
     picam = AstroMountCamera()
     obelix = Obelix()
+    obelix.run_listener()
 
     commands = []
     commands.append(Commands("cmd_goto", "5000,5000,500", "await"))

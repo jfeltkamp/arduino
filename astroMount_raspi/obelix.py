@@ -10,8 +10,9 @@ class Obelix:
     port = '/dev/ttyACM0'
     baudrate = 115200
     timeout = 1.0
-    run_listener = False
+    listener_runs = False
     params = ObelixParams()
+    listener = None
 
     # INIT: Start serial communication with Arduino and start serial read listener daemon.
     def __init__(self):
@@ -22,20 +23,25 @@ class Obelix:
                 time.sleep(3)
                 self.ser.reset_input_buffer()
                 print("Obelix: Serial connection OK.")
-                self.run_listener = True
-                threading.Thread(target=self.serial_read_listener(), daemon=True).start()
             except serial.SerialException:
                 print("Obelix: Could not connect to serial.")
                 time.sleep(1)
 
     def __del__(self):
         self.ser.close()
+        self.listener_runs = False
+        self.listener.join()
         print("Obelix: Serial connection closed.")
 
+    def run_listener(self):
+        self.listener_runs = True
+        self.listener = threading.Thread(target=self.serial_read_listener())
+        self.listener.start()
+        print("Obelix: Serial listener runs.")
 
     def serial_read_listener(self):
-        while self.run_listener:
-            time.sleep(0.1)
+        while self.listener_runs:
+            time.sleep(0.3)
             if self.ser.in_waiting > 0:
                 resp = self.ser.readline().decode('utf-8').rstrip()
                 self.params.set_params_from_response(resp)
