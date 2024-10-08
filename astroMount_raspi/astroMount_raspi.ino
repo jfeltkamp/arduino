@@ -124,7 +124,6 @@ void cmd_lcd(String value, String pos) {
   int posx = getStringPartial(pos, '_', 0).toInt();
   int posy = getStringPartial(pos, '_', 1).toInt();
   lcdOut(posx, posy, value, 16);
-  Serial.println("success");
 }
 
 /* CMD up */
