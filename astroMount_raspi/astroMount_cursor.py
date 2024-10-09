@@ -34,6 +34,8 @@ if __name__ == "__main__":
         elif key == keyboard.Key.shift_r:
             picam.capture_image(name="img")
         elif key == keyboard.Key.esc:
+            print("Closing connection")
+            obelix.command("cmd_enable", "off")
             picam.__del__()
             obelix.__del__()
             return False # stops listener.
@@ -48,6 +50,7 @@ if __name__ == "__main__":
 
     # Collect events until released
     with keyboard.Listener(on_press=key_press, on_release=key_release) as listener:
-        try:
+        try:    
+            obelix.command("cmd_enable", "on")
             listener.join()
         except: pass

@@ -57,7 +57,7 @@ if __name__ == "__main__":
 
     commands = []
 
-    commands.append(Commands("cmd_enable", "on", ""))
+    commands.append(Commands("cmd_enable", "on", "-"))
     commands.append(Commands("cmd_goto", "3000,3000,-1500,1200,1200", "await"))
     commands.append(Commands("cmd_goto", "0,3000,0,400,0", "await"))
     commands.append(Commands("cmd_goto", "3000,0,1000,1500,1500,800", "await"))
@@ -81,7 +81,7 @@ if __name__ == "__main__":
         commands.append(Commands("prc_capimg", f"img_{move.diff_x}_{move.diff_y}", ""))
     """
 
-    commands.append(Commands("cmd_enable", "off", ""))
+    commands.append(Commands("cmd_enable", "off", "-"))
 
     # Fires commands.
     try:
