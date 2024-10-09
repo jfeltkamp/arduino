@@ -45,7 +45,8 @@ void setup() {
   stepperF.setMaxSpeed(focusSpeed);
 
   pinMode(enablePin, OUTPUT);
-  digitalWrite(enablePin, LOW);
+  // By default the steppers are disabled and started by command.
+  digitalWrite(enablePin, HIGH);
 
   lcdOut(4, 0, "Obelix", 12);
   lcdOut(6, 1, "1.0", 13);
@@ -135,6 +136,16 @@ void resolveResponse() {
         awaited_response = "";
         busy = false;
     }
+}
+
+/* En-/disable steppers. */
+void cmd_enable(String value) {
+  if (value == "on") {
+      digitalWrite(enablePin, LOW);
+  }
+  else {
+      digitalWrite(enablePin, HIGH);
+  }
 }
 
 /* CMD LCD */
@@ -247,7 +258,10 @@ void cmd_interpreter(const String& cmd_raw) {
         String command = getStringPartial(cmd_raw, ':', 0);
         String params = getStringPartial(cmd_raw, ':', 1);
         String options = getStringPartial(cmd_raw, ':', 2);
-        if (command == "cmd_goto") {
+        if (command == "cmd_enable") {
+            cmd_enable(params);
+        }
+        else if (command == "cmd_goto") {
             cmd_goto(params, options);
         }
         else if (command == "cmd_up") {

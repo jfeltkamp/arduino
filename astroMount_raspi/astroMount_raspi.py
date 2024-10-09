@@ -56,12 +56,14 @@ if __name__ == "__main__":
     obelix.run_listener()
 
     commands = []
-    
+
+    commands.append(Commands("cmd_enable", "on", ""))
     commands.append(Commands("cmd_goto", "3000,3000,-1500,1200,1200", "await"))
     commands.append(Commands("cmd_goto", "0,3000,0,400,0", "await"))
     commands.append(Commands("cmd_goto", "3000,0,1000,1500,1500,800", "await"))
     commands.append(Commands("cmd_goto", "200,200,0", "await"))
     commands.append(Commands("cmd_goto", "0,0,0,150,150,150", "await"))
+
     """
     moves = get_snail_moves(width=180, height=120, steps_x=60, steps_y=40, debug=False)
     
@@ -79,7 +81,7 @@ if __name__ == "__main__":
         commands.append(Commands("prc_capimg", f"img_{move.diff_x}_{move.diff_y}", ""))
     """
 
-
+    commands.append(Commands("cmd_enable", "off", ""))
 
     # Fires commands.
     try:
