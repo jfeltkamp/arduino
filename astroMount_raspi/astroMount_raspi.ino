@@ -14,7 +14,15 @@ const int enablePin = 8;
 
 // constants
 const int acceleration = 1000;
+const int axisMaxMove = 20000;
+
+const int axisMinSpeed = 100;
+const int axisMaxSpeed = 2000;
 const int axisSpeed = 800;
+
+const int focusMaxMove = 5000;
+const int focusMinSpeed = 100;
+const int focusMaxSpeed = 2000;
 const int focusSpeed = 500;
 
 String awaited_response = "";
@@ -77,7 +85,7 @@ bool isCommand(String data) {
 int getStepsOneDirect(String value, String cmd) {
   int steps = value.toInt();
   if (steps <= 0) {
-      Serial.println("ERROR: Command '" + cmd + "' is 1-directional. Steps must be greater then 0, but is: " + value);
+      Serial.println("ERROR: Param for '" + cmd + "' is 1-directional. Steps must be greater then 0, but is: " + value);
       return 0;
   } else {
     return steps;
@@ -85,12 +93,19 @@ int getStepsOneDirect(String value, String cmd) {
 }
 
 /* Get steps 1-directional */
-int getStepsBiDirect(String value, String cmd, int min, int max) {
+int getMinMaxIntFromStr(String value, int min, int max) {
   int steps = value.toInt();
-  if (steps<min || steps>max) {
-      Serial.println("WARN: Command '" + cmd + "' min/max value. Steps must be >= "+ String(min) +" and <= "+ String(max) +", but is: " + value);
-      return 0;
-  } else {
+  if ((String(steps) != value) || (min >= max)) {
+    // Error value.
+    return min - 1;
+  }
+  if (steps < min) {
+    return min;
+  }
+  else if (steps > max) {
+    return max;
+  }
+  else {
     return steps;
   }
 }
@@ -109,6 +124,9 @@ bool setAwaitedResponse(String await, String dir) {
 
 void resolveResponse() {
     if (busy && !stepperX.isRunning() && !stepperY.isRunning() && !stepperF.isRunning()) {
+        stepperX.setMaxSpeed(axisSpeed);
+        stepperY.setMaxSpeed(axisSpeed);
+        stepperF.setMaxSpeed(focusSpeed);
         String resp = "success";
         resp = resp + "_x:" + stepperX.currentPosition();
         resp = resp + "_y:" + stepperY.currentPosition();
@@ -164,8 +182,8 @@ void cmd_right(String value, String await) {
 
 /* CMD focus */
 void cmd_focus(String value, String await) {
-    int steps = getStepsBiDirect(value, "cmd_focus", -2000, 2000);
-    if (steps != 0 && setAwaitedResponse(await, "focus")) {
+    int steps = getMinMaxIntFromStr(value, -2000, 2000);
+    if ((steps >= -2000) && (steps != 0) && setAwaitedResponse(await, "focus")) {
         busy = true;
         stepperF.move(steps);
     }
@@ -175,23 +193,36 @@ void cmd_focus(String value, String await) {
 void cmd_goto(String value, String await) {
     if (setAwaitedResponse(await, "goto")) {
         // move X axis to.
-        String target = getStringPartial(value, ',', 0);
-        if (target != "-" && target != "") {
-            stepperX.moveTo(target.toInt());
+        int target = getMinMaxIntFromStr(getStringPartial(value, ',', 0), -axisMaxMove, axisMaxMove);
+        int speed = 0;
+        if (target >= -axisMaxMove) {
+            speed = getMinMaxIntFromStr(getStringPartial(value, ',', 3), axisMinSpeed, axisMaxSpeed);
+            if (speed >= axisMinSpeed) {
+                stepperX.setMaxSpeed(speed);
+            }
+            stepperX.moveTo(target);
             busy = true;
         }
 
         // move Y axis to.
-        target = getStringPartial(value, ',', 1);
-        if (target != "-" && target != "") {
-            stepperY.moveTo(target.toInt());
+        target = getMinMaxIntFromStr(getStringPartial(value, ',', 1), -axisMaxMove, axisMaxMove);
+        if (target >= -axisMaxMove) {
+            speed = getMinMaxIntFromStr(getStringPartial(value, ',', 4), axisMinSpeed, axisMaxSpeed);
+            if (speed >= axisMinSpeed) {
+                stepperY.setMaxSpeed(speed);
+            }
+            stepperY.moveTo(target);
             busy = true;
         }
 
         // move focus to.
-        target = getStringPartial(value, ',', 2);
-        if (target != "-" && target != "") {
-            stepperF.moveTo(target.toInt());
+        target = getMinMaxIntFromStr(getStringPartial(value, ',', 2), -focusMaxMove, focusMaxMove);
+        if (target >= -focusMaxMove) {
+            speed = getMinMaxIntFromStr(getStringPartial(value, ',', 5), focusMinSpeed, focusMaxSpeed);
+            if (speed >= focusMinSpeed) {
+                stepperF.setMaxSpeed(speed);
+            }
+            stepperF.moveTo(target);
             busy = true;
         }
     }

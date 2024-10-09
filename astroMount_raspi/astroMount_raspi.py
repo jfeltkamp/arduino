@@ -57,8 +57,12 @@ if __name__ == "__main__":
 
     commands = []
     
-    commands.append(Commands("cmd_goto", "5000,5000,-1500", "await"))
-        
+    commands.append(Commands("cmd_goto", "3000,3000,-1500,1200,1200", "await"))
+    commands.append(Commands("cmd_goto", "0,3000,500,700,700", "await"))
+    commands.append(Commands("cmd_goto", "3000,0,1000,1500,1500,800", "await"))
+    commands.append(Commands("cmd_goto", "200,200,0,1500,1500,800", "await"))
+    commands.append(Commands("cmd_goto", "0,0,0,150,150,150", "await"))
+    """
     moves = get_snail_moves(width=180, height=120, steps_x=60, steps_y=40, debug=False)
     
     for move in moves:
@@ -73,10 +77,10 @@ if __name__ == "__main__":
             else:
                 commands.append(Commands("cmd_up", str(move.steps), "await"))
         commands.append(Commands("prc_capimg", f"img_{move.diff_x}_{move.diff_y}", ""))
-    
+    """
 
-    commands.append(Commands("cmd_goto", "0,0,0", "await"))
-    
+
+
     # Fires commands.
     try:
         for command in commands:
