@@ -1,6 +1,20 @@
-# Documentation Obelix
+# Documentation Obelix 1.0
 
 ## Commands
+
+### Start Obelix WebUI
+
+To start the Obelix controller enter:
+
+```
+python -m flask --app webui run --debug
+```
+
+* Running on all addresses (0.0.0.0)
+* Running on http://127.0.0.1:5080
+* Running on http://192.168.178.38:5080
+
+Tis can run parallel to camera UI.
 
 ### Start Camera Web UI
 
@@ -17,6 +31,7 @@ After that some lines with the local urls appear in the terminal.
 * Running on http://192.168.178.38:8080
 
 With the last one you can call the Camera WebUI in a Browser.
+
 
 ### Open Stream in VLC Player
 
