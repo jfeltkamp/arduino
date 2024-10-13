@@ -1,6 +1,6 @@
 # Documentation Obelix 1.0
 
-## Commands
+## ObelixCommands
 
 ### Start Obelix WebUI
 
