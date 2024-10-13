@@ -29,6 +29,7 @@ if __name__ == "__main__":
     def set_static(path):
         return send_from_directory('static', path)
 
+    app.run(host='0.0.0.0')
 
     commands = []
 
