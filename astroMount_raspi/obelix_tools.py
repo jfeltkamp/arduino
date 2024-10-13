@@ -1,5 +1,13 @@
 #!/usr/bin/env_python3
 
+class ObelixCommands:
+    def __init__(self, cmd, params, options):
+        self.cmd = cmd
+        self.params = params
+        self.options = options
+
+
+
 class ObelixParams:
 
     def __init__(self):

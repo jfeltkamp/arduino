@@ -1,6 +1,7 @@
 
 class JoystickController
 {
+  // https://www.cssscript.com/demo/touch-joystick-controller/
   // stickID: ID of HTML element (representing joystick) that will be dragged
   // maxDistance: maximum amount joystick can move in any direction
   // deadzone: joystick must move at least this amount from origin to register value change
@@ -108,11 +109,49 @@ class JoystickController
   }
 }
 
-let joystick1 = new JoystickController("stick", 128, 8);
+let joystick = new JoystickController("stick", 128, 8);
+let counter = 0;
+let prev_x = 0;
+let prev_y = 0;
 
+function sendUpdate(x,y) {
+  counter++;
+  const x_axis = Math.floor(511.5 + x * 511.5);
+  const y_axis = Math.floor(511.5 + y * 511.5);
+  document.getElementById("status").innerText = `Joystick (${counter}): ${x_axis}, ${y_axis}` ;
+  fetch(`/joystick/${x_axis}/${y_axis}`)
+}
+
+
+// Declare a variable called 'timer' to store the timer ID
+let timer;
+const debounce = (mainFunction, delay) => {
+  // Return an anonymous function that takes in any number of arguments
+  return function (...args) {
+    // Clear the previous timer to prevent the execution of 'mainFunction'
+    clearTimeout(timer);
+
+    // Set a new timer that will execute 'mainFunction' after the specified delay
+    timer = setTimeout(() => {
+      mainFunction(...args);
+    }, delay);
+  };
+};
+
+/**
+ * Triggered whenever the joystick is moved.
+ */
 function update()
 {
-  document.getElementById("status").innerText = "Joystick: " + JSON.stringify(joystick1.value);
+  const curr_x = joystick.value.x;
+  const curr_y = joystick.value.y;
+  if ((curr_x !== prev_x) || (curr_y !== prev_y)) {
+    prev_x = curr_x;
+    prev_y = curr_y;
+    // sendUpdate(curr_x, curr_y);
+    const workOnChange = debounce(() => sendUpdate(curr_x, curr_y), 200);
+    workOnChange()
+  }
 }
 
 function loop()

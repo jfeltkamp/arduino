@@ -3,7 +3,7 @@ import time
 import os, errno
 from picamera2 import Picamera2, Preview
 
-class AstroMountCamera:
+class ObelixCamera:
     base_path = ""
     path = ""
     counter = 0

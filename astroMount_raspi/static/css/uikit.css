@@ -9623,7 +9623,7 @@ iframe[data-uk-cover] {
 /*
  * The toggle is triggered on touch devices by two methods:
  * 1. Using `:focus` and tabindex
- * 2. Using `:hover` and a `touchstart` event listener registered on the document
+ * 2. Using `:hover` and a `touchstart` event ser_listener registered on the document
  *    (Doesn't work on Surface touch devices)
  */
 :where(.uk-transition-fade),

@@ -2,21 +2,34 @@
 import serial
 import threading
 import time
-from obelix_params import *
+from obelix_tools import *
+from obelix_camera import ObelixCamera
 
-
+"""
+Controls all communication with the arduino.
+"""
 class Obelix:
     # Serial communication definitions.
     port = '/dev/ttyACM0'
     baudrate = 115200
     timeout = 1.0
+
     listener_runs = False
     params = ObelixParams()
-    listener = None
+    ser_listener = None
+    cmd_listener = None
 
-    # INIT: Start serial communication with Arduino and start serial read listener daemon.
+    command_list = []
+
+    # Allow incoming analog commands.
+    # If TRUE no incoming analog commands will be executed.
+    # Use case: During execution of programs (e.g. serial shots), disturbing analog commands are locked.
+    analog_lock = False
+
+    # INIT: Start serial communication with Arduino and start serial read ser_listener daemon.
     def __init__(self):
         self.cmd_response = ""
+        self.camera = ObelixCamera()
         while True:
             try:
                 self.ser = serial.Serial(self.port, self.baudrate, timeout=self.timeout)
@@ -31,15 +44,21 @@ class Obelix:
     def __del__(self):
         self.ser.close()
         self.listener_runs = False
-        self.listener.join()
+        self.ser_listener.join()
+        self.cmd_listener.join()
         print("Obelix: Serial connection closed.")
 
+    # Start ser_listener daemon.
     def run_listener(self):
         self.listener_runs = True
-        self.listener = threading.Thread(target=self.serial_read_listener)
-        self.listener.start()
-        print("Obelix: Serial listener runs.")
+        self.ser_listener = threading.Thread(target=self.serial_read_listener)
+        self.ser_listener.start()
+        self.cmd_listener = threading.Thread(target=self.command_list_listener)
+        self.cmd_listener.start()
+        print("Obelix: Listeners running.")
 
+    # Serial read listener (daemon).
+    # Runs in infinite loop. Listens to incoming serial messages from Arduino.
     def serial_read_listener(self):
         while self.listener_runs:
             time.sleep(0.3)
@@ -47,13 +66,55 @@ class Obelix:
                 resp = self.ser.readline().decode('utf-8').rstrip()
                 self.params.set_params_from_response(resp)
                 if resp.startswith("success") | resp.startswith("error"):
-                    self.command('cmd_lcd', self.params.get_lcd("x"))
-                    self.command('cmd_lcd', self.params.get_lcd("y"))
+                    self.arduino_command('cmd_lcd', self.params.get_lcd("x"))
+                    self.arduino_command('cmd_lcd', self.params.get_lcd("y"))
                     self.cmd_response = resp
                 else:
                     print(resp)
 
-    def command(self, cmd, param, await_resp=False):
+    # Command list listener (daemon).
+    # Runs in infinite loop. Listens to incoming commands in the command list.
+    def command_list_listener(self):
+        while self.listener_runs:
+            time.sleep(0.3)
+            if len(self.command_list) > 0:
+                self.analog_lock = True
+                for command in self.command_list:
+                    self.command(command)
+                self.command_list.clear()
+                self.analog_lock = False
+
+    # Extend the command
+    # Add single command item or a list of items.
+    # Returns false if items have wrong type.
+    def command_list_push(self, commands):
+        if isinstance(commands, list):
+            for command in commands:
+                if not isinstance(command, ObelixCommands):
+                    return False
+            self.command_list.extend(commands)
+            return True
+        elif isinstance(commands, ObelixCommands):
+            self.command_list.append(commands)
+            return True
+        else:
+            return False
+
+    def command(self, command):
+        if isinstance(command, ObelixCommands):
+            if command.cmd.startswith("ard_"):
+                self.arduino_command(command.cmd, command.params + ':' + command.options, (command.options.find('await') != -1))
+            elif command.cmd.startswith("cam_"):
+                self.camera_command(command.cmd, command.params, command.options)
+            else:
+                print(f"Obelix: Command {command.cmd} is unknown.")
+        else:
+            print('Expected instance of Command but got %s ' % type(command))
+
+
+    # Sends commands to Arduino
+    # If option set: awaits response before allows to continue. Times out after 60 seconds.
+    def arduino_command(self, cmd, param, await_resp=False):
         cmd_serial = f"{cmd}:{param}\n"
         self.ser.write(cmd_serial.encode('utf-8'))
         if await_resp:
@@ -71,3 +132,19 @@ class Obelix:
                         print(self.cmd_response)
                 if time.time() - fired_time > 60:
                     raise Exception(f"Command '{cmd}: {param}' timed out.")
+
+    # Method to give access to analog commands (Joystick or webUI).
+    def analog(self, cmd):
+        if not self.analog_lock:
+            self.command(cmd)
+
+
+    def camera_command(self, prc, params, options):
+        if prc == "cam_capimg":
+            self.camera.capture_image(params)
+        elif prc == "cam_preview":
+            self.camera.start_preview()
+        elif prc == "cam_stop_preview":
+            self.camera.stop_preview()
+        elif prc == "cam_set_path":
+            self.camera.set_path(params)

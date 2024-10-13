@@ -79,7 +79,7 @@ String getStringPartial(String data, char separator, int index) {
 
 /* Check if string is command. */
 bool isCommand(String data) {
-    return getStringPartial(data, '_', 0) == "cmd";
+    return getStringPartial(data, '_', 0) == "ard";
 }
 
 /* Get steps 1-directional */
@@ -258,31 +258,31 @@ void cmd_interpreter(const String& cmd_raw) {
         String command = getStringPartial(cmd_raw, ':', 0);
         String params = getStringPartial(cmd_raw, ':', 1);
         String options = getStringPartial(cmd_raw, ':', 2);
-        if (command == "cmd_enable") {
+        if (command == "ard_enable") {
             cmd_enable(params);
         }
-        else if (command == "cmd_goto") {
+        else if (command == "ard_goto") {
             cmd_goto(params, options);
         }
-        else if (command == "cmd_up") {
+        else if (command == "ard_up") {
             cmd_up(params, options);
         }
-        else if (command == "cmd_down") {
+        else if (command == "ard_down") {
             cmd_down(params, options);
         }
-        else if (command == "cmd_left") {
+        else if (command == "ard_left") {
             cmd_left(params, options);
         }
-        else if (command == "cmd_right") {
+        else if (command == "ard_right") {
             cmd_right(params, options);
         }
-        else if (command == "cmd_stop") {
+        else if (command == "ard_stop") {
             cmd_stop(params);
         }
-        else if (command == "cmd_focus") {
+        else if (command == "ard_focus") {
             cmd_focus(params, options);
         }
-        else if (command == "cmd_lcd") {
+        else if (command == "ard_lcd") {
             cmd_lcd(params, options);
         }
     }

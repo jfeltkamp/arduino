@@ -1,6 +1,6 @@
 #!/usr/bin/env_python3
 from pynput import keyboard
-from astroMount_camera import AstroMountCamera
+from obelix_camera import AstroMountCamera
 from obelix import Obelix
 
 
@@ -38,7 +38,7 @@ if __name__ == "__main__":
             obelix.command("cmd_enable", "off")
             picam.__del__()
             obelix.__del__()
-            return False # stops listener.
+            return False # stops ser_listener.
 
     def key_release(key):
         if key in [keyboard.Key.left, keyboard.Key.right]:
