@@ -35,6 +35,7 @@ if __name__ == "__main__":
     # Fires commands.
     try:
         del obelix
+        del joystick_analog
         print("Program finished.")
     except Exception:
         traceback.print_exc()

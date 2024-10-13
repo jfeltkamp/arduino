@@ -33,12 +33,13 @@ class ObelixJoystick:
         self.listener_runs = True
         self.auto_trigger = threading.Thread(target=self.trigger_analog_cmd)
         self.auto_trigger.start()
+        self.obelix.analog(ObelixCommands("ard_enable", "on","-"))
 
     def set_coords(self, x, y):
         self.x = int(x)
         self.y = int(y)
         self.speed_x = round(self.axisMaxSpeed * (self.x - 511.5) / 511.5)
-        self.do_trigger_x = (self.speed_x >= self.axisMinSpeed)
+        self.do_trigger_x = (abs(self.speed_x) >= self.axisMinSpeed)
         if self.do_trigger_x:
             self.param_x = f"400,{abs(self.speed_x)}"
             if self.speed_x > 0:
@@ -51,7 +52,7 @@ class ObelixJoystick:
 
 
         self.speed_y = round(self.axisMaxSpeed * (self.y - 511.5) / 511.5)
-        self.do_trigger_y = (self.speed_y >= self.axisMinSpeed)
+        self.do_trigger_y = (abs(self.speed_y) >= self.axisMinSpeed)
         if self.do_trigger_y:
             self.param_y = f"400,{abs(self.speed_y)}"
             if self.speed_y > 0:
