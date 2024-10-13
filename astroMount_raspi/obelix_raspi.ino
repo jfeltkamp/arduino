@@ -157,8 +157,12 @@ void cmd_lcd(String value, String pos) {
 
 /* CMD up */
 void cmd_up(String value, String await) {
-    int steps = getStepsOneDirect(value, "cmd_up");
+    int steps = getStepsOneDirect(getStringPartial(value, ',', 0), "cmd_up");
     if (steps > 0 && setAwaitedResponse(await, "up")) {
+        int speed = getMinMaxIntFromStr(getStringPartial(value, ',', 1), axisMinSpeed, axisMaxSpeed);
+        if (speed >= axisMinSpeed) {
+            stepperY.setMaxSpeed(speed);
+        }
         busy = true;
         stepperY.move(steps);
     }
@@ -166,8 +170,12 @@ void cmd_up(String value, String await) {
 
 /* CMD down */
 void cmd_down(String value, String await) {
-    int steps = getStepsOneDirect(value, "cmd_down");
+    int steps = getStepsOneDirect(getStringPartial(value, ',', 0), "cmd_down");
     if (steps > 0 && setAwaitedResponse(await, "down")) {
+        int speed = getMinMaxIntFromStr(getStringPartial(value, ',', 1), axisMinSpeed, axisMaxSpeed);
+        if (speed >= axisMinSpeed) {
+            stepperY.setMaxSpeed(speed);
+        }
         busy = true;
         stepperY.move(-steps);
     }
@@ -175,8 +183,12 @@ void cmd_down(String value, String await) {
 
 /* CMD left */
 void cmd_left(String value, String await) {
-    int steps = getStepsOneDirect(value, "cmd_left");
+    int steps = getStepsOneDirect(getStringPartial(value, ',', 0), "cmd_left");
     if (steps > 0 && setAwaitedResponse(await, "left")) {
+        int speed = getMinMaxIntFromStr(getStringPartial(value, ',', 1), axisMinSpeed, axisMaxSpeed);
+        if (speed >= axisMinSpeed) {
+            stepperX.setMaxSpeed(speed);
+        }
         busy = true;
         stepperX.move(-steps);
     }
@@ -184,8 +196,12 @@ void cmd_left(String value, String await) {
 
 /* CMD right */
 void cmd_right(String value, String await) {
-    int steps = getStepsOneDirect(value, "cmd_right");
+    int steps = getStepsOneDirect(getStringPartial(value, ',', 0), "cmd_right");
     if (steps > 0 && setAwaitedResponse(await, "right")) {
+        int speed = getMinMaxIntFromStr(getStringPartial(value, ',', 1), axisMinSpeed, axisMaxSpeed);
+        if (speed >= axisMinSpeed) {
+            stepperX.setMaxSpeed(speed);
+        }
         busy = true;
         stepperX.move(steps);
     }
@@ -193,8 +209,12 @@ void cmd_right(String value, String await) {
 
 /* CMD focus */
 void cmd_focus(String value, String await) {
-    int steps = getMinMaxIntFromStr(value, -2000, 2000);
-    if ((steps >= -2000) && (steps != 0) && setAwaitedResponse(await, "focus")) {
+    int steps = getMinMaxIntFromStr(getStringPartial(value, ',', 0), -focusMaxMove, focusMaxMove);
+    if ((steps >= -focusMaxMove) && (steps != 0) && setAwaitedResponse(await, "focus")) {
+        int speed = getMinMaxIntFromStr(getStringPartial(value, ',', 1), focusMinSpeed, focusMaxSpeed);
+        if (speed >= focusMinSpeed) {
+            stepperF.setMaxSpeed(speed);
+        }
         busy = true;
         stepperF.move(steps);
     }
