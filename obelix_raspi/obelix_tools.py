@@ -18,6 +18,8 @@ class ObelixParams:
         self.va = 800
         # Speed of focus
         self.vf = 500
+        self.axisMaxSpeed = 1500
+        self.focusMaxSpeed = 1500
 
     def set_params_from_response(self, response):
         print('RESP: ' + response)

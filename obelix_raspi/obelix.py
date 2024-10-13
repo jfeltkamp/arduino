@@ -46,7 +46,9 @@ class Obelix:
         self.listener_runs = False
         self.ser_listener.join()
         self.cmd_listener.join()
-        print("Obelix: Serial connection closed.")
+        del self.camera
+        del self.params
+        print("Obelix: Service closed.")
 
     # Start ser_listener daemon.
     def run_listener(self):
@@ -109,7 +111,7 @@ class Obelix:
             else:
                 print(f"Obelix: Command {command.cmd} is unknown.")
         else:
-            print('Expected instance of Command but got %s ' % type(command))
+            print('Expected instance of ObelixCommands but got %s ' % type(command))
 
 
     # Sends commands to Arduino
@@ -137,7 +139,6 @@ class Obelix:
     def analog(self, cmd):
         if not self.analog_lock:
             self.command(cmd)
-
 
     def camera_command(self, prc, params, options):
         if prc == "cam_capimg":
