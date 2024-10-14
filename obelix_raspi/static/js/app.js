@@ -149,7 +149,7 @@ function update()
     prev_x = curr_x;
     prev_y = curr_y;
     // sendUpdate(curr_x, curr_y);
-    const workOnChange = debounce(() => sendUpdate(curr_x, curr_y), 200);
+    const workOnChange = debounce(() => sendUpdate(curr_x, curr_y), 50);
     workOnChange()
   }
 }
