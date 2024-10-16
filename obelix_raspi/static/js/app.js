@@ -1,163 +1,166 @@
 
+
+
 class JoystickController
 {
-  // https://www.cssscript.com/demo/touch-joystick-controller/
-  // stickID: ID of HTML element (representing joystick) that will be dragged
-  // maxDistance: maximum amount joystick can move in any direction
-  // deadzone: joystick must move at least this amount from origin to register value change
-  constructor( stickID, maxDistance, deadzone )
-  {
-    this.id = stickID;
-    let stick = document.getElementById(stickID);
 
-    // location from which drag begins, used to calculate offsets
-    this.dragStart = null;
+  constructor() {
+    this.stick = document.getElementById("stick");
 
-    // track touch identifier in case multiple joysticks present
-    this.touchId = null;
+    if (this.stick) {
+      // location from which drag begins, used to calculate offsets
+      this.dragStart = null;
 
-    this.active = false;
-    this.value = { x: 0, y: 0 };
+      // track touch identifier in case multiple joythis.sticks present
+      this.touchId = null;
 
-    let self = this;
+      // Processing data.
+      this.maxDistance = 128;
+      this.deadZone = 8;
+      this.active = false;
+      this.value = { x: 0, y: 0 };
+      this.counter = 0;
+      this.prev = { x: 0, y: 0 };
 
-    function handleDown(event)
-    {
-      self.active = true;
+      // Debouncing control submission.
+      this.debounceTimer = null;
+      this.debounceTimeout = 50;
 
-      // all drag movements are instantaneous
-      stick.style.transition = '0s';
+      this.stick.addEventListener('mousedown', (e) => { this._handleDown(e) });
+      this.stick.addEventListener('touchstart', (e) => { this._handleDown(e) });
+      document.addEventListener('mousemove', (e) => { this._handleMove(e) }, { passive: false });
+      document.addEventListener('touchmove', (e) => { this._handleMove(e) }, { passive: false });
+      document.addEventListener('mouseup', (e) => { this._handleUp(e) });
+      document.addEventListener('touchend', (e) => { this._handleUp(e) });
 
-      // touch event fired before mouse event; prevent redundant mouse event from firing
-      event.preventDefault();
-
-      if (event.changedTouches)
-        self.dragStart = { x: event.changedTouches[0].clientX, y: event.changedTouches[0].clientY };
-      else
-        self.dragStart = { x: event.clientX, y: event.clientY };
-
-      // if this is a touch event, keep track of which one
-      if (event.changedTouches)
-        self.touchId = event.changedTouches[0].identifier;
+      this._loop();
     }
+  }
 
-    function handleMove(event)
+  _handleDown(event){
+    this.active = true;
+    // all drag movements are instantaneous
+    this.stick.style.transition = '0s';
+    // touch event fired before mouse event; prevent redundant mouse event from firing
+    event.preventDefault();
+    this.dragStart = (event.changedTouches) ?
+      { x: event.changedTouches[0].clientX, y: event.changedTouches[0].clientY } :
+      { x: event.clientX, y: event.clientY };
+
+    // if this is a touch event, keep track of which one
+    if (event.changedTouches) {
+      this.touchId = event.changedTouches[0].identifier;
+    }
+  }
+
+  _handleMove(event){
+    if ( !this.active ) return;
+
+    // if this is a touch event, make sure it is the right one
+    // also handle multiple simultaneous touchmove events
+    let touchmoveId = null;
+    if (event.changedTouches)
     {
-      if ( !self.active ) return;
-
-      // if this is a touch event, make sure it is the right one
-      // also handle multiple simultaneous touchmove events
-      let touchmoveId = null;
-      if (event.changedTouches)
+      for (let i = 0; i < event.changedTouches.length; i++)
       {
-        for (let i = 0; i < event.changedTouches.length; i++)
+        if (this.touchId === event.changedTouches[i].identifier)
         {
-          if (self.touchId == event.changedTouches[i].identifier)
-          {
-            touchmoveId = i;
-            event.clientX = event.changedTouches[i].clientX;
-            event.clientY = event.changedTouches[i].clientY;
-          }
+          touchmoveId = i;
+          event.clientX = event.changedTouches[i].clientX;
+          event.clientY = event.changedTouches[i].clientY;
         }
-
-        if (touchmoveId == null) return;
       }
 
-      const xDiff = event.clientX - self.dragStart.x;
-      const yDiff = event.clientY - self.dragStart.y;
-      const angle = Math.atan2(yDiff, xDiff);
-      const distance = Math.min(maxDistance, Math.hypot(xDiff, yDiff));
-      const xPosition = distance * Math.cos(angle);
-      const yPosition = distance * Math.sin(angle);
-
-      // move stick image to new position
-      stick.style.transform = `translate3d(${xPosition}px, ${yPosition}px, 0px)`;
-
-      // deadzone adjustment
-      const distance2 = (distance < deadzone) ? 0 : maxDistance / (maxDistance - deadzone) * (distance - deadzone);
-      const xPosition2 = distance2 * Math.cos(angle);
-      const yPosition2 = distance2 * Math.sin(angle);
-      const xPercent = parseFloat((xPosition2 / maxDistance).toFixed(4));
-      const yPercent = parseFloat((yPosition2 / maxDistance).toFixed(4));
-
-      self.value = { x: xPercent, y: yPercent };
+      if (touchmoveId == null) return;
     }
 
-    function handleUp(event)
-    {
-      if ( !self.active ) return;
+    const xDiff = event.clientX - this.dragStart.x;
+    const yDiff = event.clientY - this.dragStart.y;
+    const angle = Math.atan2(yDiff, xDiff);
+    const distance = Math.min(this.maxDistance, Math.hypot(xDiff, yDiff));
+    const xPosition = distance * Math.cos(angle);
+    const yPosition = distance * Math.sin(angle);
 
-      // if this is a touch event, make sure it is the right one
-      if (event.changedTouches && (self.touchId !== event.changedTouches[0].identifier)) return;
+    // move this.stick image to new position
+    this.stick.style.transform = `translate(${xPosition}px, ${yPosition}px)`;
 
-      // transition the joystick position back to center
-      stick.style.transition = '.2s';
-      stick.style.transform = `translate3d(0px, 0px, 0px)`;
+    // deadZone adjustment
+    const distance2 = (distance < this.deadZone) ? 0 : this.maxDistance / (this.maxDistance - this.deadZone) * (distance - this.deadZone);
+    const xPosition2 = distance2 * Math.cos(angle);
+    const yPosition2 = distance2 * Math.sin(angle);
+    const xPercent = parseFloat((xPosition2 / this.maxDistance).toFixed(4));
+    const yPercent = parseFloat((yPosition2 / this.maxDistance).toFixed(4));
 
-      // reset everything
-      self.value = { x: 0, y: 0 };
-      self.touchId = null;
-      self.active = false;
-    }
-
-    stick.addEventListener('mousedown', handleDown);
-    stick.addEventListener('touchstart', handleDown);
-    document.addEventListener('mousemove', handleMove, {passive: false});
-    document.addEventListener('touchmove', handleMove, {passive: false});
-    document.addEventListener('mouseup', handleUp);
-    document.addEventListener('touchend', handleUp);
+    this.value = { x: xPercent, y: yPercent };
   }
-}
 
-let joystick = new JoystickController("stick", 128, 8);
-let counter = 0;
-let prev_x = 0;
-let prev_y = 0;
+  /**
+   * Handles mouseUp/touchUp event.
+   *
+   * @param event
+   * @private
+   */
+  _handleUp(event){
+    if ( !this.active ) return;
 
-function sendUpdate(x,y) {
-  counter++;
-  const x_axis = Math.floor(511.5 + x * 511.5);
-  const y_axis = Math.floor(511.5 + y * 511.5);
-  document.getElementById("status").innerText = `Joystick (${counter}): ${x_axis}, ${y_axis}` ;
-  fetch(`/joystick/${x_axis}/${y_axis}`)
-}
+    // if this is a touch event, make sure it is the right one
+    if (event.changedTouches && (this.touchId !== event.changedTouches[0].identifier)) return;
 
+    // transition the joystick position back to center
+    this.stick.style.transition = '.2s';
+    this.stick.style.transform = `translate3d(0px, 0px, 0px)`;
 
-// Declare a variable called 'timer' to store the timer ID
-let timer;
-const debounce = (mainFunction, delay) => {
-  // Return an anonymous function that takes in any number of arguments
-  return function (...args) {
-    // Clear the previous timer to prevent the execution of 'mainFunction'
-    clearTimeout(timer);
+    // reset everything
+    this.value = { x: 0, y: 0 };
+    this.touchId = null;
+    this.active = false;
+  }
 
-    // Set a new timer that will execute 'mainFunction' after the specified delay
-    timer = setTimeout(() => {
-      mainFunction(...args);
-    }, delay);
+  /**
+   * Sends data update to the application server.
+   *
+   * @private
+   */
+  _sendUpdate() {
+    const x_axis = Math.floor(511.5 + this.value.x * 511.5);
+    const y_axis = Math.floor(511.5 + this.value.y * 511.5);
+    document.getElementById("status").innerText = `Joystick (${this.counter++}): ${x_axis}, ${y_axis}` ;
+    fetch(`/joystick/${x_axis}/${y_axis}`)
+  }
+
+  /**
+   * Debounce submission of data update for fast series of mouse/touch move events.
+   *
+   * @param mainFunction
+   *   Function to be executed debounced to 1-2 per second.
+   * @returns {(function(...[*]): void)|*}
+   * @private
+   */
+  _debounce(mainFunction) {
+    return (...args) => {
+      clearTimeout(this.debounceTimer);
+      this.debounceTimer = setTimeout(() => {
+        mainFunction(...args);
+      }, this.debounceTimeout);
+    };
   };
-};
 
-/**
- * Triggered whenever the joystick is moved.
- */
-function update()
-{
-  const curr_x = joystick.value.x;
-  const curr_y = joystick.value.y;
-  if ((curr_x !== prev_x) || (curr_y !== prev_y)) {
-    prev_x = curr_x;
-    prev_y = curr_y;
-    // sendUpdate(curr_x, curr_y);
-    const workOnChange = debounce(() => sendUpdate(curr_x, curr_y), 50);
-    workOnChange()
+  /**
+   * Triggered whenever the joystick is moved.
+   */
+  _update() {
+    if ((this.value.x !== this.prev.x) || (this.value.y !== this.prev.y)) {
+      this.prev = {...this.value};
+      // sendUpdate(curr_x, curr_y);
+      const workOnChange = this._debounce(() => { this._sendUpdate() });
+      workOnChange()
+    }
+  }
+
+  _loop(){
+    requestAnimationFrame(() => { this._loop() });
+    this._update();
   }
 }
 
-function loop()
-{
-  requestAnimationFrame(loop);
-  update();
-}
-
-loop();
+new JoystickController();

@@ -10,7 +10,14 @@ def hello():
 
 @app.route("/joystick/<int:x_axis>/<int:y_axis>")
 def joystick(x_axis=0, y_axis=0):
-    print(x_axis, y_axis)
+    print("Joystick:", x_axis, y_axis)
+    return {
+        "result": "success"
+    }
+
+@app.route("/focus/<int:z_axis>")
+def focus(z_axis=0):
+    print("Focus: ", z_axis)
     return {
         "result": "success"
     }
