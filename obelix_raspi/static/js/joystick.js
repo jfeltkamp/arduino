@@ -1,6 +1,4 @@
 
-
-
 class JoystickController
 {
 
@@ -8,6 +6,7 @@ class JoystickController
     this.stick = document.getElementById("stick");
 
     if (this.stick) {
+      this.status = document.getElementById("status-joystick");
       // location from which drag begins, used to calculate offsets
       this.dragStart = null;
 
@@ -32,11 +31,18 @@ class JoystickController
       document.addEventListener('touchmove', (e) => { this._handleMove(e) }, { passive: false });
       document.addEventListener('mouseup', (e) => { this._handleUp(e) });
       document.addEventListener('touchend', (e) => { this._handleUp(e) });
-
-      this._loop();
     }
   }
 
+  /**
+   * Handles mouse/touch down event.
+   *
+   * Inits the handle animation.
+   *
+   * @param event
+   *   The mouse/touch move event.
+   *  @private
+   */
   _handleDown(event){
     this.active = true;
     // all drag movements are instantaneous
@@ -53,6 +59,15 @@ class JoystickController
     }
   }
 
+  /**
+   * Handles mouse/touch move events.
+   *
+   * Calculates the position of the joystick handle and follow mouse/touch pointer.
+   *
+   * @param event
+   *   The mouse/touch move event.
+   *  @private
+   */
   _handleMove(event){
     if ( !this.active ) return;
 
@@ -74,6 +89,7 @@ class JoystickController
       if (touchmoveId == null) return;
     }
 
+    // Calculate handle position, to stick on the mouse.
     const xDiff = event.clientX - this.dragStart.x;
     const yDiff = event.clientY - this.dragStart.y;
     const angle = Math.atan2(yDiff, xDiff);
@@ -92,6 +108,7 @@ class JoystickController
     const yPercent = parseFloat((yPosition2 / this.maxDistance).toFixed(4));
 
     this.value = { x: xPercent, y: yPercent };
+    this._loop()
   }
 
   /**
@@ -124,7 +141,7 @@ class JoystickController
   _sendUpdate() {
     const x_axis = Math.floor(511.5 + this.value.x * 511.5);
     const y_axis = Math.floor(511.5 + this.value.y * 511.5);
-    document.getElementById("status").innerText = `Joystick (${this.counter++}): ${x_axis}, ${y_axis}` ;
+    if (this.status) { this.status.innerText = `Joystick (${this.counter++}): ${x_axis}, ${y_axis}`; }
     fetch(`/joystick/${x_axis}/${y_axis}`)
   }
 
@@ -146,19 +163,29 @@ class JoystickController
   };
 
   /**
-   * Triggered whenever the joystick is moved.
+   * Triggered whenever the joystick moved.
+   *
+   * @private
    */
   _update() {
     if ((this.value.x !== this.prev.x) || (this.value.y !== this.prev.y)) {
       this.prev = {...this.value};
-      // sendUpdate(curr_x, curr_y);
       const workOnChange = this._debounce(() => { this._sendUpdate() });
       workOnChange()
     }
   }
 
+  /**
+   * Creates an optimized animation loop to have sync with monitor.
+   *
+   * @private
+   */
   _loop(){
-    requestAnimationFrame(() => { this._loop() });
+    if (this.active) {
+      this.frame = requestAnimationFrame(() => { this._loop() });
+    } else {
+      cancelAnimationFrame(this.frame);
+    }
     this._update();
   }
 }
