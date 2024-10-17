@@ -5,6 +5,7 @@ class InitFocusController {
     // Get UI elements
     this.rangeInput = document.getElementById('focus');
     this.rangeMeter = document.getElementById('range-meter');
+    this.focusStatus = document.getElementById('focus-status');
 
     if (this.rangeInput) {
       // Animate settings
@@ -33,10 +34,6 @@ class InitFocusController {
    * @private
    */
   _handleInputEvent() {
-    if (this.rangeMeter) {
-      const percent=  Math.round(this.rangeInput.value / 10.24);
-      this.rangeMeter.style = `y:${100 - percent}%`;
-    }
     const debouncedUpdate = this._debounce(() => this._sendDebouncedUpdate());
     debouncedUpdate()
   }
@@ -51,6 +48,18 @@ class InitFocusController {
     const speed_z = this.rangeInput.value
     document.getElementById("status-focus").innerText = `Focus (${this.submissionCounter}): ${speed_z}` ;
     fetch(`/focus/${speed_z}`)
+      .then((response) => {
+        return response.json();
+      }).then((data) => {
+        const speed = data?.focus?.speed;
+        if (speed && this.focusStatus) {
+          this.focusStatus.value = speed;
+        }
+        const position = data?.focus?.position;
+        if (position && this.rangeMeter) {
+          this.rangeMeter.style = `y:${100 - position}%`;
+        }
+      })
   }
 
   /**

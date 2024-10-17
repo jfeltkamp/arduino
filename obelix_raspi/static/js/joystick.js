@@ -143,6 +143,11 @@ class JoystickController
     const y_axis = Math.floor(511.5 + this.value.y * 511.5);
     if (this.status) { this.status.innerText = `Joystick (${this.counter++}): ${x_axis}, ${y_axis}`; }
     fetch(`/joystick/${x_axis}/${y_axis}`)
+      .then((response) => {
+        return response.json();
+      }).then((data) => {
+        console.log('HUHU. Your data !', data);
+      })
   }
 
   /**
