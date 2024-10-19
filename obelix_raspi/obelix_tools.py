@@ -22,7 +22,6 @@ class ObelixParams:
         self.focusMaxSpeed = 1500
 
     def set_params_from_response(self, response):
-        print('RESP: ' + response)
         params_raw = response.split("_")
         params_raw.pop(0)
         for param in params_raw:

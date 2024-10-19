@@ -150,7 +150,7 @@ void resolveResponse() {
         resp = resp + "_f:" + stepperF.currentPosition();
         Serial.println(resp);
         awaited_response = "";
-        op_mode = "";
+        op_mode = MODE_NEUTRAL;
         busy = false;
     }
 }

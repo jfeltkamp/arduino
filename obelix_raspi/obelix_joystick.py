@@ -61,6 +61,6 @@ class ObelixJoystick:
         while self.listener_runs:
             time.sleep(0.1)
             if self.do_trigger:
-                self.obelix.analog(ObelixCommands(self.cmd_x, self.param_x,""))
-                self.obelix.analog(ObelixCommands(self.cmd_y, self.param_y,""))
+                self.obelix.analog(ObelixCommands(self.cmd_x, self.param_x, "-"))
+                self.obelix.analog(ObelixCommands(self.cmd_y, self.param_y,"-"))
                 self.do_trigger = (self.do_trigger_x or self.do_trigger_y)
