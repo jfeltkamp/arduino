@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sphäre</title>
+    <style>
+        .box {
+            width: 50vw;
+            height: 50vw;
+            position: relative;
+            margin: auto;
+        }
+        .cube-wrap {
+            height: 100%;
+            width: 100%;
+            perspective: 996px;
+            perspective-origin: -1% -1%;
+            background: rgba(0,0,0,.2);
+        }
+        .cube {
+            position: relative;
+            top: 50%;
+            left: 50%;
+            overflow: visible;
+            height: 100%;
+            width: 100%;
+            -webkit-transform-style: preserve-3d;
+            transform-style: preserve-3d;
+            transform: scaleX(1) scaleY(1) scaleZ(1)
+                        rotateX(-15deg) rotateY(0deg) rotateZ(0deg)
+                        translateX(0px) translateY(0px) translateZ(0px)
+                        skewX(0deg) skewY(0deg);
+        }
+        .cube > * {
+            position: absolute;
+            width: 80%;
+            height: 80%;
+            border-radius: 50%;
+            border: 1px solid red;
+            transform-origin: center center;
+        }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <div class="cube-wrap">
+            <div class="cube">
+                <div class="front" style="transform: rotateY(20deg)"></div>
+                <div class="front" style="transform: rotateY(40deg)"></div>
+                <div class="front" style="transform: rotateY(60deg)"></div>
+                <div class="front" style="transform: rotateY(80deg)"></div>
+                <div class="front" style="transform: rotateY(100deg)"></div>
+                <div class="front" style="transform: rotateY(120deg)"></div>
+                <div class="front" style="transform: rotateY(140deg)"></div>
+                <div class="front" style="transform: rotateY(160deg)"></div>
+                <div class="front" style="transform: rotateY(180deg)"></div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

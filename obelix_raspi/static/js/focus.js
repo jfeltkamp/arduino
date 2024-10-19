@@ -5,7 +5,7 @@ class InitFocusController {
     // Get UI elements
     this.rangeInput = document.getElementById('focus');
     this.rangeMeter = document.getElementById('range-meter');
-    this.focusStatus = document.getElementById('focus-status');
+    this.focusStatus = document.getElementById('focus-status-value');
 
     if (this.rangeInput) {
       // Animate settings
@@ -52,8 +52,8 @@ class InitFocusController {
         return response.json();
       }).then((data) => {
         const speed = data?.focus?.speed;
-        if (speed && this.focusStatus) {
-          this.focusStatus.value = speed;
+        if ((typeof speed !== 'undefined') && this.focusStatus) {
+          this.focusStatus.innerText = speed;
         }
         const position = data?.focus?.position;
         if (position && this.rangeMeter) {
