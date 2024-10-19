@@ -270,23 +270,21 @@ void cmd_stop(String value) {
 }
 
 /* CMD moxe x axis analog */
-void cmd_x(String value) {
-    int speed = getMinMaxIntFromStr(getStringPartial(value, ',', 0), -axisMaxSpeed, axisMaxSpeed);
-    if ((speed >= -axisMaxSpeed) && setMode(MODE_ANALOG)) {
-        if (abs(speed) < axisMinSpeed) {
-            speed = 0;
-        }
-        op_mode = "analog";
-        analog_x_speed = speed;
+int cmd_axis(String value, int minSpeed, int maxSpeed) {
+    int speed = getMinMaxIntFromStr(getStringPartial(value, ',', 0), -maxSpeed, maxSpeed);
+    if ((speed >= -maxSpeed) && (abs(speed) >= minSpeed) && setMode(MODE_ANALOG)) {
+        return speed;
     }
+    return 0;
 }
 
-void set_speed(AccelStepper stepper) {
+/* Sets speed during analog run. */
+void set_speed(AccelStepper stepper, int target_speed) {
     int curr_speed = round(stepper.speed());
-    if (analog_x_speed > curr_speed) {
+    if (target_speed > curr_speed) {
         stepper.setSpeed(curr_speed + 1);
     }
-    if (analog_x_speed < curr_speed) {
+    if (target_speed < curr_speed) {
         stepper.setSpeed(curr_speed - 1);
     }
     stepper.runSpeed();
@@ -320,7 +318,13 @@ void cmd_interpreter(const String& cmd_raw) {
             cmd_stop(params);
         }
         else if (command == "ard_x") {
-            cmd_x(params);
+            analog_x_speed = cmd_axis(params, axisMinSpeed, axisMaxSpeed);
+        }
+        else if (command == "ard_y") {
+            analog_y_speed = cmd_axis(params, axisMinSpeed, axisMaxSpeed);
+        }
+        else if (command == "ard_f") {
+            analog_f_speed = cmd_axis(params, focusMinSpeed, focusMaxSpeed);
         }
         else if (command == "ard_focus") {
             cmd_focus(params, options);
