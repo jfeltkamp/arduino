@@ -37,36 +37,29 @@ class ObelixJoystick:
 
     def set_coords(self, x, y):
         self.x = int(x)
-        self.y = int(y)
         self.speed_x = round(self.axisMaxSpeed * (self.x - 511.5) / 511.5)
         self.do_trigger_x = (abs(self.speed_x) >= self.axisMinSpeed)
         if self.do_trigger_x:
-            self.param_x = f"400,{abs(self.speed_x)}"
-            if self.speed_x > 0:
-                self.cmd_x = "ard_right"
-            else:
-                self.cmd_x = "ard_left"
+            self.param_x = f"{abs(self.speed_x)}"
+            self.cmd_x = "ard_x"
         else:
-            self.cmd_x = "ard_stop"
-            self.param_x = "x"
+            self.cmd_x = "ard_x"
+            self.param_x = "0"
 
-
+        self.y = int(y)
         self.speed_y = round(self.axisMaxSpeed * (self.y - 511.5) / 511.5)
         self.do_trigger_y = (abs(self.speed_y) >= self.axisMinSpeed)
         if self.do_trigger_y:
-            self.param_y = f"400,{abs(self.speed_y)}"
-            if self.speed_y > 0:
-                self.cmd_y = "ard_down"
-            else:
-                self.cmd_y = "ard_up"
+            self.param_y = f"{abs(self.speed_y)}"
+            self.cmd_y = "ard_y"
         else:
-            self.cmd_y = "ard_stop"
-            self.param_y = "y"
+            self.cmd_y = "ard_y"
+            self.param_y = "0"
         self.do_trigger = True
 
     def trigger_analog_cmd(self):
         while self.listener_runs:
-            time.sleep(0.3)
+            time.sleep(0.1)
             if self.do_trigger:
                 self.obelix.analog(ObelixCommands(self.cmd_x, self.param_x,""))
                 self.obelix.analog(ObelixCommands(self.cmd_y, self.param_y,""))

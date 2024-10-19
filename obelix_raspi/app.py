@@ -4,6 +4,7 @@ from obelix import Obelix
 from obelix_joystick import ObelixJoystick
 from flask import Flask, render_template, send_from_directory
 from random import randint
+from obelix_tools import ObelixCommands
 
 if __name__ == "__main__":
 
