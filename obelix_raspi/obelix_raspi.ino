@@ -25,8 +25,17 @@ const int focusMinSpeed = 100;
 const int focusMaxSpeed = 2000;
 const int focusSpeed = 500;
 
+const int MODE_NEUTRAL = 0;
+const int MODE_ANALOG = 1;
+const int MODE_AUTO = 2;
+
+// Process variables
 String awaited_response = "";
 bool busy = false;
+int op_mode = MODE_NEUTRAL;
+int analog_x_speed = 0;
+int analog_y_speed = 0;
+int analog_f_speed = 0;
 
 void setup() {
   Serial.begin(115200);
@@ -50,6 +59,16 @@ void setup() {
 
   lcdOut(4, 0, "Obelix", 12);
   lcdOut(6, 1, "1.0", 13);
+}
+
+bool setMode(int mode) {
+    if (op_mode == MODE_NEUTRAL) {
+        op_mode = mode;
+    }
+    if (op_mode == mode) {
+        return true;
+    }
+    return false;
 }
 
 /* Write message to LCD display. */
@@ -88,9 +107,8 @@ int getStepsOneDirect(String value, String cmd) {
   if (steps <= 0) {
       Serial.println("ERROR: Param for '" + cmd + "' is 1-directional. Steps must be greater then 0, but is: " + value);
       return 0;
-  } else {
-    return steps;
   }
+  return steps;
 }
 
 /* Get steps 1-directional */
@@ -106,9 +124,7 @@ int getMinMaxIntFromStr(String value, int min, int max) {
   else if (steps > max) {
     return max;
   }
-  else {
-    return steps;
-  }
+  return steps;
 }
 
 bool setAwaitedResponse(String await, String dir) {
@@ -134,6 +150,7 @@ void resolveResponse() {
         resp = resp + "_f:" + stepperF.currentPosition();
         Serial.println(resp);
         awaited_response = "";
+        op_mode = "";
         busy = false;
     }
 }
@@ -158,11 +175,7 @@ void cmd_lcd(String value, String pos) {
 /* CMD up */
 void cmd_up(String value, String await) {
     int steps = getStepsOneDirect(getStringPartial(value, ',', 0), "cmd_up");
-    if (steps > 0 && setAwaitedResponse(await, "up")) {
-        int speed = getMinMaxIntFromStr(getStringPartial(value, ',', 1), axisMinSpeed, axisMaxSpeed);
-        if (speed >= axisMinSpeed) {
-            stepperY.setMaxSpeed(speed);
-        }
+    if (steps > 0 && setMode(MODE_AUTO) && setAwaitedResponse(await, "up")) {
         busy = true;
         stepperY.move(steps);
     }
@@ -171,11 +184,7 @@ void cmd_up(String value, String await) {
 /* CMD down */
 void cmd_down(String value, String await) {
     int steps = getStepsOneDirect(getStringPartial(value, ',', 0), "cmd_down");
-    if (steps > 0 && setAwaitedResponse(await, "down")) {
-        int speed = getMinMaxIntFromStr(getStringPartial(value, ',', 1), axisMinSpeed, axisMaxSpeed);
-        if (speed >= axisMinSpeed) {
-            stepperY.setMaxSpeed(speed);
-        }
+    if (steps > 0 && setMode(MODE_AUTO) && setAwaitedResponse(await, "down")) {
         busy = true;
         stepperY.move(-steps);
     }
@@ -184,11 +193,7 @@ void cmd_down(String value, String await) {
 /* CMD left */
 void cmd_left(String value, String await) {
     int steps = getStepsOneDirect(getStringPartial(value, ',', 0), "cmd_left");
-    if (steps > 0 && setAwaitedResponse(await, "left")) {
-        int speed = getMinMaxIntFromStr(getStringPartial(value, ',', 1), axisMinSpeed, axisMaxSpeed);
-        if (speed >= axisMinSpeed) {
-            stepperX.setMaxSpeed(speed);
-        }
+    if (steps > 0 && setMode(MODE_AUTO) && setAwaitedResponse(await, "left")) {
         busy = true;
         stepperX.move(-steps);
     }
@@ -197,11 +202,7 @@ void cmd_left(String value, String await) {
 /* CMD right */
 void cmd_right(String value, String await) {
     int steps = getStepsOneDirect(getStringPartial(value, ',', 0), "cmd_right");
-    if (steps > 0 && setAwaitedResponse(await, "right")) {
-        int speed = getMinMaxIntFromStr(getStringPartial(value, ',', 1), axisMinSpeed, axisMaxSpeed);
-        if (speed >= axisMinSpeed) {
-            stepperX.setMaxSpeed(speed);
-        }
+    if (steps > 0 && setMode(MODE_AUTO) && setAwaitedResponse(await, "right")) {
         busy = true;
         stepperX.move(steps);
     }
@@ -210,11 +211,7 @@ void cmd_right(String value, String await) {
 /* CMD focus */
 void cmd_focus(String value, String await) {
     int steps = getMinMaxIntFromStr(getStringPartial(value, ',', 0), -focusMaxMove, focusMaxMove);
-    if ((steps >= -focusMaxMove) && (steps != 0) && setAwaitedResponse(await, "focus")) {
-        int speed = getMinMaxIntFromStr(getStringPartial(value, ',', 1), focusMinSpeed, focusMaxSpeed);
-        if (speed >= focusMinSpeed) {
-            stepperF.setMaxSpeed(speed);
-        }
+    if ((steps >= -focusMaxMove) && (steps != 0) && setMode(MODE_AUTO) && setAwaitedResponse(await, "focus")) {
         busy = true;
         stepperF.move(steps);
     }
@@ -222,7 +219,7 @@ void cmd_focus(String value, String await) {
 
 /* CMD goto */
 void cmd_goto(String value, String await) {
-    if (setAwaitedResponse(await, "goto")) {
+    if (setMode(MODE_AUTO) && setAwaitedResponse(await, "goto")) {
         // move X axis to.
         int target = getMinMaxIntFromStr(getStringPartial(value, ',', 0), -axisMaxMove, axisMaxMove);
         int speed = 0;
@@ -272,6 +269,29 @@ void cmd_stop(String value) {
     }
 }
 
+/* CMD moxe x axis analog */
+void cmd_x(String value) {
+    int speed = getMinMaxIntFromStr(getStringPartial(value, ',', 0), -axisMaxSpeed, axisMaxSpeed);
+    if ((speed >= -axisMaxSpeed) && setMode(MODE_ANALOG)) {
+        if (abs(speed) < axisMinSpeed) {
+            speed = 0;
+        }
+        op_mode = "analog";
+        analog_x_speed = speed;
+    }
+}
+
+void set_speed(AccelStepper stepper) {
+    int curr_speed = round(stepper.speed());
+    if (analog_x_speed > curr_speed) {
+        stepper.setSpeed(curr_speed + 1);
+    }
+    if (analog_x_speed < curr_speed) {
+        stepper.setSpeed(curr_speed - 1);
+    }
+    stepper.runSpeed();
+}
+
 /* Command interpreter */
 void cmd_interpreter(const String& cmd_raw) {
     if (isCommand(cmd_raw)) {
@@ -299,6 +319,9 @@ void cmd_interpreter(const String& cmd_raw) {
         else if (command == "ard_stop") {
             cmd_stop(params);
         }
+        else if (command == "ard_x") {
+            cmd_x(params);
+        }
         else if (command == "ard_focus") {
             cmd_focus(params, options);
         }
@@ -313,9 +336,17 @@ void loop() {
         String message = Serial.readStringUntil('\n');
         cmd_interpreter(message);
     }
-    stepperX.run();
-    stepperY.run();
-    stepperF.run();
+
+    if (op_mode == MODE_ANALOG) {
+        set_speed(stepperX);
+        set_speed(stepperY);
+        set_speed(stepperF);
+    }
+    else {
+        stepperX.run();
+        stepperY.run();
+        stepperF.run();
+    }
 
     resolveResponse();
 }
