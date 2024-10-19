@@ -342,9 +342,9 @@ void loop() {
     }
 
     if (op_mode == MODE_ANALOG) {
-        set_speed(stepperX);
-        set_speed(stepperY);
-        set_speed(stepperF);
+        set_speed(stepperX, analog_x_speed);
+        set_speed(stepperY, analog_y_speed);
+        set_speed(stepperF, analog_f_speed);
     }
     else {
         stepperX.run();
