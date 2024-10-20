@@ -33,12 +33,16 @@ const int MODE_AUTO = 2;
 String awaited_response = "";
 bool busy = false;
 int op_mode = MODE_NEUTRAL;
+// Annalog mode.
 int analog_x_speed = 0;
 int analog_y_speed = 0;
 int analog_f_speed = 0;
 int curr_x_speed = 0;
 int curr_y_speed = 0;
 int curr_f_speed = 0;
+unsigned long speed_last_update_t = 0;
+int speed_steps_per_update = 2;
+float speed_update_cycle = speed_steps_per_update * 1000 / acceleration;
 
 void setup() {
   Serial.begin(115200);
@@ -275,25 +279,50 @@ void cmd_stop(String value) {
 /* CMD moxe x axis analog */
 int cmd_axis(String value, int minSpeed, int maxSpeed) {
     int speed = getMinMaxIntFromStr(getStringPartial(value, ',', 0), -maxSpeed, maxSpeed);
+    cmd_lcd("SPEED: " + value + ">" + String(speed) , "0_0")
     if ((speed >= -maxSpeed) && (abs(speed) >= minSpeed) && setMode(MODE_ANALOG)) {
+        busy = true;
         return speed;
     }
     return 0;
 }
 
 /* Sets speed during analog run. */
-void set_speed(AccelStepper stepper, int target_speed, int curr_speed) {
-    stepper.setSpeed(curr_speed);
-    if (stepper.runSpeed()) {
-        cmd_lcd(curr_speed, '0_0')
-        if (target_speed > curr_speed) {
-            return curr_speed + 1;
+void set_speed() {
+    unsigned long now = millis();
+    if (now - speed_last_update_t) > speed_update_cycle) {
+        speed_last_update_t = now;
+        // X axis
+        if (analog_x_speed >= (curr_x_speed + speed_steps_per_update)) {
+            curr_x_speed = curr_x_speed + speed_steps_per_update;
         }
-        if (target_speed < curr_speed) {
-            return curr_speed - 1;
+        else if (analog_x_speed <= (curr_x_speed - speed_steps_per_update)) {
+            curr_x_speed = curr_x_speed - speed_steps_per_update;
+        }
+        else if (analog_x_speed != curr_x_speed) {
+            curr_x_speed = analog_x_speed;
+        }
+        // Y axis
+        if (analog_y_speed > (curr_y_speed + speed_steps_per_update)) {
+            curr_y_speed = curr_y_speed + speed_steps_per_update;
+        }
+        else if (analog_y_speed < (curr_y_speed - speed_steps_per_update)) {
+            curr_y_speed = curr_y_speed - speed_steps_per_update;
+        }
+        else if (analog_y_speed != curr_y_speed) {
+            curr_y_speed = analog_y_speed;
+        }
+        // FOCUS (Z axis)
+        if (analog_f_speed > (curr_f_speed + speed_steps_per_update)) {
+            curr_f_speed = curr_f_speed + speed_steps_per_update;
+        }
+        else if (analog_f_speed < (curr_f_speed - speed_steps_per_update)) {
+            curr_f_speed = curr_f_speed - speed_steps_per_update;
+        }
+        else if (analog_f_speed != curr_f_speed) {
+            curr_f_speed = analog_f_speed;
         }
     }
-    return curr_speed;
 }
 
 /* Command interpreter */
@@ -302,41 +331,46 @@ void cmd_interpreter(const String& cmd_raw) {
         String command = getStringPartial(cmd_raw, ':', 0);
         String params = getStringPartial(cmd_raw, ':', 1);
         String options = getStringPartial(cmd_raw, ':', 2);
+        cmd_lcd("P: " + command + ">" + params + ">" + options, "0_1")
         if (command == "ard_enable") {
             cmd_enable(params);
         }
-        else if (command == "ard_goto") {
-            cmd_goto(params, options);
-        }
-        else if (command == "ard_up") {
-            cmd_up(params, options);
-        }
-        else if (command == "ard_down") {
-            cmd_down(params, options);
-        }
-        else if (command == "ard_left") {
-            cmd_left(params, options);
-        }
-        else if (command == "ard_right") {
-            cmd_right(params, options);
-        }
-        else if (command == "ard_stop") {
-            cmd_stop(params);
-        }
-        else if (command == "ard_x") {
-            analog_x_speed = cmd_axis(params, axisMinSpeed, axisMaxSpeed);
-        }
-        else if (command == "ard_y") {
-            analog_y_speed = cmd_axis(params, axisMinSpeed, axisMaxSpeed);
-        }
-        else if (command == "ard_f") {
-            analog_f_speed = cmd_axis(params, focusMinSpeed, focusMaxSpeed);
-        }
-        else if (command == "ard_focus") {
-            cmd_focus(params, options);
-        }
         else if (command == "ard_lcd") {
             cmd_lcd(params, options);
+        }
+        if (op_mode != MODE_ANALOG) {
+            if (command == "ard_goto") {
+                cmd_goto(params, options);
+            }
+            else if (command == "ard_up") {
+                cmd_up(params, options);
+            }
+            else if (command == "ard_down") {
+                cmd_down(params, options);
+            }
+            else if (command == "ard_left") {
+                cmd_left(params, options);
+            }
+            else if (command == "ard_right") {
+                cmd_right(params, options);
+            }
+            else if (command == "ard_stop") {
+                cmd_stop(params);
+            }
+            else if (command == "ard_focus") {
+                cmd_focus(params, options);
+            }
+        }
+        else if (op_mode != MODE_AUTO) {
+            if (command == "ard_x") {
+                analog_x_speed = cmd_axis(params, axisMinSpeed, axisMaxSpeed);
+            }
+            else if (command == "ard_y") {
+                analog_y_speed = cmd_axis(params, axisMinSpeed, axisMaxSpeed);
+            }
+            else if (command == "ard_f") {
+                analog_f_speed = cmd_axis(params, focusMinSpeed, focusMaxSpeed);
+            }
         }
     }
 }
@@ -347,9 +381,13 @@ void loop() {
         cmd_interpreter(message);
     }
     if (op_mode == MODE_ANALOG) {
-        curr_x_speed = set_speed(stepperX, analog_x_speed, curr_x_speed);
-        curr_y_speed = set_speed(stepperY, analog_y_speed, curr_y_speed);
-        curr_f_speed = set_speed(stepperF, analog_f_speed, curr_f_speed);
+        set_speed();
+        stepperX.setSpeed(curr_x_speed);
+        stepperX.runSpeed();
+        stepperY.setSpeed(curr_y_speed);
+        stepperY.runSpeed();
+        stepperF.setSpeed(curr_f_speed);
+        stepperF.runSpeed();
     }
     else {
         stepperX.run();
