@@ -279,7 +279,7 @@ void cmd_stop(String value) {
 /* CMD moxe x axis analog */
 int cmd_axis(String value, int minSpeed, int maxSpeed) {
     int speed = getMinMaxIntFromStr(getStringPartial(value, ',', 0), -maxSpeed, maxSpeed);
-    cmd_lcd("SPEED: " + value + ">" + String(speed) , "0_0")
+    cmd_lcd("SPEED: " + value + ">" + String(speed) , "0_0");
     if ((speed >= -maxSpeed) && (abs(speed) >= minSpeed) && setMode(MODE_ANALOG)) {
         busy = true;
         return speed;
@@ -289,9 +289,9 @@ int cmd_axis(String value, int minSpeed, int maxSpeed) {
 
 /* Sets speed during analog run. */
 void set_speed() {
-    unsigned long now = millis();
-    if (now - speed_last_update_t) > speed_update_cycle) {
-        speed_last_update_t = now;
+    unsigned long izt = millis();
+    if ((izt - speed_last_update_t) > speed_update_cycle) {
+        speed_last_update_t = izt;
         // X axis
         if (analog_x_speed >= (curr_x_speed + speed_steps_per_update)) {
             curr_x_speed = curr_x_speed + speed_steps_per_update;
@@ -331,7 +331,7 @@ void cmd_interpreter(const String& cmd_raw) {
         String command = getStringPartial(cmd_raw, ':', 0);
         String params = getStringPartial(cmd_raw, ':', 1);
         String options = getStringPartial(cmd_raw, ':', 2);
-        cmd_lcd("P: " + command + ">" + params + ">" + options, "0_1")
+        cmd_lcd("P: " + command + ">" + params + ">" + options, "0_1");
         if (command == "ard_enable") {
             cmd_enable(params);
         }
@@ -361,7 +361,7 @@ void cmd_interpreter(const String& cmd_raw) {
                 cmd_focus(params, options);
             }
         }
-        else if (op_mode != MODE_AUTO) {
+        if (op_mode != MODE_AUTO) {
             if (command == "ard_x") {
                 analog_x_speed = cmd_axis(params, axisMinSpeed, axisMaxSpeed);
             }
