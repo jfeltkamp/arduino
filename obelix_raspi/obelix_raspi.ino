@@ -279,7 +279,6 @@ void cmd_stop(String value) {
 /* CMD moxe x axis analog */
 int cmd_axis(String value, int minSpeed, int maxSpeed) {
     int speed = getMinMaxIntFromStr(getStringPartial(value, ',', 0), -maxSpeed, maxSpeed);
-    cmd_lcd("SPEED: " + value + ">" + String(speed) , "0_0");
     if ((speed >= -maxSpeed) && (abs(speed) >= minSpeed) && setMode(MODE_ANALOG)) {
         busy = true;
         return speed;
@@ -331,7 +330,6 @@ void cmd_interpreter(const String& cmd_raw) {
         String command = getStringPartial(cmd_raw, ':', 0);
         String params = getStringPartial(cmd_raw, ':', 1);
         String options = getStringPartial(cmd_raw, ':', 2);
-        cmd_lcd("P: " + command + ">" + params + ">" + options, "0_1");
         if (command == "ard_enable") {
             cmd_enable(params);
         }
@@ -394,6 +392,5 @@ void loop() {
         stepperY.run();
         stepperF.run();
     }
-
     resolveResponse();
 }
