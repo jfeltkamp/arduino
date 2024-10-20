@@ -36,6 +36,9 @@ int op_mode = MODE_NEUTRAL;
 int analog_x_speed = 0;
 int analog_y_speed = 0;
 int analog_f_speed = 0;
+int curr_x_speed = 0;
+int curr_y_speed = 0;
+int curr_f_speed = 0;
 
 void setup() {
   Serial.begin(115200);
@@ -279,15 +282,18 @@ int cmd_axis(String value, int minSpeed, int maxSpeed) {
 }
 
 /* Sets speed during analog run. */
-void set_speed(AccelStepper stepper, int target_speed) {
-    int curr_speed = round(stepper.speed());
-    if (target_speed > curr_speed) {
-        stepper.setSpeed(curr_speed + 1);
+void set_speed(AccelStepper stepper, int target_speed, int curr_speed) {
+    stepper.setSpeed(curr_speed);
+    if (stepper.runSpeed()) {
+        cmd_lcd(curr_speed, '0_0')
+        if (target_speed > curr_speed) {
+            return curr_speed + 1;
+        }
+        if (target_speed < curr_speed) {
+            return curr_speed - 1;
+        }
     }
-    if (target_speed < curr_speed) {
-        stepper.setSpeed(curr_speed - 1);
-    }
-    stepper.runSpeed();
+    return curr_speed;
 }
 
 /* Command interpreter */
@@ -340,11 +346,10 @@ void loop() {
         String message = Serial.readStringUntil('\n');
         cmd_interpreter(message);
     }
-
     if (op_mode == MODE_ANALOG) {
-        set_speed(stepperX, analog_x_speed);
-        set_speed(stepperY, analog_y_speed);
-        set_speed(stepperF, analog_f_speed);
+        curr_x_speed = set_speed(stepperX, analog_x_speed, curr_x_speed);
+        curr_y_speed = set_speed(stepperY, analog_y_speed, curr_y_speed);
+        curr_f_speed = set_speed(stepperF, analog_f_speed, curr_f_speed);
     }
     else {
         stepperX.run();
