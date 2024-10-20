@@ -8,6 +8,7 @@
 1. BACK-UPs for Raspi !!!!
 1. Display images in Browser UI.
 1. Display camera stream in Browser.
+1. Disable Motors when passive.
 1. Saving of positions. 
    1. Start Position.
    1. Unlimited Number of other Positions.
@@ -15,6 +16,12 @@
    1. Save as config file.
    1. Load config of saved positions.
    1. ...
+
+### Nice to have
+
+1. Stitch images together with Open CV.
+1. Find movements/objects in images with Open CV.
+1. Reduce background light by software.
    
 ## Hardware
 
@@ -26,5 +33,4 @@
 
 ### Nice to have 
 1. Replace focus driver by TMC 2208.
-1. New focus with NEMA 17 ??
-1. 
+1. New focus motor, NEMA 17 ?? Reduce heat/voltage for motor.
