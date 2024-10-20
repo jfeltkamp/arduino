@@ -4,17 +4,24 @@ from obelix_tools import ObelixCommands
 class ObelixJoystick:
     x: int = 0
     y: int = 0
+    f: int = 0
     speed_x: int = 0
     speed_y: int = 0
+    speed_f: int = 0
     axisMinSpeed: int = 100
     axisMaxSpeed: int = 1500
+    focusMinSpeed: int = 100
+    focusMaxSpeed: int = 2000
     do_trigger: bool = False
     do_trigger_x: bool = False
     do_trigger_y: bool = False
+    do_trigger_f: bool = False
     cmd_x = "ard_stop"
     cmd_y = "ard_stop"
+    cmd_f = "ard_stop"
     param_x = "x"
     param_y = "y"
+    param_f = "f"
 
     def __init__(self, obelix):
         self.obelix = obelix
@@ -45,3 +52,15 @@ class ObelixJoystick:
             self.cmd_y = "ard_y"
             self.param_y = "0"
         self.obelix.analog(ObelixCommands(self.cmd_y, self.param_y,"-"))
+
+    def set_focus(self, f):
+        self.f = int(f)
+        self.speed_f = round(self.focusMaxSpeed * (self.f - 511.5) / 511.5)
+        self.do_trigger_f = (abs(self.speed_f) >= self.focusMinSpeed)
+        if self.do_trigger_f:
+            self.cmd_f = "ard_f"
+            self.param_f = f"{self.speed_f}"
+        else:
+            self.cmd_f = "ard_f"
+            self.param_f = "0"
+        self.obelix.analog(ObelixCommands(self.cmd_f, self.param_f, "-"))

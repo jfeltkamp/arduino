@@ -39,12 +39,12 @@ if __name__ == "__main__":
 
     @app.route("/focus/<int:axis_z>")
     def focus(axis_z=0):
-        print("Focus: ", axis_z)
+        joystick_analog.set_focus(axis_z)
         speed = 10 * (axis_z - 511.5) / 511.5
         return {
             "focus": {
                 "speed": round(speed, 1),
-                "position": randint(0,100),
+                "position": 50,
             }
         }
 
