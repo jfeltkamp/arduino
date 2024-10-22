@@ -184,9 +184,20 @@ void sendStatus(String status, String message) {
     Serial.println(jsonOutput);
 }
 
+/* Check if stepper is running */
+bool isRunning(AccelStepper stepper) {
+    if (op_mode == MODE_ANALOG) {
+        return stepper.speed != 0;
+    }
+    else if (op_mode == MODE_AUTO) {
+        return stepper.isRunning();
+    }
+    return false;
+}
+
 /* Reset params to default to await next command. */
 void resolveResponse() {
-    if (busy && !stepperX.isRunning() && !stepperY.isRunning() && !stepperF.isRunning()) {
+    if (busy && !isRunning(stepperX) && !isRunning(stepperY) && !isRunning(stepperF)) {
         stepperX.setMaxSpeed(axisSpeed);
         stepperY.setMaxSpeed(axisSpeed);
         stepperF.setMaxSpeed(focusSpeed);
