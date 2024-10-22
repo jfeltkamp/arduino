@@ -197,7 +197,6 @@ bool isRunning(AccelStepper stepper) {
 
 /* Reset params to default to await next command. */
 void resolveResponse() {
-    Serial.println("RES busy: " + String(busy) + ", x runs: " + String(isRunning(stepperX));
     if (busy && !isRunning(stepperX) && !isRunning(stepperY) && !isRunning(stepperF)) {
         Serial.println("RESOLVE IN");
         stepperX.setMaxSpeed(axisSpeed);
@@ -435,7 +434,7 @@ void loop() {
         stepperF.setSpeed(curr_f_speed);
         stepperF.runSpeed();
     }
-    else {
+    if (op_mode == MODE_AUTO) {
         stepperX.run();
         stepperY.run();
         stepperF.run();
