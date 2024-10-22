@@ -150,7 +150,7 @@ bool setAwaitedResponse(String await, String dir) {
 /* Send status to controller. */
 void sendStatus(String status, String message) {
     // Create a JSON document
-    StaticJsonDocument<800> jsonDoc;
+    StaticJsonDocument<1000> jsonDoc;
     jsonDoc["status"] = status;
     jsonDoc["message"] = message;
     JsonObject data = jsonDoc.createNestedObject("data");
@@ -197,14 +197,16 @@ bool isRunning(AccelStepper stepper) {
 
 /* Reset params to default to await next command. */
 void resolveResponse() {
+    Serial.println("RES busy: " + String(busy) + ", x runs: " + String(isRunning(stepperX));
     if (busy && !isRunning(stepperX) && !isRunning(stepperY) && !isRunning(stepperF)) {
+        Serial.println("RESOLVE IN");
         stepperX.setMaxSpeed(axisSpeed);
         stepperY.setMaxSpeed(axisSpeed);
         stepperF.setMaxSpeed(focusSpeed);
-        sendStatus("success", "Successful completed command: " + awaited_response);
         awaited_response = "";
         op_mode = MODE_NEUTRAL;
         busy = false;
+        // sendStatus("success", "Successful completed command: " + awaited_response);
     }
 }
 

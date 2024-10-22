@@ -66,9 +66,10 @@ class Obelix:
             time.sleep(0.3)
             if self.ser.in_waiting > 0:
                 resp = self.ser.readline().decode('utf-8').rstrip()
+                print(resp)
+                """
                 resp = ObelixPayload(resp)
                 print(resp.status)
-                """
                 self.params.set_params_from_response(resp)
                 if resp.startswith("success") | resp.startswith("error"):
                     self.arduino_command('cmd_lcd', self.params.get_lcd("x"))
