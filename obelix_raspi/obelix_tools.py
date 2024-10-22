@@ -34,6 +34,8 @@ class ObelixParams:
         self.va = 800
         # Speed of focus
         self.vf = 500
+        self.axisMaxSpeed = 1500
+        self.focusMaxSpeed = 1500
         self.calc_deg()
 
     def set_params_from_response(self, response):
