@@ -1,5 +1,6 @@
 #include <LiquidCrystal_I2C.h>
 #include <AccelStepper.h>
+#include <ArduinoJson.h>
 
 #define motorInterfaceType 1
 const byte focusInterfaceType = 8;
@@ -112,7 +113,7 @@ bool isCommand(String data) {
 int getStepsOneDirect(String value, String cmd) {
   int steps = value.toInt();
   if (steps <= 0) {
-      Serial.println("ERROR: Param for '" + cmd + "' is 1-directional. Steps must be greater then 0, but is: " + value);
+      sendStatus("error", "Param for '" + cmd + "' is 1-directional. Steps must be greater then 0, but is: " + value);
       return 0;
   }
   return steps;
@@ -137,7 +138,7 @@ int getMinMaxIntFromStr(String value, int min, int max) {
 bool setAwaitedResponse(String await, String dir) {
     if (awaited_response != "") {
         // Another response is already awaited.
-        Serial.println("error");
+        sendStatus("error", "Cannot execute command. Blocked because response from last command is awaited.");
         return false;
     }
     else if (await == "await") {
@@ -146,16 +147,50 @@ bool setAwaitedResponse(String await, String dir) {
     return true;
 }
 
+/* Send status to controller. */
+void sendStatus(String status, String message) {
+    // Create a JSON document
+    StaticJsonDocument<800> jsonDoc;
+    jsonDoc["status"] = status;
+    jsonDoc["message"] = message;
+    JsonObject data = jsonDoc.createNestedObject("data");
+    data["accel"] = acceleration;
+    // Create data objects.
+    JsonObject xAxis = data.createNestedObject("x");
+    JsonObject yAxis = data.createNestedObject("y");
+    JsonObject focus = data.createNestedObject("f");
+
+    xAxis["pos"] = stepperX.currentPosition();
+    yAxis["pos"] = stepperY.currentPosition();
+    focus["pos"] = stepperF.currentPosition();
+
+    xAxis["maxV"] = axisMaxSpeed;
+    yAxis["maxV"] = axisMaxSpeed;
+    focus["maxV"] = focusMaxSpeed;
+
+    xAxis["minV"] = axisMinSpeed;
+    yAxis["minV"] = axisMinSpeed;
+    focus["minV"] = focusMinSpeed;
+
+    xAxis["v"] = axisSpeed;
+    yAxis["v"] = axisSpeed;
+    focus["v"] = focusSpeed;
+
+    // Serialize JSON to string
+    String jsonOutput;
+    serializeJson(jsonDoc, jsonOutput);
+
+    // Send JSON data over Serial
+    Serial.println(jsonOutput);
+}
+
+/* Reset params to default to await next command. */
 void resolveResponse() {
     if (busy && !stepperX.isRunning() && !stepperY.isRunning() && !stepperF.isRunning()) {
         stepperX.setMaxSpeed(axisSpeed);
         stepperY.setMaxSpeed(axisSpeed);
         stepperF.setMaxSpeed(focusSpeed);
-        String resp = "success";
-        resp = resp + "_x:" + stepperX.currentPosition();
-        resp = resp + "_y:" + stepperY.currentPosition();
-        resp = resp + "_f:" + stepperF.currentPosition();
-        Serial.println(resp);
+        sendStatus("success", "Successful completed command: " + awaited_response);
         awaited_response = "";
         op_mode = MODE_NEUTRAL;
         busy = false;

@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800">
     <defs>
-        <circle id="grad" r="360" cx="150" fill="none" stroke="#000" stroke-dasharray="188.5 754 1319.5" />
+        <circle id="grad" r="400" cx="0" fill="none" stroke="#000" />
         <polygon id="compass" fill="none" stroke="#000" points="7,7 50,0 7,-7 0,-50 -7,-7 -50,0 -7,7 0,50" />
     </defs>
     <defs>

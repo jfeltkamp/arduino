@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300">
+    <defs>
+        <g id="sphere">
+            <ellipse rx="100" ry="400" fill="none" stroke="#FFF4" />
+            <ellipse rx="200" ry="400" fill="none" stroke="#FFF4" />
+            <ellipse rx="300" ry="400" fill="none" stroke="#FFF4" />
+            <ellipse rx="400" ry="400" fill="none" stroke="#FFF4" />
+            <ellipse rx="550" ry="400" fill="none" stroke="#FFF4" />
+            <ellipse rx="800" ry="400" fill="none" stroke="#FFF4" />
+        </g>
+    </defs>
+    <defs>
+        <g id="horizon">
+            <g transform="translate(-150,-450)">
+                <rect width="600" height="600" fill="#2874b2"/>
+                <use href="#sphere" transform="translate(300, 600)"/>
+                <use href="#sphere" transform="translate(300, -200)"/>
+
+                <g transform="translate(300, 200)">
+                    <ellipse rx="200" ry="80" fill="#2874b2" stroke="#FFF4" />
+                    <ellipse rx="400" ry=".1" fill="none" stroke="#FFF4" />
+                    <ellipse rx="400" ry="160" fill="none" stroke="#FFF4" />
+                    <ellipse rx="800" ry="240" fill="none" stroke="#FFF4" />
+                    <ellipse rx="1600" ry="320" fill="none" stroke="#FFF4" />
+                    <path d="M0,-200 0,800" fill="none" stroke="#FFF4" />
+                    <circle r="20" fill="#2874b2" stroke="#FFF4"/>
+                </g>
+                <rect width="600" height="400" y="600" fill="#785633"/>
+            </g>
+        </g>
+    </defs>
+    <!-- Adjust here (0-90), formular: arc * 400 / 90°  -->
+    <use id="azimuth-sphere" href="#horizon" transform="translate(0 200)" />
+                        <!-- Adjust here    v  -->
+    <g id="altitude-visual" transform="translate(150 150) rotate(45)">
+        <path d="M-70 0 -10 0 A 10 10 0 0 0 10 0 L 70 0" fill="none" stroke-width="2" stroke="#000"/>
+        <path d="M 50,1 57,6 43,6z" fill="#FFF" />
+        <text id="altitude-text" text-anchor="middle" transform="translate(52 22)" fill="#FFF" font-size="15">45.2°</text>
+    </g>
+    <g transform="translate(150 150)">
+        <path d="M-70 0 -10 0 A 10 10 0 0 0 10 0 L 70 0" fill="none" stroke-width="2" stroke="#000"/>
+        <path d="M 0,-100 8,-107 8,-93z" fill="#FFF" />
+        <text id="azimuth-text" transform="translate(12 -95)" fill="#FFF" font-size="15">260.234°</text>
+    </g>
+</svg>
