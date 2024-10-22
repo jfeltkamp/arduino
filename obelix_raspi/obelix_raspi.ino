@@ -187,7 +187,7 @@ void sendStatus(String status, String message) {
 /* Check if stepper is running */
 bool isRunning(AccelStepper stepper) {
     if (op_mode == MODE_ANALOG) {
-        return stepper.speed != 0;
+        return round(stepper.speed()) != 0;
     }
     else if (op_mode == MODE_AUTO) {
         return stepper.isRunning();
