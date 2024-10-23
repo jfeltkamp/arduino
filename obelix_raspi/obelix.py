@@ -70,15 +70,12 @@ class Obelix:
                     resp = ObelixPayload(self.ser.readline().decode('utf-8').rstrip())
                     print(resp.status)
                     self.params.set_params_from_response(resp.data)
-                    self.arduino_command('cmd_lcd', self.params.get_lcd("x"))
-                    self.arduino_command('cmd_lcd', self.params.get_lcd("y"))
+                    self.arduino_command('ard_lcd', self.params.get_lcd("x"))
+                    self.arduino_command('ard_lcd', self.params.get_lcd("y"))
                 except Exception:
                     traceback.print_exc()
                     print("Obelix response could not be decoded.")
-                else:
-                    print(resp)
                 
-
     # Command list listener (daemon).
     # Runs in infinite loop. Listens to incoming commands in the command list.
     def command_list_listener(self):

@@ -49,7 +49,7 @@ class ObelixParams:
         if 'x' in response:
             self.x = response["x"]
         if 'y' in response:
-            self.x = response["y"]
+            self.y = response["y"]
         if 'f' in response:
             self.f = response["f"]
         if 'acc' in response:
@@ -77,8 +77,10 @@ class ObelixParams:
         self.calc_deg()
 
     def calc_deg(self):
-        self.deg_x = round(self.x / self.spr, 2)
-        self.deg_y = round(self.y / self.spr, 2)
+        self.deg_x = round(360 * self.x / self.spr, 2)
+        if (self.deg_x < 0):
+            self.deg_x = 360 + self.deg_x
+        self.deg_y = round(360 * self.y / self.spr, 2)
 
 
     def get_lcd(self, param):
