@@ -69,7 +69,7 @@ class Obelix:
                 try:
                     resp = ObelixPayload(self.ser.readline().decode('utf-8').rstrip())
                     print(resp.status)
-                    self.params.set_params_from_response(resp)
+                    self.params.set_params_from_response(resp.data)
                     self.arduino_command('cmd_lcd', self.params.get_lcd("x"))
                     self.arduino_command('cmd_lcd', self.params.get_lcd("y"))
                 except Exception:

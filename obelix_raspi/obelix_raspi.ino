@@ -163,7 +163,7 @@ void sendStatus(String respStatus, bool config) {
     if (config) {
         size = 128;
     }
-    StaticJsonDocument doc(size);
+    StaticJsonDocument<size> doc;
     doc["status"] = respStatus;
 
     JsonObject data = doc.createNestedObject("data");
