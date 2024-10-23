@@ -113,7 +113,7 @@ bool isCommand(String data) {
 int getStepsOneDirect(String value, String cmd) {
   int steps = value.toInt();
   if (steps <= 0) {
-      sendStatus("error", "Param for '" + cmd + "' is 1-directional. Steps must be greater then 0, but is: " + value);
+      sendStatus("error");
       return 0;
   }
   return steps;
@@ -138,7 +138,7 @@ int getMinMaxIntFromStr(String value, int min, int max) {
 bool setAwaitedResponse(String await, String dir) {
     if (awaited_response != "") {
         // Another response is already awaited.
-        sendStatus("error", "Cannot execute command. Blocked because response from last command is awaited.");
+        sendStatus("error");
         return false;
     }
     else if (await == "await") {
@@ -148,40 +148,37 @@ bool setAwaitedResponse(String await, String dir) {
 }
 
 /* Send status to controller. */
-void sendStatus(String status, String message) {
+void sendStatus(String respStatus) {
     // Create a JSON document
-    StaticJsonDocument<1000> jsonDoc;
-    jsonDoc["status"] = status;
-    jsonDoc["message"] = message;
-    JsonObject data = jsonDoc.createNestedObject("data");
-    data["accel"] = acceleration;
+    DynamicJsonDocument doc(255);
+    doc["status"] = respStatus;
+    JsonObject data = doc.createNestedObject("data");
+    data["acc"] = acceleration;
+    
     // Create data objects.
     JsonObject xAxis = data.createNestedObject("x");
     JsonObject yAxis = data.createNestedObject("y");
     JsonObject focus = data.createNestedObject("f");
 
-    xAxis["pos"] = stepperX.currentPosition();
-    yAxis["pos"] = stepperY.currentPosition();
-    focus["pos"] = stepperF.currentPosition();
+    xAxis["p"] = stepperX.currentPosition();
+    yAxis["p"] = stepperY.currentPosition();
+    focus["p"] = stepperF.currentPosition();
 
-    xAxis["maxV"] = axisMaxSpeed;
-    yAxis["maxV"] = axisMaxSpeed;
-    focus["maxV"] = focusMaxSpeed;
+    xAxis["v1"] = axisMaxSpeed;
+    yAxis["v1"] = axisMaxSpeed;
+    focus["v1"] = focusMaxSpeed;
 
-    xAxis["minV"] = axisMinSpeed;
-    yAxis["minV"] = axisMinSpeed;
-    focus["minV"] = focusMinSpeed;
+    xAxis["v2"] = axisMinSpeed;
+    yAxis["v2"] = axisMinSpeed;
+    focus["v2"] = focusMinSpeed;
 
     xAxis["v"] = axisSpeed;
     yAxis["v"] = axisSpeed;
     focus["v"] = focusSpeed;
-
+    
     // Serialize JSON to string
-    String jsonOutput;
-    serializeJson(jsonDoc, jsonOutput);
-
-    // Send JSON data over Serial
-    Serial.println(jsonOutput);
+    String output;
+    serializeJson(doc, Serial);
 }
 
 /* Check if stepper is running */
@@ -198,14 +195,13 @@ bool isRunning(AccelStepper stepper) {
 /* Reset params to default to await next command. */
 void resolveResponse() {
     if (busy && !isRunning(stepperX) && !isRunning(stepperY) && !isRunning(stepperF)) {
-        Serial.println("RESOLVE IN");
         stepperX.setMaxSpeed(axisSpeed);
         stepperY.setMaxSpeed(axisSpeed);
         stepperF.setMaxSpeed(focusSpeed);
         awaited_response = "";
         op_mode = MODE_NEUTRAL;
         busy = false;
-        // sendStatus("success", "Successful completed command: " + awaited_response);
+        sendStatus("success");
     }
 }
 
