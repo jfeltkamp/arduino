@@ -1,5 +1,6 @@
 #!/usr/bin/env_python3
 import serial
+import traceback
 import threading
 import time
 from obelix_tools import *
@@ -65,14 +66,15 @@ class Obelix:
         while self.listener_runs:
             time.sleep(0.3)
             if self.ser.in_waiting > 0:
-                resp = self.ser.readline().decode('utf-8').rstrip()
-                resp = ObelixPayload(resp)
-                print(resp.status)
-                # self.params.set_params_from_response(resp)
-                if resp.startswith("success") | resp.startswith("error"):
+                try:
+                    resp = ObelixPayload(self.ser.readline().decode('utf-8').rstrip())
+                    print(resp.status)
+                    self.params.set_params_from_response(resp)
                     self.arduino_command('cmd_lcd', self.params.get_lcd("x"))
                     self.arduino_command('cmd_lcd', self.params.get_lcd("y"))
-                    self.cmd_response = resp
+                except Exception:
+                    traceback.print_exc()
+                    print("Obelix response could not be decoded.")
                 else:
                     print(resp)
                 

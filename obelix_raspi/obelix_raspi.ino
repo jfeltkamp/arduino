@@ -14,17 +14,26 @@ LiquidCrystal_I2C lcd(0x27, 16, 2);
 const int enablePin = 8;
 
 // constants
-const int acceleration = 1000;
-const int axisMaxMove = 20000;
+const int acc = 1000;
+// Axis steps per revolution.
+const int spr = 80000;
+// max position axis from 0 (absolute: plus or minus).
+const int mpa = 20000;
+// Speed axis.
+const int va = 800;
+// Min speed axis.
+const int va1 = 100;
+// Max speed axis.
+const int va2 = 2000;
 
-const int axisMinSpeed = 100;
-const int axisMaxSpeed = 2000;
-const int axisSpeed = 800;
-
-const int focusMaxMove = 5000;
-const int focusMinSpeed = 100;
-const int focusMaxSpeed = 2000;
-const int focusSpeed = 500;
+// Max position focus from 0 (absolute: plus or minus).
+const int mpf = 5000;
+// Speed focus.
+const int vf = 500;
+// Min speed focus.
+const int vf1 = 100;
+// Max speed focus.
+const int vf2 = 2000;
 
 const int MODE_NEUTRAL = 0;
 const int MODE_ANALOG = 1;
@@ -43,7 +52,7 @@ int curr_y_speed = 0;
 int curr_f_speed = 0;
 unsigned long speed_last_update_t = 0;
 int speed_steps_per_update = 2;
-float speed_update_cycle = speed_steps_per_update * 1000 / acceleration;
+float speed_update_cycle = speed_steps_per_update * 1000 / acc;
 
 void setup() {
   Serial.begin(115200);
@@ -52,14 +61,14 @@ void setup() {
   while (!Serial) {}
 
   // set acceleration in steps/sec^2
-  stepperX.setAcceleration(acceleration);
-  stepperX.setMaxSpeed(axisSpeed);
+  stepperX.setAcceleration(acc);
+  stepperX.setMaxSpeed(va);
 
-  stepperY.setAcceleration(acceleration);
-  stepperY.setMaxSpeed(axisSpeed);
+  stepperY.setAcceleration(acc);
+  stepperY.setMaxSpeed(va);
 
-  stepperF.setAcceleration(acceleration);
-  stepperF.setMaxSpeed(focusSpeed);
+  stepperF.setAcceleration(acc);
+  stepperF.setMaxSpeed(vf);
 
   pinMode(enablePin, OUTPUT);
   // By default the steppers are disabled and started by command.
@@ -113,7 +122,7 @@ bool isCommand(String data) {
 int getStepsOneDirect(String value, String cmd) {
   int steps = value.toInt();
   if (steps <= 0) {
-      sendStatus("error");
+      sendStatus("error", false);
       return 0;
   }
   return steps;
@@ -138,7 +147,7 @@ int getMinMaxIntFromStr(String value, int min, int max) {
 bool setAwaitedResponse(String await, String dir) {
     if (awaited_response != "") {
         // Another response is already awaited.
-        sendStatus("error");
+        sendStatus("error", false);
         return false;
     }
     else if (await == "await") {
@@ -148,36 +157,36 @@ bool setAwaitedResponse(String await, String dir) {
 }
 
 /* Send status to controller. */
-void sendStatus(String respStatus) {
+void sendStatus(String respStatus, bool config) {
     // Create a JSON document
-    DynamicJsonDocument doc(255);
+    int size = 64;
+    if (config) {
+        size = 128;
+    }
+    StaticJsonDocument doc(size);
     doc["status"] = respStatus;
+
     JsonObject data = doc.createNestedObject("data");
-    data["acc"] = acceleration;
-    
-    // Create data objects.
-    JsonObject xAxis = data.createNestedObject("x");
-    JsonObject yAxis = data.createNestedObject("y");
-    JsonObject focus = data.createNestedObject("f");
+    data["x"] = stepperX.currentPosition();
+    data["y"] = stepperY.currentPosition();
+    data["f"] = stepperF.currentPosition();
 
-    xAxis["p"] = stepperX.currentPosition();
-    yAxis["p"] = stepperY.currentPosition();
-    focus["p"] = stepperF.currentPosition();
+    if (config) {
+        data["acc"] = acc;
+        data["spr"] = spr;
 
-    xAxis["v1"] = axisMaxSpeed;
-    yAxis["v1"] = axisMaxSpeed;
-    focus["v1"] = focusMaxSpeed;
+        data["mpa"] = mpa;
+        data["va"] = va;
+        data["va1"] = va1;
+        data["va2"] = va2;
 
-    xAxis["v2"] = axisMinSpeed;
-    yAxis["v2"] = axisMinSpeed;
-    focus["v2"] = focusMinSpeed;
+        data["mpf"] = mpf;
+        data["vf"] = vf;
+        data["vf1"] = vf1;
+        data["vf2"] = vf2;
+    }
 
-    xAxis["v"] = axisSpeed;
-    yAxis["v"] = axisSpeed;
-    focus["v"] = focusSpeed;
-    
-    // Serialize JSON to string
-    String output;
+    // Serialize JSON to string and send by Serial.
     serializeJson(doc, Serial);
 }
 
@@ -195,13 +204,13 @@ bool isRunning(AccelStepper stepper) {
 /* Reset params to default to await next command. */
 void resolveResponse() {
     if (busy && !isRunning(stepperX) && !isRunning(stepperY) && !isRunning(stepperF)) {
-        stepperX.setMaxSpeed(axisSpeed);
-        stepperY.setMaxSpeed(axisSpeed);
-        stepperF.setMaxSpeed(focusSpeed);
+        stepperX.setMaxSpeed(va);
+        stepperY.setMaxSpeed(va);
+        stepperF.setMaxSpeed(vf);
         awaited_response = "";
         op_mode = MODE_NEUTRAL;
         busy = false;
-        sendStatus("success");
+        sendStatus("success", false);
     }
 }
 
@@ -260,8 +269,8 @@ void cmd_right(String value, String await) {
 
 /* CMD focus */
 void cmd_focus(String value, String await) {
-    int steps = getMinMaxIntFromStr(getStringPartial(value, ',', 0), -focusMaxMove, focusMaxMove);
-    if ((steps >= -focusMaxMove) && (steps != 0) && setMode(MODE_AUTO) && setAwaitedResponse(await, "focus")) {
+    int steps = getMinMaxIntFromStr(getStringPartial(value, ',', 0), -mpf, mpf);
+    if ((steps >= -mpf) && (steps != 0) && setMode(MODE_AUTO) && setAwaitedResponse(await, "focus")) {
         busy = true;
         stepperF.move(steps);
     }
@@ -271,11 +280,11 @@ void cmd_focus(String value, String await) {
 void cmd_goto(String value, String await) {
     if (setMode(MODE_AUTO) && setAwaitedResponse(await, "goto")) {
         // move X axis to.
-        int target = getMinMaxIntFromStr(getStringPartial(value, ',', 0), -axisMaxMove, axisMaxMove);
+        int target = getMinMaxIntFromStr(getStringPartial(value, ',', 0), -mpa, mpa);
         int speed = 0;
-        if (target >= -axisMaxMove) {
-            speed = getMinMaxIntFromStr(getStringPartial(value, ',', 3), axisMinSpeed, axisMaxSpeed);
-            if (speed >= axisMinSpeed) {
+        if (target >= -mpa) {
+            speed = getMinMaxIntFromStr(getStringPartial(value, ',', 3), va1, va2);
+            if (speed >= va1) {
                 stepperX.setMaxSpeed(speed);
             }
             stepperX.moveTo(target);
@@ -283,10 +292,10 @@ void cmd_goto(String value, String await) {
         }
 
         // move Y axis to.
-        target = getMinMaxIntFromStr(getStringPartial(value, ',', 1), -axisMaxMove, axisMaxMove);
-        if (target >= -axisMaxMove) {
-            speed = getMinMaxIntFromStr(getStringPartial(value, ',', 4), axisMinSpeed, axisMaxSpeed);
-            if (speed >= axisMinSpeed) {
+        target = getMinMaxIntFromStr(getStringPartial(value, ',', 1), -mpa, mpa);
+        if (target >= -mpa) {
+            speed = getMinMaxIntFromStr(getStringPartial(value, ',', 4), va1, va2);
+            if (speed >= va1) {
                 stepperY.setMaxSpeed(speed);
             }
             stepperY.moveTo(target);
@@ -294,10 +303,10 @@ void cmd_goto(String value, String await) {
         }
 
         // move focus to.
-        target = getMinMaxIntFromStr(getStringPartial(value, ',', 2), -focusMaxMove, focusMaxMove);
-        if (target >= -focusMaxMove) {
-            speed = getMinMaxIntFromStr(getStringPartial(value, ',', 5), focusMinSpeed, focusMaxSpeed);
-            if (speed >= focusMinSpeed) {
+        target = getMinMaxIntFromStr(getStringPartial(value, ',', 2), -mpf, mpf);
+        if (target >= -mpf) {
+            speed = getMinMaxIntFromStr(getStringPartial(value, ',', 5), vf1, vf2);
+            if (speed >= vf1) {
                 stepperF.setMaxSpeed(speed);
             }
             stepperF.moveTo(target);
@@ -404,13 +413,13 @@ void cmd_interpreter(const String& cmd_raw) {
         }
         if (op_mode != MODE_AUTO) {
             if (command == "ard_x") {
-                analog_x_speed = cmd_axis(params, axisMinSpeed, axisMaxSpeed);
+                analog_x_speed = cmd_axis(params, va1, va2);
             }
             else if (command == "ard_y") {
-                analog_y_speed = cmd_axis(params, axisMinSpeed, axisMaxSpeed);
+                analog_y_speed = cmd_axis(params, va1, va2);
             }
             else if (command == "ard_f") {
-                analog_f_speed = cmd_axis(params, focusMinSpeed, focusMaxSpeed);
+                analog_f_speed = cmd_axis(params, vf1, vf2);
             }
         }
     }
