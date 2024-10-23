@@ -1,3 +1,4 @@
+import { Horizon } from './horizon.js'
 
 class JoystickController
 {
@@ -6,6 +7,7 @@ class JoystickController
     this.stick = document.getElementById("stick");
 
     if (this.stick) {
+      this.horizon = new Horizon();
       this.status = document.getElementById("status-joystick");
       // location from which drag begins, used to calculate offsets
       this.dragStart = null;
@@ -139,15 +141,15 @@ class JoystickController
    * @private
    */
   _sendUpdate() {
-    const x_axis = Math.floor(511.5 + this.value.x * 511.5);
-    const y_axis = Math.floor(511.5 + this.value.y * 511.5);
+    const x_axis = Math.round(511.5 + this.value.x * 511.5);
+    const y_axis = Math.round(511.5 + this.value.y * 511.5);
     if (this.status) { this.status.innerText = `Joystick (${this.counter++}): ${x_axis}, ${y_axis}`; }
     fetch(`/joystick/${x_axis}/${y_axis}`)
       .then((response) => {
         return response.json();
       }).then((data) => {
-        console.log('HUHU. Your data !', data);
-      })
+        this.horizon.initUpdate(data)
+      });
   }
 
   /**

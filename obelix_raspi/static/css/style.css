@@ -67,3 +67,8 @@ input[type="range"]::-webkit-slider-thumb {
 #focus-status-value {
   font-size: 1.5em;
 }
+
+#azimuth-sphere,
+#altitude-visual {
+  transition: transform .25s linear;
+}

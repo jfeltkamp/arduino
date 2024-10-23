@@ -60,12 +60,14 @@
               </g>
             </defs>
             <!-- Adjust here (0-90), formular: arc * 400 / 90°  -->
-            <use id="azimuth-sphere" href="#horizon" transform="translate(0 200)" />
+            <use id="azimuth-sphere" href="#horizon" transform="translate(0 400)" />
             <!-- Adjust here    v  -->
-            <g id="altitude-visual" transform="translate(150 150) rotate(45)">
-              <path d="M-70 0 -10 0 A 10 10 0 0 0 10 0 L 70 0" fill="none" stroke-width="2" stroke="#000"/>
-              <path d="M 50,1 57,6 43,6z" fill="#FFF" />
-              <text id="altitude-text" text-anchor="middle" transform="translate(52 22)" fill="#FFF" font-size="15">45.2°</text>
+            <g transform="translate(150 150)">
+              <g id="altitude-visual" style="transform: rotate(45deg)">
+                <path d="M-70 0 -10 0 A 10 10 0 0 0 10 0 L 70 0" fill="none" stroke-width="2" stroke="#000"/>
+                <path d="M 50,1 57,6 43,6z" fill="#FFF" />
+                <text id="altitude-text" text-anchor="middle" transform="translate(52 22)" fill="#FFF" font-size="15">45.2°</text>
+              </g>
             </g>
             <g transform="translate(150 150)">
               <path d="M-70 0 -10 0 A 10 10 0 0 0 10 0 L 70 0" fill="none" stroke-width="2" stroke="#000"/>
@@ -126,8 +128,8 @@
   </div>
 
   <script src="/static/js/uikit.min.js"></script>
-  <script src="/static/js/joystick.js"></script>
-  <script src="/static/js/focus.js"></script>
+  <script type="module" src="/static/js/joystick.js"></script>
+  <script type="module" src="/static/js/focus.js"></script>
 
 </body>
 
