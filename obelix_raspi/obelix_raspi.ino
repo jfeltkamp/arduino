@@ -159,11 +159,7 @@ bool setAwaitedResponse(String await, String dir) {
 /* Send status to controller. */
 void sendStatus(String respStatus, bool config) {
     // Create a JSON document
-    int size = 64;
-    if (config) {
-        size = 128;
-    }
-    StaticJsonDocument<size> doc;
+    StaticJsonDocument<128> doc;
     doc["status"] = respStatus;
 
     JsonObject data = doc.createNestedObject("data");
