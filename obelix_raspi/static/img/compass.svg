@@ -1,0 +1,122 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800">
+    <style>
+        .grade {
+        fill: none;
+        stroke: #000;
+        }
+        .cmp-text {
+        fill: #000;
+        font-size: 13px;
+        text-anchor: middle;
+        }
+        .cmp-text-sm {
+        fill: #000;
+        font-size: 8px;
+        text-anchor: middle;
+        }
+        .cmp-text-sm.left {
+        text-anchor: start;
+        }
+
+        #compass,
+        #azimuth-sphere,
+        #altitude-visual {
+        transition: transform .25s linear;
+        }
+    </style>
+    <g id="compass" transform="rotate(270)">
+        <circle r="400" class="grade" stroke-dasharray="1 5.98131701" stroke-width="20"/>
+        <circle r="400" class="grade" stroke-dasharray="1 33.90658504" stroke-width="30"/>
+        <circle r="400" class="grade" stroke-dasharray="1 103.71975512" stroke-width="40"/>
+        <circle r="400" fill="none" stroke-dasharray="1 156.07963268" stroke="#F00" stroke-width="40"/>
+        <text class="cmp-text" transform="rotate(0) translate(0 432)">N</text>
+        <text class="cmp-text" transform="rotate(-15) translate(0 432)">15</text>
+        <text class="cmp-text" transform="rotate(-30) translate(0 432)">30</text>
+        <text class="cmp-text" transform="rotate(-45) translate(0 432)">45</text>
+        <text class="cmp-text" transform="rotate(-60) translate(0 432)">60</text>
+        <text class="cmp-text" transform="rotate(-75) translate(0 432)">75</text>
+        <text class="cmp-text" transform="rotate(-90) translate(0 432)">E</text>
+        <text class="cmp-text" transform="rotate(-105) translate(0 432)">105</text>
+        <text class="cmp-text" transform="rotate(-120) translate(0 432)">120</text>
+        <text class="cmp-text" transform="rotate(-135) translate(0 432)">135</text>
+        <text class="cmp-text" transform="rotate(-150) translate(0 432)">150</text>
+        <text class="cmp-text" transform="rotate(-165) translate(0 432)">165</text>
+        <text class="cmp-text" transform="rotate(-180) translate(0 432)">S</text>
+        <text class="cmp-text" transform="rotate(-195) translate(0 432)">195</text>
+        <text class="cmp-text" transform="rotate(-210) translate(0 432)">210</text>
+        <text class="cmp-text" transform="rotate(-225) translate(0 432)">225</text>
+        <text class="cmp-text" transform="rotate(-240) translate(0 432)">240</text>
+        <text class="cmp-text" transform="rotate(-255) translate(0 432)">255</text>
+        <text class="cmp-text" transform="rotate(-270) translate(0 432)">W</text>
+        <text class="cmp-text" transform="rotate(-285) translate(0 432)">285</text>
+        <text class="cmp-text" transform="rotate(-300) translate(0 432)">300</text>
+        <text class="cmp-text" transform="rotate(-315) translate(0 432)">315</text>
+        <text class="cmp-text" transform="rotate(-330) translate(0 432)">330</text>
+        <text class="cmp-text" transform="rotate(-345) translate(0 432)">345</text>
+        <text class="cmp-text-sm left" transform="rotate(0) translate(0 422)">0</text>
+        <text class="cmp-text-sm" transform="rotate(-5) translate(0 422)">5</text>
+        <text class="cmp-text-sm" transform="rotate(-10) translate(0 422)">10</text>
+        <text class="cmp-text-sm" transform="rotate(-20) translate(0 422)">20</text>
+        <text class="cmp-text-sm" transform="rotate(-25) translate(0 422)">25</text>
+        <text class="cmp-text-sm" transform="rotate(-22.5) translate(0 422)">NNE</text>
+        <text class="cmp-text-sm" transform="rotate(-35) translate(0 422)">35</text>
+        <text class="cmp-text-sm" transform="rotate(-40) translate(0 422)">40</text>
+        <text class="cmp-text-sm left" transform="rotate(-45) translate(0 422)">NE</text>
+        <text class="cmp-text-sm" transform="rotate(-50) translate(0 422)">50</text>
+        <text class="cmp-text-sm" transform="rotate(-55) translate(0 422)">55</text>
+        <text class="cmp-text-sm" transform="rotate(-65) translate(0 422)">65</text>
+        <text class="cmp-text-sm" transform="rotate(-70) translate(0 422)">70</text>
+        <text class="cmp-text-sm" transform="rotate(-67.5) translate(0 422)">NEE</text>
+        <text class="cmp-text-sm" transform="rotate(-80) translate(0 422)">80</text>
+        <text class="cmp-text-sm" transform="rotate(-85) translate(0 422)">85</text>
+        <text class="cmp-text-sm left" transform="rotate(-90) translate(0 422)">90</text>
+        <text class="cmp-text-sm" transform="rotate(-95) translate(0 422)">95</text>
+        <text class="cmp-text-sm" transform="rotate(-95) translate(0 422)">95</text>
+        <text class="cmp-text-sm" transform="rotate(-100) translate(0 422)">100</text>
+        <text class="cmp-text-sm" transform="rotate(-110) translate(0 422)">110</text>
+        <text class="cmp-text-sm" transform="rotate(-112.5) translate(0 422)">SEE</text>
+        <text class="cmp-text-sm" transform="rotate(-115) translate(0 422)">115</text>
+        <text class="cmp-text-sm" transform="rotate(-125) translate(0 422)">125</text>
+        <text class="cmp-text-sm" transform="rotate(-130) translate(0 422)">130</text>
+        <text class="cmp-text-sm left" transform="rotate(-135) translate(0 422)">SE</text>
+        <text class="cmp-text-sm" transform="rotate(-140) translate(0 422)">140</text>
+        <text class="cmp-text-sm" transform="rotate(-145) translate(0 422)">145</text>
+        <text class="cmp-text-sm" transform="rotate(-155) translate(0 422)">155</text>
+        <text class="cmp-text-sm" transform="rotate(-157.5) translate(0 422)">SSE</text>
+        <text class="cmp-text-sm" transform="rotate(-160) translate(0 422)">160</text>
+        <text class="cmp-text-sm" transform="rotate(-170) translate(0 422)">170</text>
+        <text class="cmp-text-sm" transform="rotate(-175) translate(0 422)">175</text>
+        <text class="cmp-text-sm left" transform="rotate(-180) translate(0 422)">180</text>
+        <text class="cmp-text-sm" transform="rotate(-185) translate(0 422)">185</text>
+        <text class="cmp-text-sm" transform="rotate(-190) translate(0 422)">190</text>
+        <text class="cmp-text-sm" transform="rotate(-200) translate(0 422)">200</text>
+        <text class="cmp-text-sm" transform="rotate(-202.5) translate(0 422)">SSW</text>
+        <text class="cmp-text-sm" transform="rotate(-205) translate(0 422)">205</text>
+        <text class="cmp-text-sm" transform="rotate(-215) translate(0 422)">215</text>
+        <text class="cmp-text-sm" transform="rotate(-220) translate(0 422)">220</text>
+        <text class="cmp-text-sm left" transform="rotate(-225) translate(0 422)">SW</text>
+        <text class="cmp-text-sm" transform="rotate(-230) translate(0 422)">230</text>
+        <text class="cmp-text-sm" transform="rotate(-235) translate(0 422)">235</text>
+        <text class="cmp-text-sm" transform="rotate(-245) translate(0 422)">245</text>
+        <text class="cmp-text-sm" transform="rotate(-247.5) translate(0 422)">SWW</text>
+        <text class="cmp-text-sm" transform="rotate(-250) translate(0 422)">250</text>
+        <text class="cmp-text-sm" transform="rotate(-260) translate(0 422)">260</text>
+        <text class="cmp-text-sm" transform="rotate(-265) translate(0 422)">265</text>
+        <text class="cmp-text-sm left" transform="rotate(-270) translate(0 422)">270</text>
+        <text class="cmp-text-sm" transform="rotate(-275) translate(0 422)">275</text>
+        <text class="cmp-text-sm" transform="rotate(-280) translate(0 422)">280</text>
+        <text class="cmp-text-sm" transform="rotate(-290) translate(0 422)">290</text>
+        <text class="cmp-text-sm" transform="rotate(-292.5) translate(0 422)">NWW</text>
+        <text class="cmp-text-sm" transform="rotate(-295) translate(0 422)">295</text>
+        <text class="cmp-text-sm" transform="rotate(-305) translate(0 422)">305</text>
+        <text class="cmp-text-sm" transform="rotate(-310) translate(0 422)">310</text>
+        <text class="cmp-text-sm left" transform="rotate(-315) translate(0 422)">NW</text>
+        <text class="cmp-text-sm" transform="rotate(-320) translate(0 422)">320</text>
+        <text class="cmp-text-sm" transform="rotate(-325) translate(0 422)">325</text>
+        <text class="cmp-text-sm" transform="rotate(-335) translate(0 422)">335</text>
+        <text class="cmp-text-sm" transform="rotate(-340) translate(0 422)">340</text>
+        <text class="cmp-text-sm" transform="rotate(-350) translate(0 422)">350</text>
+        <text class="cmp-text-sm" transform="rotate(-355) translate(0 422)">355</text>
+        <text class="cmp-text-sm" transform="rotate(-337.5) translate(0 422)">NNW</text>
+    </g>
+</svg>

@@ -1,3 +1,4 @@
+import horizon from './horizon.js';
 
 class InitFocusController {
 
@@ -8,6 +9,7 @@ class InitFocusController {
     this.focusStatus = document.getElementById('focus-status-value');
 
     if (this.rangeInput) {
+      this.horizon = horizon;
       // Animate settings
       this.submissionCounter = 0;
       this.duration = .3;
@@ -51,14 +53,7 @@ class InitFocusController {
       .then((response) => {
         return response.json();
       }).then((data) => {
-        const speed = data?.focus?.speed;
-        if ((typeof speed !== 'undefined') && this.focusStatus) {
-          this.focusStatus.innerText = speed;
-        }
-        const position = data?.focus?.position;
-        if (position && this.rangeMeter) {
-          this.rangeMeter.style = `y:${100 - position}%`;
-        }
+        this.horizon.initUpdate(data);
       })
   }
 

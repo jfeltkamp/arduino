@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 400 400">
+    <defs>
+        <polygon id="focusArrow" points="0,400 180,65 100,65 200,35 300,65 220,65 400,400"/>
+        <linearGradient id="focusArrowGradClip" x1="0%" x2="0%" y1="0%" y2="100%">
+            <stop offset="0%" stop-color="#005" />
+            <stop offset="50%" stop-color="#039" />
+            <stop offset="100%" stop-color="#07f" />
+        </linearGradient>
+    </defs>
+    <clipPath id="arrowStripesClip">
+        <polygon points="200,0 -390,400 -370,400 200,0 -350,400 -330,400 200,0 -310,400 -290,400 200,0 -270,400 -250,400 200,0 -230,400 -210,400 200,0 -190,400 -170,400 200,0 -150,400 -130,400 200,0 -110,400 -90,400 200,0 -70,400 -50,400 200,0 -30,400 -10,400 200,0 10,400 30,400 200,0 50,400 70,400 200,0 90,400 110,400 200,0 130,400 150,400 200,0 170,400 190,400 200,0 210,400 230,400 200,0 250,400 270,400 200,0 290,400 310,400 200,0 330,400 350,400 200,0 370,400 390,400 200,0 410,400 430,400 200,0 450,400 470,400 200,0 490,400 510,400 200,0 530,400 550,400 200,0 570,400 590,400 200,0 610,400 630,400 200,0 650,400 670,400 200,0 690,400 710,400 200,0 730,400 750,400 200,0 770,400 790,400"/>
+    </clipPath>
+    <clipPath id="focusRangeMeterClip">
+        <!-- Adjust here                    v -->
+        <rect id="focus-range-meter" style="y:390" width="400" height="400"/>
+    </clipPath>
+    <g transform="scale(1)">
+        <use clip-path="url(#focusRangeMeterClip)" href="#focusArrow" fill="url(#focusArrowGradClip)" />
+        <use clip-path="url(#arrowStripesClip)" href="#focusArrow" fill="#FFF" />
+    </g>
+</svg>

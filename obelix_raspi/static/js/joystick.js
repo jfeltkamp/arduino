@@ -1,4 +1,4 @@
-import { Horizon } from './horizon.js'
+import horizon from './horizon.js';
 
 class JoystickController
 {
@@ -7,7 +7,7 @@ class JoystickController
     this.stick = document.getElementById("stick");
 
     if (this.stick) {
-      this.horizon = new Horizon();
+      this.horizon = horizon;
       this.status = document.getElementById("status-joystick");
       // location from which drag begins, used to calculate offsets
       this.dragStart = null;

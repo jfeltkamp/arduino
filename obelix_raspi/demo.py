@@ -1,6 +1,5 @@
 #!/usr/bin/env_python3
 from flask import Flask, render_template, send_from_directory
-from random import randint
 
 app = Flask(__name__)
 
@@ -21,12 +20,13 @@ def joystick(axis_x=0, axis_y=0):
 @app.route("/focus/<int:axis_z>")
 def focus(axis_z=0):
     print("Focus: ", axis_z)
-    speed = 10 * (axis_z - 511.5) / 511.5
+    speed = round(1000 * (axis_z - 511.5) / 511.5)
     return {
-        "focus": {
-            "speed": round(speed, 1),
-            "position": randint(0,100),
-        }
+        "vf": speed,
+        "acc": 1000,
+        "mpf": 5000,
+        "vf1": 100,
+        "vf2": 1500
     }
 
 @app.route('/static/<path:path>')
