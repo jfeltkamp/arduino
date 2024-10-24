@@ -10,7 +10,7 @@ def hello():
 @app.route("/joystick/<int:axis_x>/<int:axis_y>")
 def joystick(axis_x=0, axis_y=0):
     speed_x = 1500 * (axis_x - 511.5) / 511.5
-    speed_y = 1500 * (axis_y - 511.5) / 511.5
+    speed_y = -1500 * (axis_y - 511.5) / 511.5
     return {
         "vx": round(speed_x),
         "vy": round(speed_y),

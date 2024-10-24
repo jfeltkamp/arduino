@@ -57,7 +57,11 @@
                     <path d="M0,-200 0,800" fill="none" stroke="#FFF4" />
                     <circle r="20" fill="#2874b2" stroke="#FFF4"/>
                 </g>
-                <rect width="600" height="400" y="600" fill="url(#floor)"/>
+                <rect width="600" height="800" y="600" fill="url(#floor)"/>
+                <g transform="translate(300, 1000)">
+                    <circle r="10" fill="#A00" stroke="#FFF"/>
+                    <text font-size="8" fill="#FFF" text-anchor="middle" transform="translate(0 3)">You</text>
+                </g>
             </g>
         </g>
     </defs>
