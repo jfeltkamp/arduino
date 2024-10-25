@@ -70,9 +70,9 @@ class Obelix:
                     resp = ObelixPayload(self.ser.readline().decode('utf-8').rstrip())
                     print(resp.status)
                     self.params.set_params_from_response(resp.data)
-                    self.cmd_response = resp.status
                     self.arduino_command('ard_lcd', self.params.get_lcd("x"))
                     self.arduino_command('ard_lcd', self.params.get_lcd("y"))
+                    self.cmd_response = resp.status
                 except Exception:
                     traceback.print_exc()
                     print("Obelix response could not be decoded.")
