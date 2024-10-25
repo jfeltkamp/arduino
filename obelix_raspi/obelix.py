@@ -160,11 +160,12 @@ class Obelix:
         position_update = {}
         while True:
             time.sleep(0.1)
-            if self.cmd_response != "":
-                if self.cmd_response.startswith("success"):
-                    print("Position update.")
-                    position_update = self.params.get_position()
-                    break
+            if self.cmd_response == "success":
+                print("Awaited position update.")
+                position_update = self.params.get_position()
+                break
             if time.time() - fired_time > 15:
+                position_update = self.params.get_position()
+                print("Cancel position update.")
                 break
         return position_update
