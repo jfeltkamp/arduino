@@ -70,6 +70,7 @@ class Obelix:
                     resp = ObelixPayload(self.ser.readline().decode('utf-8').rstrip())
                     print(resp.status)
                     self.params.set_params_from_response(resp.data)
+                    self.cmd_response = resp.status
                     self.arduino_command('ard_lcd', self.params.get_lcd("x"))
                     self.arduino_command('ard_lcd', self.params.get_lcd("y"))
                 except Exception:
@@ -121,6 +122,7 @@ class Obelix:
     def arduino_command(self, cmd, param, await_resp=False):
         cmd_serial = f"{cmd}:{param}\n"
         self.ser.write(cmd_serial.encode('utf-8'))
+        self.cmd_response = ""
         if await_resp:
             fired_time = time.time()
             while True:
@@ -140,6 +142,7 @@ class Obelix:
     # Method to give access to analog commands (Joystick or webUI).
     def analog_command(self, cmd):
         if not self.analog_lock:
+            self.cmd_response = ""
             self.command(cmd)
 
     def camera_command(self, prc, params, options):
@@ -151,3 +154,17 @@ class Obelix:
             self.camera.stop_preview()
         elif prc == "cam_set_path":
             self.camera.set_path(params)
+
+    def await_position_update(self):
+        fired_time = time.time()
+        position_update = {}
+        while True:
+            time.sleep(0.1)
+            if self.cmd_response != "":
+                if self.cmd_response.startswith("success"):
+                    print("Position update.")
+                    position_update = self.params.get_position()
+                    break
+            if time.time() - fired_time > 15:
+                break
+        return position_update

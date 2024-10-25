@@ -31,7 +31,7 @@ if __name__ == "__main__":
     # Deliver position to refresh.
     @app.route('/refresh-position')
     def refresh_position():
-        return obelix.params.get_position()
+        return obelix.await_position_update()
 
     # Receive signals from virtuell Joystick.
     @app.route("/joystick/<int:analog_x>/<int:analog_y>")
