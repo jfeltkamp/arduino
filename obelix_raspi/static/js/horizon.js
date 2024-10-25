@@ -109,15 +109,14 @@ class Horizon {
       }, this.timeout);
     }
     else {
-      // After all motors are stopped, the time until all motors have come to rest is calculated from the speed
-      // and acceleration. Then the position is queried.
-      const refreshTime = 1000 + Math.round(Math.max(this.conf.va2, this.conf.vf2) / this.conf.acc * 1000);
-      this.timer = setTimeout(() => {
-        this.refreshPosition();
-      }, refreshTime);
+      this.refreshPosition();
     }
   }
 
+  /**
+   * Async position update.
+   * May be slow because waits until Arduino has stopped steppers and has sent update.
+   */
   refreshPosition() {
     fetch(`/refresh-position`)
       .then((response) => {
