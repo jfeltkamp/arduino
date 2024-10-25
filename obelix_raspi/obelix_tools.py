@@ -22,27 +22,27 @@ class ObelixPayload:
         self.__dict__ = json.loads(payload)
 
 class ObelixParams:
-    # Positions
-    x = 0
-    y = 0
-    f = 0
-    # Steppers acceleration.
-    acc = 1000
-    # axis steps per revolution
-    spr = 80000
-
-    # axis
-    mpa = 20000 # max position axis (+-)
-    va = 800
-    va1 = 100
-    va2 = 1500
-    # Speed of focus
-    mpf = 5000 # max position focus (+-)
-    vf = 500
-    vf1 = 100
-    vf2 = 1500
 
     def __init__(self):
+        # Positions
+        self.x = 0
+        self.y = 0
+        self.f = 0
+        # Steppers acceleration.
+        self.acc = 1000
+        # axis steps per revolution
+        self.spr = 80000
+
+        # axis
+        self.mpa = 20000 # max position axis (+-)
+        self.va = 800
+        self.va1 = 100
+        self.va2 = 1500
+        # Speed of focus
+        self.mpf = 5000 # max position focus (+-)
+        self.vf = 500
+        self.vf1 = 100
+        self.vf2 = 1500
         self.calc_deg()
 
     def set_params_from_response(self, response):
@@ -88,3 +88,10 @@ class ObelixParams:
             return f"{self.deg_x}:0_0"
         elif param == "y":
             return f"{self.deg_y}:0_1"
+
+    def get_position(self):
+        return {
+            "x": self.x,
+            "y": self.y,
+            "f": self.f
+        }

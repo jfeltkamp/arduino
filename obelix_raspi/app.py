@@ -1,18 +1,16 @@
 #!/usr/bin/env_python3
 import traceback
 from obelix import Obelix
-from obelix_joystick import ObelixJoystick
+from obelix_analog import ObelixAnalog
 from flask import Flask, render_template, send_from_directory
-from random import randint
-from obelix_tools import ObelixCommands
 
 if __name__ == "__main__":
 
     obelix = Obelix()
     obelix.run_listener()
 
-    joystick_analog = ObelixJoystick(obelix)
-    joystick_analog.run_auto_trigger()
+    joystick_analog = ObelixAnalog(obelix)
+    joystick_analog.enable()
 
     app = Flask(__name__)
 
@@ -20,37 +18,29 @@ if __name__ == "__main__":
     def hello():
         return render_template('index.html')
 
-
-    @app.route("/joystick/<int:axis_x>/<int:axis_y>")
-    def joystick(axis_x=0, axis_y=0):
-        joystick_analog.set_coords(axis_x, axis_y)
-        speed_x = 10 * (axis_x - 511.5) / 511.5
-        speed_y = 10 * (axis_y - 511.5) / 511.5
-        return {
-            "axis_x": {
-                "speed": round(speed_x, 1),
-                "position": randint(0,360),
-            },
-            "axis_y": {
-                "speed": round(speed_y, 1),
-                "position": randint(0,90),
-            }
-        }
-
-    @app.route("/focus/<int:axis_z>")
-    def focus(axis_z=0):
-        joystick_analog.set_focus(axis_z)
-        speed = 10 * (axis_z - 511.5) / 511.5
-        return {
-            "focus": {
-                "speed": round(speed, 1),
-                "position": 50,
-            }
-        }
-
+    # Deliver static files.
     @app.route('/static/<path:path>')
     def set_static(path):
         return send_from_directory('static', path)
+
+    # Deliver initial config to frontend.
+    @app.route('/get-config')
+    def get_config():
+        return obelix.params.__dict__
+
+    # Deliver position to refresh.
+    @app.route('/refresh-position')
+    def refresh_position():
+        return obelix.params.get_position()
+
+    # Receive signals from virtuell Joystick.
+    @app.route("/joystick/<int:analog_x>/<int:analog_y>")
+    def joystick(analog_x=0, analog_y=0):
+        return joystick_analog.set_axis_speed(analog_x, analog_y)
+
+    @app.route("/focus/<int:analog_f>")
+    def focus(analog_f=0):
+        return joystick_analog.set_focus_speed(analog_f)
 
     app.run(host='0.0.0.0')
 

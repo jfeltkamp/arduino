@@ -5,8 +5,6 @@ class InitFocusController {
   constructor() {
     // Get UI elements
     this.rangeInput = document.getElementById('focus');
-    this.rangeMeter = document.getElementById('range-meter');
-    this.focusStatus = document.getElementById('focus-status-value');
 
     if (this.rangeInput) {
       this.horizon = horizon;

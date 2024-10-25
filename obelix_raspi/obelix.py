@@ -138,7 +138,7 @@ class Obelix:
                     raise Exception(f"Command '{cmd}: {param}' timed out.")
 
     # Method to give access to analog commands (Joystick or webUI).
-    def analog(self, cmd):
+    def analog_command(self, cmd):
         if not self.analog_lock:
             self.command(cmd)
 
