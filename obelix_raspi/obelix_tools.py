@@ -28,6 +28,8 @@ class ObelixParams:
         self.x = 0
         self.y = 0
         self.f = 0
+        self.deg_x = 0.0
+        self.deg_y = 0.0
         # Steppers acceleration.
         self.acc = 1000
         # axis steps per revolution
@@ -93,5 +95,7 @@ class ObelixParams:
         return {
             "x": self.x,
             "y": self.y,
-            "f": self.f
+            "f": self.f,
+            "deg_x": self.deg_x,
+            "deg_y": self.deg_y,
         }

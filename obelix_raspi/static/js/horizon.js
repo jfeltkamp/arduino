@@ -16,7 +16,9 @@ class Horizon {
     this.conf = {
       x: 0,
       y: 0,
-      f: -2500,
+      f: 0,
+      deg_x: 0.0,
+      deg_y: 0.0,
       acc: 1000,
       spr: 80000,
       pmf: 5000,
@@ -66,17 +68,15 @@ class Horizon {
     const rateF = rangeF / this.conf.pmf;
     this.focusRangeMeter.style.y = `${(1-rateF) * 133}%`;
 
-    const degX = Math.round(this.conf.x / this.conf.spr * 36000) / 100;
-    const degY = Math.round(this.conf.y / this.conf.spr * 36000) / 100;
     // Set X axis params in SVG.
-    this.azimuthText.textContent = `${degX}°`;
-    this.compass.style.transform = `rotate(${degX}deg)`;
+    this.azimuthText.textContent = `${this.conf.deg_x}°`;
+    this.compass.style.transform = `rotate(${this.conf.deg_x}deg)`;
 
     // Set Y axis params in SVG.
-    const azimuthLift = Math.round(degY * 400 / 90);
+    const azimuthLift = Math.round(this.conf.deg_y * 400 / 90);
     this.azimuthSphere.style.transform = `translate(0, ${azimuthLift}px)`;
-    this.altitudeVisual.style.transform = `rotate(${degY}deg)`;
-    this.altitudeText.textContent = `∠ ${degY}°`;
+    this.altitudeVisual.style.transform = `rotate(${this.conf.deg_y}deg)`;
+    this.altitudeText.textContent = `∠ ${this.conf.deg_y}°`;
   }
 
   runSpeed() {
