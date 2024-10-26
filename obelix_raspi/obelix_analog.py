@@ -30,7 +30,7 @@ class ObelixAnalog:
     # Set speeds for axis.
     def set_axis_speed(self, analog_x, analog_y):
         self.speed_x = get_val_from_analog(analog_x, self.obelix.params.va1, self.obelix.params.va2)
-        self.speed_y = get_val_from_analog(analog_y, self.obelix.params.va1, self.obelix.params.va2)
+        self.speed_y = get_val_from_analog(analog_y, self.obelix.params.va1, self.obelix.params.va2, True)
         self.obelix.analog_command(ObelixCommands("ard_x", f"{self.speed_x}", "-"))
         self.obelix.analog_command(ObelixCommands("ard_y", f"{self.speed_y}", "-"))
         return {
