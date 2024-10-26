@@ -89,9 +89,14 @@ class Horizon {
     if (isVx || isVy || isVf) {
       if (isVx) {
         this.conf.x = this.conf.x + Math.round(this.conf.vx * this.timeout / 1000);
+        this.conf.deg_x = Math.round(this.conf.x / this.conf.spr * 36000) / 100;
+        if (this.conf.deg_x < 0) {
+          this.conf.deg_x = 360 + this.conf.deg_x;
+        }
       }
       if (isVy) {
         this.conf.y = this.conf.y + Math.round(this.conf.vy * this.timeout / 1000);
+        this.conf.deg_y = Math.round(this.conf.y / this.conf.spr * 36000) / 100;
       }
       if (isVf) {
         this.conf.f = this.conf.f + Math.round(this.conf.vf * this.timeout / 1000);
