@@ -39,6 +39,10 @@ const int MODE_NEUTRAL = 0;
 const int MODE_ANALOG = 1;
 const int MODE_AUTO = 2;
 
+const int DIR_X = 1;    // Stepper counts up clockwise => 1
+const int DIR_Y = -1;   // Stepper counts up counter-clockwise => -1
+const int DIR_F = 1;
+
 // Process variables
 String awaited_response = "";
 bool busy = false;
@@ -180,6 +184,10 @@ void sendStatus(String respStatus, bool config) {
         data["vf"] = vf;
         data["vf1"] = vf1;
         data["vf2"] = vf2;
+
+        data["dx"] = DIR_X;
+        data["dy"] = DIR_Y;
+        data["df"] = DIR_F;
     }
 
     // Serialize JSON to string and send by Serial.
@@ -232,7 +240,7 @@ void cmd_up(String value, String await) {
     int steps = getStepsOneDirect(getStringPartial(value, ',', 0), "cmd_up");
     if (steps > 0 && setMode(MODE_AUTO) && setAwaitedResponse(await, "up")) {
         busy = true;
-        stepperY.move(steps);
+        stepperY.move(-steps * DIR_Y);
     }
 }
 
@@ -241,7 +249,7 @@ void cmd_down(String value, String await) {
     int steps = getStepsOneDirect(getStringPartial(value, ',', 0), "cmd_down");
     if (steps > 0 && setMode(MODE_AUTO) && setAwaitedResponse(await, "down")) {
         busy = true;
-        stepperY.move(-steps);
+        stepperY.move(steps * DIR_Y);
     }
 }
 
@@ -250,7 +258,7 @@ void cmd_left(String value, String await) {
     int steps = getStepsOneDirect(getStringPartial(value, ',', 0), "cmd_left");
     if (steps > 0 && setMode(MODE_AUTO) && setAwaitedResponse(await, "left")) {
         busy = true;
-        stepperX.move(-steps);
+        stepperX.move(-steps * DIR_X);
     }
 }
 
@@ -259,7 +267,7 @@ void cmd_right(String value, String await) {
     int steps = getStepsOneDirect(getStringPartial(value, ',', 0), "cmd_right");
     if (steps > 0 && setMode(MODE_AUTO) && setAwaitedResponse(await, "right")) {
         busy = true;
-        stepperX.move(steps);
+        stepperX.move(steps * DIR_X);
     }
 }
 
@@ -268,7 +276,7 @@ void cmd_focus(String value, String await) {
     int steps = getMinMaxIntFromStr(getStringPartial(value, ',', 0), -mpf, mpf);
     if ((steps >= -mpf) && (steps != 0) && setMode(MODE_AUTO) && setAwaitedResponse(await, "focus")) {
         busy = true;
-        stepperF.move(steps);
+        stepperF.move(steps * DIR_F);
     }
 }
 

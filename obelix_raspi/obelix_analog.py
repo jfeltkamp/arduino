@@ -48,5 +48,8 @@ class ObelixAnalog:
 
     # Function for minor analog adjustments.
     def adjust(self, direction, length):
-        self.obelix.analog_command(ObelixCommands(f"ard_{direction}", f"{length}", "-"))
-        return self.obelix.await_position_update()
+        return {
+            "result": self.obelix.command_list_push(ObelixCommands(f"ard_{direction}", f"{length}", "-")),
+            "direction": direction,
+            "length": length
+        }

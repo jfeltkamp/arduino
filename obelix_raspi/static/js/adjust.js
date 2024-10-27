@@ -38,8 +38,9 @@ class Adjust {
         .then((response) => {
           return response.json();
         }).then((data) => {
-          console.log('Adjust update', dataset, data)
-          horizon.initUpdate(data);
+          if (data?.result) {
+            horizon.dirUpdate(dir, length);
+          }
         });
     }
   }

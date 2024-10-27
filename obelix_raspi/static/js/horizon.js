@@ -19,6 +19,9 @@ class Horizon {
       f: 0,
       deg_x: 0.0,
       deg_y: 0.0,
+      dx: 1,
+      dy: -1,
+      df: 1,
       acc: 1000,
       spr: 80000,
       pmf: 5000,
@@ -162,6 +165,24 @@ class Horizon {
         }
         this.updateSvg();
     });
+  }
+
+  dirUpdate(dir, length) {
+    if (dir === 'left') {
+      this.initUpdate({ "x": this.conf.x + length * -this.conf.dx })
+    }
+    else if (dir === 'right') {
+      this.initUpdate({ "x": this.conf.x + length * this.conf.dx })
+    }
+    else if (dir === 'up') {
+      this.initUpdate({ "y": this.conf.y + length * -this.conf.dy })
+    }
+    else if (dir === 'down') {
+      this.initUpdate({ "y": this.conf.y + length * this.conf.dy })
+    }
+    else if (dir === 'focus') {
+      this.initUpdate({ "f": this.conf.x + length * this.conf.df })
+    }
   }
 }
 
