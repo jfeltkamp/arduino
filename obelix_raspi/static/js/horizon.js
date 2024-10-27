@@ -59,10 +59,12 @@ class Horizon {
     this.setPosition(data);
     this.updateSvg();
 
-    this.conf.vx = (typeof data.vx === 'number') ? data.vx : this.conf.vx;
-    this.conf.vy = (typeof data.vy === 'number') ? data.vy : this.conf.vy;
-    this.conf.vf = (typeof data.vf === 'number') ? data.vf : this.conf.vf;
-    this.runSpeed();
+    if ((typeof data.vx === 'number') || (typeof data.vy === 'number') || (typeof data.vf === 'number')) {
+      this.conf.vx = (typeof data.vx === 'number') ? data.vx : this.conf.vx;
+      this.conf.vy = (typeof data.vy === 'number') ? data.vy : this.conf.vy;
+      this.conf.vf = (typeof data.vf === 'number') ? data.vf : this.conf.vf;
+      this.runSpeed();
+    }
   }
 
   /**
