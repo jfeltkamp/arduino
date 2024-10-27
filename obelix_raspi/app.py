@@ -42,6 +42,10 @@ if __name__ == "__main__":
     def focus(analog_f=0):
         return joystick_analog.set_focus_speed(analog_f)
 
+    @app.route("/adjust/<str:dir>/<int:length>")
+    def adjust(dir="__", length=0):
+        return joystick_analog.set_focus_speed(analog_f)
+
     app.run(host='0.0.0.0')
 
     # Fires commands.

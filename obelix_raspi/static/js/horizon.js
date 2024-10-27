@@ -35,6 +35,9 @@ class Horizon {
     this.getArduinoConfig();
   }
 
+  /**
+   * Initial load of the Arduino config.
+   */
   getArduinoConfig() {
     fetch(`/get-config`)
       .then((response) => {
@@ -50,9 +53,7 @@ class Horizon {
   }
 
   initUpdate(data) {
-    this.conf.x = (typeof data.x === 'number') ? data.x : this.conf.x;
-    this.conf.y = (typeof data.y === 'number') ? data.y : this.conf.y;
-    this.conf.f = (typeof data.f === 'number') ? data.f : this.conf.f;
+    this.setPosition(data);
     this.updateSvg();
 
     this.conf.vx = (typeof data.vx === 'number') ? data.vx : this.conf.vx;
@@ -61,6 +62,9 @@ class Horizon {
     this.runSpeed();
   }
 
+  /**
+   * Refresh the horizon SVG, based on current conf.
+   */
   updateSvg() {
     // Calc
     const stepsF = this.conf.f + this.conf.pmf;
@@ -79,6 +83,47 @@ class Horizon {
     this.altitudeText.textContent = `∠ ${this.conf.deg_y}°`;
   }
 
+  /**
+   * Get current position.
+   *
+   * @returns {{f: number, x: number, y: number}}
+   */
+  getPosition() {
+    return {
+      "x": this.conf.x,
+      "y": this.conf.y,
+      "f": this.conf.f,
+    }
+  }
+
+  /**
+   * Sets new X-Y-F position and re-calculates params derived from the positions.
+   *
+   * @param newPos
+   */
+  setPosition(newPos) {
+    if (typeof newPos.x === 'number') {
+      this.conf.x = newPos.x;
+      this.conf.deg_x = Math.round(newPos.x / this.conf.spr * 36000) / 100;
+      if (this.conf.deg_x < 0) {
+        this.conf.deg_x = 360 + this.conf.deg_x;
+      }
+    }
+    if (typeof newPos.y === 'number') {
+      this.conf.y = newPos.y;
+      this.conf.deg_y = Math.round(newPos.y / this.conf.spr * 36000) / 100;
+    }
+    if (typeof newPos.f === 'number') {
+      this.conf.f = newPos.f;
+      if (this.conf.f >  this.conf.pmf) {
+        this.conf.f = this.conf.pmf;
+      }
+      if (this.conf.f < -this.conf.pmf) {
+        this.conf.f = -this.conf.pmf;
+      }
+    }
+  }
+
   runSpeed() {
     if (this.timer) {
       clearTimeout(this.timer);
@@ -87,26 +132,11 @@ class Horizon {
     const isVy = Math.abs(this.conf.vy) >= this.conf.va1;
     const isVf = Math.abs(this.conf.vf) >= this.conf.vf1;
     if (isVx || isVy || isVf) {
-      if (isVx) {
-        this.conf.x = this.conf.x + Math.round(this.conf.vx * this.timeout / 1000);
-        this.conf.deg_x = Math.round(this.conf.x / this.conf.spr * 36000) / 100;
-        if (this.conf.deg_x < 0) {
-          this.conf.deg_x = 360 + this.conf.deg_x;
-        }
-      }
-      if (isVy) {
-        this.conf.y = this.conf.y + Math.round(this.conf.vy * this.timeout / 1000);
-        this.conf.deg_y = Math.round(this.conf.y / this.conf.spr * 36000) / 100;
-      }
-      if (isVf) {
-        this.conf.f = this.conf.f + Math.round(this.conf.vf * this.timeout / 1000);
-        if (this.conf.f >  this.conf.pmf) {
-          this.conf.f = this.conf.pmf;
-        }
-        if (this.conf.f < -this.conf.pmf) {
-          this.conf.f = -this.conf.pmf;
-        }
-      }
+      const newPos = {}
+      newPos['x'] = (isVx) ? this.conf.x + Math.round(this.conf.vx * this.timeout / 1000) : null;
+      newPos['y'] = (isVy) ? this.conf.y + Math.round(this.conf.vy * this.timeout / 1000) : null;
+      newPos['f'] = (isVf) ? this.conf.f + Math.round(this.conf.vf * this.timeout / 1000) : null;
+      this.setPosition(newPos);
       this.updateSvg();
 
       this.timer = setTimeout(() => {

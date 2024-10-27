@@ -46,7 +46,6 @@ class InitFocusController {
   _sendDebouncedUpdate() {
     this.submissionCounter++;
     const speed_z = this.rangeInput.value
-    document.getElementById("status-focus").innerText = `Focus (${this.submissionCounter}): ${speed_z}` ;
     fetch(`/focus/${speed_z}`)
       .then((response) => {
         return response.json();

@@ -8,7 +8,6 @@ class JoystickController
 
     if (this.stick) {
       this.horizon = horizon;
-      this.status = document.getElementById("status-joystick");
       // location from which drag begins, used to calculate offsets
       this.dragStart = null;
 
@@ -143,7 +142,6 @@ class JoystickController
   _sendUpdate() {
     const x_axis = Math.round(511.5 + this.value.x * 511.5);
     const y_axis = Math.round(511.5 + this.value.y * 511.5);
-    if (this.status) { this.status.innerText = `Joystick (${this.counter++}): ${x_axis}, ${y_axis}`; }
     fetch(`/joystick/${x_axis}/${y_axis}`)
       .then((response) => {
         return response.json();
