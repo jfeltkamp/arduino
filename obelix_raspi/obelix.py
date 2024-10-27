@@ -136,8 +136,9 @@ class Obelix:
                         raise Exception(f"Error on executing command '{cmd}: {param}'.")
                     else:
                         print(self.cmd_response)
-                if time.time() - fired_time > 60:
-                    raise Exception(f"Command '{cmd}: {param}' timed out.")
+                if time.time() - fired_time > 20:
+                    print(f"Command '{cmd}: {param}' timed out.")
+                    break
 
     # Method to give access to analog commands (Joystick or webUI).
     def analog_command(self, cmd):
