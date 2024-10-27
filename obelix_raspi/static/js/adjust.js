@@ -27,7 +27,8 @@ class Adjust {
   sendCommand(dataset) {
     let dir = dataset?.dir;
     let length = dataset?.len;
-    if (dir && length && (typeof this.axisSteps[length] === 'undefined')) {
+    console.log(dataset, dir, length);
+    if (dir && length && (typeof this.axisSteps[length] === 'number')) {
       length = this.axisSteps[length];
       if (['closer', 'further'].indexOf(dir) >= 0) {
         length = (dir === 'closer') ? -length : length;
