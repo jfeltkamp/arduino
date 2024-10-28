@@ -22,11 +22,6 @@ class Obelix:
 
     command_list = []
 
-    # Allow incoming analog commands.
-    # If TRUE no incoming analog commands will be executed.
-    # Use case: During execution of programs (e.g. serial shots), disturbing analog commands are locked.
-    analog_lock = False
-
     # INIT: Start serial communication with Arduino and start serial read ser_listener daemon.
     def __init__(self):
         self.cmd_response = ""
@@ -64,7 +59,7 @@ class Obelix:
     # Runs in infinite loop. Listens to incoming serial messages from Arduino.
     def serial_read_listener(self):
         while self.listener_runs:
-            time.sleep(0.3)
+            time.sleep(0.1)
             if self.ser.in_waiting > 0:
                 try:
                     resp = ObelixPayload(self.ser.readline().decode('utf-8').rstrip())
@@ -81,13 +76,10 @@ class Obelix:
     # Runs in infinite loop. Listens to incoming commands in the command list.
     def command_list_listener(self):
         while self.listener_runs:
-            time.sleep(0.3)
+            time.sleep(0.1)
             if len(self.command_list) > 0:
-                self.analog_lock = True
-                for command in self.command_list:
-                    self.command(command)
-                self.command_list.clear()
-                self.analog_lock = False
+                command = self.command_list.pop(0)
+                self.command(command)
 
     # Extend the command
     # Add single command item or a list of items.
@@ -142,7 +134,7 @@ class Obelix:
 
     # Method to give access to analog commands (Joystick or webUI).
     def analog_command(self, cmd):
-        if not self.analog_lock:
+        if len(self.command_list) == 0:
             self.cmd_response = ""
             self.command(cmd)
 
