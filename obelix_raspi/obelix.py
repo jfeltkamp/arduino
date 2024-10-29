@@ -69,8 +69,8 @@ class Obelix:
                     self.params.set_params_from_response(resp.data)
                     self.arduino_command('ard_lcd', self.params.get_lcd("x"))
                     self.arduino_command('ard_lcd', self.params.get_lcd("y"))
-                    emit('message', self.params.get_position())
                     self.cmd_response = resp.status
+                    self.socketio.emit('message', self.params.get_position())
                 except Exception:
                     traceback.print_exc()
                     print("Obelix response could not be decoded.")
