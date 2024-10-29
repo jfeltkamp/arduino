@@ -5,7 +5,6 @@ import threading
 import time
 from obelix_tools import *
 from obelix_camera import ObelixCamera
-from flask_socketio import emit
 
 """
 Controls all communication with the arduino.
@@ -27,6 +26,7 @@ class Obelix:
     def __init__(self, socketio):
         self.camera = ObelixCamera()
         self.socketio = socketio
+        self.cmd_go_next = True
         while True:
             try:
                 self.ser = serial.Serial(self.port, self.baudrate, timeout=self.timeout)

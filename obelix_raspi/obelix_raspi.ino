@@ -160,6 +160,15 @@ bool setAwaitedResponse(String await, String dir) {
     return true;
 }
 
+/* Send error message to controller. */
+void sendError(String respStatus, String msg) {
+    StaticJsonDocument<128> doc;
+    doc["status"] = respStatus;
+    doc["message"] = msg;
+    // Serialize JSON to string and send by Serial.
+    serializeJson(doc, Serial);
+}
+
 /* Send status to controller. */
 void sendStatus(String respStatus, bool config) {
     // Create a JSON document
@@ -238,9 +247,14 @@ void cmd_lcd(String value, String pos) {
 /* CMD up */
 void cmd_up(String value, String await) {
     int steps = getStepsOneDirect(getStringPartial(value, ',', 0), "cmd_up");
-    if (steps > 0 && setMode(MODE_AUTO) && setAwaitedResponse(await, "up")) {
+    bool set_awaited = setAwaitedResponse(await, "up")
+    bool set_mode = setMode(MODE_AUTO)
+    if (steps > 0 && set_mode && set_awaited) {
         busy = true;
         stepperY.move(-steps * DIR_Y);
+    }
+    else {
+        sendError("falied", "cmd_up failed. stp: " + String(steps) + " m: " + String(set_mode) + " aw: " + String(set_awaited));
     }
 }
 
