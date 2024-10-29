@@ -1,4 +1,4 @@
-import horizon from '/horizon';
+import horizon from '/horizon.js';
 
 const socket = io.connect('http://' + location.hostname + ':' + location.port);
 
