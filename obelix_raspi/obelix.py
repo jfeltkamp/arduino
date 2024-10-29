@@ -5,6 +5,7 @@ import threading
 import time
 from obelix_tools import *
 from obelix_camera import ObelixCamera
+from flask_socketio import emit
 
 """
 Controls all communication with the arduino.
@@ -23,9 +24,10 @@ class Obelix:
     command_list = []
 
     # INIT: Start serial communication with Arduino and start serial read ser_listener daemon.
-    def __init__(self):
+    def __init__(self, socketio):
         self.cmd_response = ""
         self.camera = ObelixCamera()
+        self.socketio = socketio
         while True:
             try:
                 self.ser = serial.Serial(self.port, self.baudrate, timeout=self.timeout)
@@ -129,7 +131,7 @@ class Obelix:
                     else:
                         print(self.cmd_response)
                 if time.time() - fired_time > 20:
-                    print(f"Command '{cmd}: {param}' timed out.")
+                    print(f"Command '{cmd}:{param}' timed out.")
                     break
 
     # Method to give access to analog commands (Joystick or webUI).

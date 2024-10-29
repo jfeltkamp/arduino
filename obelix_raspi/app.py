@@ -3,16 +3,23 @@ import traceback
 from obelix import Obelix
 from obelix_analog import ObelixAnalog
 from flask import Flask, render_template, send_from_directory
+from flask_socketio import SocketIO, emit
 
 if __name__ == "__main__":
+    app = Flask(__name__)
+    app.config['SECRET_KEY'] = 'secret!'
+    socketio = SocketIO(app)
 
-    obelix = Obelix()
+
+    obelix = Obelix(socketio)
     obelix.run_listener()
 
     joystick_analog = ObelixAnalog(obelix)
     joystick_analog.enable()
 
-    app = Flask(__name__)
+    @socketio.on('connect')
+    def connect():
+        emit('message', obelix.params.get_position())
 
     @app.route("/")
     def hello():

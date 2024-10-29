@@ -1,10 +1,18 @@
 #!/usr/bin/env_python3
 from flask import Flask, render_template, send_from_directory
 from obelix_tools import ObelixParams
+from flask_socketio import SocketIO, emit
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = 'secret!'
+socketio = SocketIO(app)
 
 params = ObelixParams()
+
+@socketio.on('connect')
+def connect():
+    emit('message', params.get_position())
+
 
 @app.route("/")
 def hello():
