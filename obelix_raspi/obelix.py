@@ -69,6 +69,7 @@ class Obelix:
                     self.params.set_params_from_response(resp.data)
                     self.arduino_command('ard_lcd', self.params.get_lcd("x"))
                     self.arduino_command('ard_lcd', self.params.get_lcd("y"))
+                    emit('message', self.params.get_position())
                     self.cmd_response = resp.status
                 except Exception:
                     traceback.print_exc()
@@ -127,7 +128,7 @@ class Obelix:
                         self.cmd_response = ""
                         break
                     elif self.cmd_response == "error":
-                        raise Exception(f"Error on executing command '{cmd}: {param}'.")
+                        raise Exception(f"Error on executing command '{cmd}:{param}'.")
                     else:
                         print(self.cmd_response)
                 if time.time() - fired_time > 20:
