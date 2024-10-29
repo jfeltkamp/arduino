@@ -148,9 +148,6 @@ class Horizon {
         this.runSpeed();
       }, this.timeout);
     }
-    else {
-      this.refreshPosition();
-    }
   }
 
   /**

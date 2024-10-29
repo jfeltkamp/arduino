@@ -25,7 +25,6 @@ class Obelix:
 
     # INIT: Start serial communication with Arduino and start serial read ser_listener daemon.
     def __init__(self, socketio):
-        self.cmd_response = ""
         self.camera = ObelixCamera()
         self.socketio = socketio
         while True:
@@ -69,7 +68,6 @@ class Obelix:
                     self.params.set_params_from_response(resp.data)
                     self.arduino_command('ard_lcd', self.params.get_lcd("x"))
                     self.arduino_command('ard_lcd', self.params.get_lcd("y"))
-                    self.cmd_response = resp.status
                     self.socketio.emit('message', self.params.get_position())
                 except Exception:
                     traceback.print_exc()
@@ -81,8 +79,8 @@ class Obelix:
         while self.listener_runs:
             time.sleep(0.1)
             if len(self.command_list) > 0:
-                command = self.command_list.pop(0)
-                self.command(command)
+                self.command(self.command_list[0])
+                self.command_list.pop(0)
 
     # Extend the command
     # Add single command item or a list of items.
@@ -117,28 +115,21 @@ class Obelix:
     def arduino_command(self, cmd, param, await_resp=False):
         cmd_serial = f"{cmd}:{param}\n"
         self.ser.write(cmd_serial.encode('utf-8'))
-        self.cmd_response = ""
         if await_resp:
             fired_time = time.time()
             while True:
                 time.sleep(0.1)
-                if self.cmd_response != "":
-                    if self.cmd_response.startswith("success"):
-                        print(f"Command '{cmd}:{param}' was successful.")
-                        self.cmd_response = ""
-                        break
-                    elif self.cmd_response == "error":
-                        raise Exception(f"Error on executing command '{cmd}:{param}'.")
-                    else:
-                        print(self.cmd_response)
+                if self.ser.in_waiting > 0:
+                    time.sleep(0.3)
+                    break
                 if time.time() - fired_time > 20:
                     print(f"Command '{cmd}:{param}' timed out.")
                     break
 
     # Method to give access to analog commands (Joystick or webUI).
     def analog_command(self, cmd):
+        # Just check if programm is not running.
         if len(self.command_list) == 0:
-            self.cmd_response = ""
             self.command(cmd)
 
     def camera_command(self, prc, params, options):
@@ -150,18 +141,3 @@ class Obelix:
             self.camera.stop_preview()
         elif prc == "cam_set_path":
             self.camera.set_path(params)
-
-    def await_position_update(self):
-        fired_time = time.time()
-        position_update = {}
-        while True:
-            time.sleep(0.1)
-            if self.cmd_response == "success":
-                print("Awaited position update.")
-                position_update = self.params.get_position()
-                break
-            if time.time() - fired_time > 15:
-                position_update = self.params.get_position()
-                print("Cancel position update.")
-                break
-        return position_update
