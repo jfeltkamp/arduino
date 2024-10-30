@@ -1,4 +1,4 @@
-import horizon from '/horizon.js';
+import horizon from './horizon.js';
 
 const socket = io.connect('http://' + location.hostname + ':' + location.port);
 
@@ -13,4 +13,3 @@ socket.on('message', function(data) {
   }
 });
 
-export default socket;
