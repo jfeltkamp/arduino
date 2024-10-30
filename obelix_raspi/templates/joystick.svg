@@ -12,11 +12,11 @@
           stroke: #333;
           stroke-width: 6;
           stroke-linejoin: round;
-          cursor: pointer;
         }
         #joys #joys-slide,
         #joys #joys-stick {
           fill: #7c7c7c;
+          cursor: pointer;
         }
     </style>
     <g id="joys" transform="translate(320 355)">
@@ -30,6 +30,6 @@
 
         <use id="joys-slider" href="#joys-def-slider"/>
         <!-- Adjust here                                    v -->
-        <use id="joys-slide" href="#joys-def-slide"  style="translateY(0)"/>
+        <use id="joys-slide" href="#joys-def-slide"  style="transform: translateY(0px)"/>
     </g>
 </svg>

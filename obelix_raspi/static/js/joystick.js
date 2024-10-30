@@ -90,11 +90,15 @@ class JoystickController
       if (touchmoveId == null) return;
     }
 
+    // SVG might be scaled, so we have to calculate the scaled value.
+    const rect = this.stick.getBoundingClientRect();
+    const scale = (rect) ? Math.round(16000 / rect.width) / 100 : 1;
+
     // Calculate handle position, to stick on the mouse.
     const xDiff = event.clientX - this.dragStart.x;
     const yDiff = event.clientY - this.dragStart.y;
     const angle = Math.atan2(yDiff, xDiff);
-    const distance = Math.min(this.maxDistance, Math.hypot(xDiff, yDiff));
+    const distance = Math.min(this.maxDistance, Math.hypot(xDiff, yDiff) * scale);
     const xPosition = distance * Math.cos(angle);
     const yPosition = distance * Math.sin(angle);
 

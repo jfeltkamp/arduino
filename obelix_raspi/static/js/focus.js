@@ -14,7 +14,7 @@ class InitFocusController {
       this.touchId = null;
 
       // Processing data.
-      this.maxDistance = 200;
+      this.maxDistance = 230;
       this.deadZone = 8;
       this.active = false;
       this.value = { f: 0 };
@@ -70,6 +70,7 @@ class InitFocusController {
    */
   _handleMove(event){
     if ( !this.active ) return;
+    event.preventDefault();
 
     // if this is a touch event, make sure it is the right one
     // also handle multiple simultaneous touchmove events
@@ -89,14 +90,17 @@ class InitFocusController {
     }
 
     // Calculate handle position, to stick on the mouse.
+    // SVG might be scaled, so we have to calculate the scaled value.
+    const rect = this.stick.getBoundingClientRect();
+    const scale = (rect) ? Math.round(10000 / rect.width) / 100 : 1;
     const yDiff = event.clientY - this.dragStart.y;
-    const distance = (yDiff >= 0) ? Math.min(this.maxDistance, yDiff) : Math.max(-this.maxDistance, yDiff);
+    const distance = (yDiff >= 0) ? Math.min(this.maxDistance, (yDiff * scale)) : Math.max(-this.maxDistance, (yDiff * scale));
 
     // move this.stick image to new position
     this.stick.style.transform = `translateY(${distance}px)`;
 
     // deadZone adjustment
-    const yPercent = parseFloat((distance / this.maxDistance).toFixed(4));
+    const yPercent = (Math.abs(distance) > this.deadZone) ? parseFloat((distance / this.maxDistance).toFixed(4)) : 0;
 
     this.value = { "f": yPercent };
     this._loop()
@@ -110,6 +114,7 @@ class InitFocusController {
    */
   _handleUp(event){
     if ( !this.active ) return;
+    event.preventDefault();
 
     // if this is a touch event, make sure it is the right one
     if (event.changedTouches && (this.touchId !== event.changedTouches[0].identifier)) return;
