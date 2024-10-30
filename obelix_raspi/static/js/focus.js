@@ -3,131 +3,185 @@ import horizon from './horizon.js';
 class InitFocusController {
 
   constructor() {
-    // Get UI elements
-    this.rangeInput = document.getElementById('focus');
+    this.stick = document.getElementById("joys-slide");
 
-    if (this.rangeInput) {
+    if (this.stick) {
       this.horizon = horizon;
-      // Animate settings
-      this.submissionCounter = 0;
-      this.duration = .3;
-      this.totalFrame = this.duration * 60;
-      this.increment = 1 / this.totalFrame;
-      this._reset();
+      // location from which drag begins, used to calculate offsets
+      this.dragStart = null;
 
-      // Sending data
-      this.debounceDelay = 50;
+      // track touch identifier in case multiple joythis.sticks present
+      this.touchId = null;
 
-      // Init event handlers
-      this.rangeInput.addEventListener('change', () => this._handleChangeEvent());
-      this.rangeInput.addEventListener('input', () => this._handleInputEvent());
-    }
-    else {
-      console.error('No range input found.')
-      return false;
+      // Processing data.
+      this.maxDistance = 200;
+      this.deadZone = 8;
+      this.active = false;
+      this.value = { f: 0 };
+      this.counter = 0;
+      this.prev = { f: 0 };
+
+      // Debouncing control submission.
+      this.debounceTimer = null;
+      this.debounceTimeout = 50;
+
+      this.stick.addEventListener('mousedown', (e) => { this._handleDown(e) });
+      this.stick.addEventListener('touchstart', (e) => { this._handleDown(e) });
+      document.addEventListener('mousemove', (e) => { this._handleMove(e) }, { passive: false });
+      document.addEventListener('touchmove', (e) => { this._handleMove(e) }, { passive: false });
+      document.addEventListener('mouseup', (e) => { this._handleUp(e) });
+      document.addEventListener('touchend', (e) => { this._handleUp(e) });
     }
   }
 
   /**
-   * Input event handler for the range input event.
+   * Handles mouse/touch down event.
    *
-   * @private
+   * Inits the handle animation.
+   *
+   * @param event
+   *   The mouse/touch move event.
+   *  @private
    */
-  _handleInputEvent() {
-    const debouncedUpdate = this._debounce(() => this._sendDebouncedUpdate());
-    debouncedUpdate()
+  _handleDown(event){
+    this.active = true;
+    // all drag movements are instantaneous
+    this.stick.style.transition = '0s';
+    // touch event fired before mouse event; prevent redundant mouse event from firing
+    event.preventDefault();
+    this.dragStart = (event.changedTouches) ?
+      { y: event.changedTouches[0].clientY } :
+      { y: event.clientY };
+
+    // if this is a touch event, keep track of which one
+    if (event.changedTouches) {
+      this.touchId = event.changedTouches[0].identifier;
+    }
   }
 
   /**
-   * Push input data to application server.
+   * Handles mouse/touch move events.
+   *
+   * Calculates the position of the joystick handle and follow mouse/touch pointer.
+   *
+   * @param event
+   *   The mouse/touch move event.
+   *  @private
+   */
+  _handleMove(event){
+    if ( !this.active ) return;
+
+    // if this is a touch event, make sure it is the right one
+    // also handle multiple simultaneous touchmove events
+    let touchmoveId = null;
+    if (event.changedTouches)
+    {
+      for (let i = 0; i < event.changedTouches.length; i++)
+      {
+        if (this.touchId === event.changedTouches[i].identifier)
+        {
+          touchmoveId = i;
+          event.clientY = event.changedTouches[i].clientY;
+        }
+      }
+
+      if (touchmoveId == null) return;
+    }
+
+    // Calculate handle position, to stick on the mouse.
+    const yDiff = event.clientY - this.dragStart.y;
+    const distance = (yDiff >= 0) ? Math.min(this.maxDistance, yDiff) : Math.max(-this.maxDistance, yDiff);
+
+    // move this.stick image to new position
+    this.stick.style.transform = `translateY(${distance}px)`;
+
+    // deadZone adjustment
+    const yPercent = parseFloat((distance / this.maxDistance).toFixed(4));
+
+    this.value = { "f": yPercent };
+    this._loop()
+  }
+
+  /**
+   * Handles mouseUp/touchUp event.
+   *
+   * @param event
+   * @private
+   */
+  _handleUp(event){
+    if ( !this.active ) return;
+
+    // if this is a touch event, make sure it is the right one
+    if (event.changedTouches && (this.touchId !== event.changedTouches[0].identifier)) return;
+
+    // transition the joystick position back to center
+    this.stick.style.transition = '.2s';
+    this.stick.style.transform = `translateY(0px)`;
+
+    // reset everything
+    this.value = { f: 0 };
+    this.touchId = null;
+    this.active = false;
+  }
+
+  /**
+   * Sends data update to the application server.
    *
    * @private
    */
-  _sendDebouncedUpdate() {
-    this.submissionCounter++;
-    const speed_z = this.rangeInput.value
-    fetch(`/focus/${speed_z}`)
+  _sendUpdate() {
+    const focus = Math.round(511.5 - this.value.f * 511.5);
+    fetch(`/focus/${focus}`)
       .then((response) => {
         return response.json();
       }).then((data) => {
-        this.horizon.initUpdate(data);
-      })
-  }
-
-  /**
-   * Initializes the animation of the range input.
-   *
-   * When user releases the handle, it returns to the center on its own.
-   *
-   * @private
-   */
-  _handleChangeEvent() {
-    if (!this.blocked) {
-      this.animOrig = parseInt(this.rangeInput.value, 10);
-      const target = this.animOrig - 511;
-      this._anim(target);
-    }
-  }
-
-  /**
-   * Controls the Cubic-Bezier timed value of animation steps.
-   *
-   * @private
-   */
-  _bezier(t, final){
-    return 3 * (1-t) * Math.pow(t,2) * final + Math.pow(t,3) * final;
-  }
-
-  /**
-   * Reset values to default after input range animation.
-   *
-   * @private
-   */
-  _reset() {
-    this.currentTime  = 0;
-    this.frame = null;
-    this.blocked = false
-    this.animOrig = 0;
-  }
-
-  /**
-   * Analog animation of range input, that flips back when released.
-   *
-   * @private
-   */
-  _anim(to){
-    let currentValue = this._bezier(this.currentTime, to);
-    this.rangeInput.value = this.animOrig - Math.round(currentValue)
-    if (this.currentTime * this.duration >= this.duration) {
-      cancelAnimationFrame(this.frame);
-      this._reset();
-      let event = new CustomEvent("input");
-      this.rangeInput.dispatchEvent(event);
-    }
-    else {
-      this.blocked = true;
-      this.currentTime += this.increment;
-      this.frame = requestAnimationFrame(() => {
-        this._anim(to)
+        this.horizon.initUpdate(data)
       });
-    }
   }
 
   /**
-   * Debounce fast series of input events fired from range input.
+   * Debounce submission of data update for fast series of mouse/touch move events.
    *
    * @param mainFunction
+   *   Function to be executed debounced to 1-2 per second.
    * @returns {(function(...[*]): void)|*}
+   * @private
    */
   _debounce(mainFunction) {
-    const self = this;
-    return function (...args) {
-      clearTimeout(self.bounceTimer);
-      self.bounceTimer = setTimeout(() => {
+    return (...args) => {
+      clearTimeout(this.debounceTimer);
+      this.debounceTimer = setTimeout(() => {
         mainFunction(...args);
-      }, self.debounceDelay);
+      }, this.debounceTimeout);
     };
   };
+
+  /**
+   * Triggered whenever the joystick moved.
+   *
+   * @private
+   */
+  _update() {
+    if (this.value.f !== this.prev.f) {
+      this.prev = {...this.value};
+      const workOnChange = this._debounce(() => { this._sendUpdate() });
+      workOnChange()
+    }
+  }
+
+  /**
+   * Creates an optimized animation loop to have sync with monitor.
+   *
+   * @private
+   */
+  _loop(){
+    if (this.active) {
+      this.frame = requestAnimationFrame(() => { this._loop() });
+    } else {
+      cancelAnimationFrame(this.frame);
+    }
+    this._update();
+  }
 }
 
 new InitFocusController();

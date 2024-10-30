@@ -4,7 +4,7 @@ class JoystickController
 {
 
   constructor() {
-    this.stick = document.getElementById("stick");
+    this.stick = document.getElementById("joys-stick");
 
     if (this.stick) {
       this.horizon = horizon;
@@ -15,7 +15,7 @@ class JoystickController
       this.touchId = null;
 
       // Processing data.
-      this.maxDistance = 128;
+      this.maxDistance = 200;
       this.deadZone = 8;
       this.active = false;
       this.value = { x: 0, y: 0 };
