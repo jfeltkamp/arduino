@@ -44,6 +44,7 @@ const int DIR_Y = -1;   // Stepper counts up counter-clockwise => -1
 const int DIR_F = 1;
 
 // Process variables
+bool debug = true;
 String awaited_response = "";
 bool busy = false;
 int op_mode = MODE_NEUTRAL;
@@ -239,29 +240,26 @@ void cmd_enable(String value) {
 
 /* CMD LCD */
 void cmd_lcd(String value, String pos) {
-  int posx = getStringPartial(pos, '_', 0).toInt();
-  int posy = getStringPartial(pos, '_', 1).toInt();
-  lcdOut(posx, posy, value, 16);
+    if (!debug) {
+        int posx = getStringPartial(pos, '_', 0).toInt();
+        int posy = getStringPartial(pos, '_', 1).toInt();
+        lcdOut(posx, posy, value, 16);
+    }
 }
 
 /* CMD up */
 void cmd_up(String value, String await) {
     int steps = getStepsOneDirect(getStringPartial(value, ',', 0), "cmd_up");
-    bool set_awaited = setAwaitedResponse(await, "up")
-    bool set_mode = setMode(MODE_AUTO)
-    if (steps > 0 && set_mode && set_awaited) {
+    if (steps > 0 && setMode(MODE_AUTO) && setAwaitedResponse(await, "up")) {
         busy = true;
         stepperY.move(-steps * DIR_Y);
-    }
-    else {
-        sendError("falied", "cmd_up failed. stp: " + String(steps) + " m: " + String(set_mode) + " aw: " + String(set_awaited));
     }
 }
 
 /* CMD down */
 void cmd_down(String value, String await) {
     int steps = getStepsOneDirect(getStringPartial(value, ',', 0), "cmd_down");
-    if (steps > 0 && setMode(MODE_AUTO) && setAwaitedResponse(await, "down")) {
+    if (steps > 0 && setMode(MODE_AUTO) && setAwaitedResponse(await, "dw")) {
         busy = true;
         stepperY.move(steps * DIR_Y);
     }
@@ -270,7 +268,7 @@ void cmd_down(String value, String await) {
 /* CMD left */
 void cmd_left(String value, String await) {
     int steps = getStepsOneDirect(getStringPartial(value, ',', 0), "cmd_left");
-    if (steps > 0 && setMode(MODE_AUTO) && setAwaitedResponse(await, "left")) {
+    if (steps > 0 && setMode(MODE_AUTO) && setAwaitedResponse(await, "le")) {
         busy = true;
         stepperX.move(-steps * DIR_X);
     }
@@ -279,7 +277,7 @@ void cmd_left(String value, String await) {
 /* CMD right */
 void cmd_right(String value, String await) {
     int steps = getStepsOneDirect(getStringPartial(value, ',', 0), "cmd_right");
-    if (steps > 0 && setMode(MODE_AUTO) && setAwaitedResponse(await, "right")) {
+    if (steps > 0 && setMode(MODE_AUTO) && setAwaitedResponse(await, "ri")) {
         busy = true;
         stepperX.move(steps * DIR_X);
     }
@@ -288,7 +286,7 @@ void cmd_right(String value, String await) {
 /* CMD focus */
 void cmd_focus(String value, String await) {
     int steps = getMinMaxIntFromStr(getStringPartial(value, ',', 0), -mpf, mpf);
-    if ((steps >= -mpf) && (steps != 0) && setMode(MODE_AUTO) && setAwaitedResponse(await, "focus")) {
+    if ((steps >= -mpf) && (steps != 0) && setMode(MODE_AUTO) && setAwaitedResponse(await, "fc")) {
         busy = true;
         stepperF.move(steps * DIR_F);
     }
@@ -296,7 +294,7 @@ void cmd_focus(String value, String await) {
 
 /* CMD goto */
 void cmd_goto(String value, String await) {
-    if (setMode(MODE_AUTO) && setAwaitedResponse(await, "goto")) {
+    if (setMode(MODE_AUTO) && setAwaitedResponse(await, "gt")) {
         // move X axis to.
         int target = getMinMaxIntFromStr(getStringPartial(value, ',', 0), -mpa, mpa);
         int speed = 0;
@@ -443,7 +441,37 @@ void cmd_interpreter(const String& cmd_raw) {
     }
 }
 
+void debugTimer() {
+    static const unsigned long REFRESH_INTERVAL = 1000; // ms
+    static unsigned long lastRefreshTime = 0;
+
+    if(millis() - lastRefreshTime >= REFRESH_INTERVAL) {
+        lastRefreshTime += REFRESH_INTERVAL;
+        debugDisplay();
+    }
+}
+
+void debugDisplay() {
+    String line1 = "";
+    // enabled (3 char)
+    if (digitalRead(enablePin)) { line1 += "eY " } else { line1 += "eN "; }
+    // busy (3 char)
+    if (busy) { line1 += "bY " } else { line1 += "vN "; }
+    // mode (2 char)
+    if (op_mode == MODE_ANALOG){line1 += "M ";} else if (op_mode == MODE_AUTO){line1 += "A ";} else if (op_mode == MODE_NEUTRAL){line1 += "N ";} else {line1 += "? ";}
+    // awaited response (3 char)
+    if (awaited_response == ""){line1 += "-- ";} else {line1 += awaited_response + " ";}
+    // Steppers running XYF (4 char)
+    if (isRunning(stepperX)) {line1 += "Y";} else {line1 += "N";}
+    if (isRunning(stepperY)) {line1 += "Y";} else {line1 += "N";}
+    if (isRunning(stepperF)) {line1 += "Y ";} else {line1 += "N ";}
+    lcdOut(0, 0, line1, 16);
+}
+
 void loop() {
+    if (debug) {
+        debugTimer();
+    }
     if (Serial.available() > 0) {
         String message = Serial.readStringUntil('\n');
         cmd_interpreter(message);
