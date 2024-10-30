@@ -65,11 +65,14 @@ class Obelix:
                 try:
                     resp = ObelixPayload(self.ser.readline().decode('utf-8').rstrip())
                     print(resp.status)
-                    self.params.set_params_from_response(resp.data)
-                    self.arduino_command('ard_lcd', self.params.get_lcd("x"))
-                    self.arduino_command('ard_lcd', self.params.get_lcd("y"))
-                    self.socketio.emit('message', self.params.get_position())
+                    if resp.status == "success":
+                        self.params.set_params_from_response(resp.data)
+                        self.arduino_command('ard_lcd', self.params.get_lcd("x"))
+                        self.arduino_command('ard_lcd', self.params.get_lcd("y"))
+                        self.cmd_go_next = True
+                        self.socketio.emit('message', self.params.get_position())
                 except Exception:
+                    self.cmd_go_next = True
                     traceback.print_exc()
                     print("Obelix response could not be decoded.")
                 
@@ -116,15 +119,15 @@ class Obelix:
         cmd_serial = f"{cmd}:{param}\n"
         self.ser.write(cmd_serial.encode('utf-8'))
         if await_resp:
+            self.cmd_go_next = False
             fired_time = time.time()
             while True:
                 time.sleep(0.1)
-                if self.ser.in_waiting > 0:
-                    time.sleep(0.3)
+                if self.cmd_go_next:
                     break
                 if time.time() - fired_time > 20:
                     print(f"Command '{cmd}:{param}' timed out.")
-                    break
+                    self.cmd_go_next = True
 
     # Method to give access to analog commands (Joystick or webUI).
     def analog_command(self, cmd):
