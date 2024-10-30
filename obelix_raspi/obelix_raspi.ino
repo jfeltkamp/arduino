@@ -219,11 +219,17 @@ bool isRunning(AccelStepper stepper) {
 void resolveResponse() {
     if (busy && !isRunning(stepperX) && !isRunning(stepperY) && !isRunning(stepperF)) {
         stepperX.setMaxSpeed(va);
-        stepperX.stop();
+        stepperX.moveTo(stepperX.currentPosition());
+        stepperX.setSpeed(0);
+
         stepperY.setMaxSpeed(va);
-        stepperY.stop();
+        stepperY.moveTo(stepperY.currentPosition());
+        stepperY.setSpeed(0);
+
         stepperF.setMaxSpeed(vf);
-        stepperF.stop();
+        stepperF.moveTo(stepperF.currentPosition());
+        stepperF.setSpeed(0);
+
         awaited_response = "";
         op_mode = MODE_NEUTRAL;
         busy = false;
