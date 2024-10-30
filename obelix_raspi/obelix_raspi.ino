@@ -219,8 +219,11 @@ bool isRunning(AccelStepper stepper) {
 void resolveResponse() {
     if (busy && !isRunning(stepperX) && !isRunning(stepperY) && !isRunning(stepperF)) {
         stepperX.setMaxSpeed(va);
+        stepperX.stop();
         stepperY.setMaxSpeed(va);
+        stepperY.stop();
         stepperF.setMaxSpeed(vf);
+        stepperF.stop();
         awaited_response = "";
         op_mode = MODE_NEUTRAL;
         busy = false;
@@ -468,7 +471,7 @@ void debugDisplay() {
     lcdOut(0, 0, line1, 16);
     String line2 = "";
     line2 += "v: " + int(trunc(stepperX.speed()));
-    String dtg;
+    char dtg[40];
     sprintf(dtg,"d: %lu", stepperX.distanceToGo());
     line2 += dtg;
     lcdOut(0, 1, line2, 16);
