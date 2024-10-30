@@ -44,7 +44,7 @@ const int DIR_Y = -1;   // Stepper counts up counter-clockwise => -1
 const int DIR_F = 1;
 
 // Process variables
-bool debug = true;
+bool debug = false;
 String awaited_response = "";
 bool busy = false;
 int op_mode = MODE_NEUTRAL;
