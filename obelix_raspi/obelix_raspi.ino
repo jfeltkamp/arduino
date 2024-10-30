@@ -454,9 +454,9 @@ void debugTimer() {
 void debugDisplay() {
     String line1 = "";
     // enabled (3 char)
-    if (digitalRead(enablePin)) { line1 += "eY " } else { line1 += "eN "; }
+    if (!digitalRead(enablePin)) { line1 += "eY "; } else { line1 += "eN "; }
     // busy (3 char)
-    if (busy) { line1 += "bY " } else { line1 += "vN "; }
+    if (busy) { line1 += "bY "; } else { line1 += "vN "; }
     // mode (2 char)
     if (op_mode == MODE_ANALOG){line1 += "M ";} else if (op_mode == MODE_AUTO){line1 += "A ";} else if (op_mode == MODE_NEUTRAL){line1 += "N ";} else {line1 += "? ";}
     // awaited response (3 char)
