@@ -466,6 +466,10 @@ void debugDisplay() {
     if (isRunning(stepperY)) {line1 += "Y";} else {line1 += "N";}
     if (isRunning(stepperF)) {line1 += "Y ";} else {line1 += "N ";}
     lcdOut(0, 0, line1, 16);
+    String line2 = "";
+    line2 += "va: " + va;
+    line2 += " vf: " + vf;
+    lcdOut(0, 1, line2, 16);
 }
 
 void loop() {
