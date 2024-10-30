@@ -467,8 +467,10 @@ void debugDisplay() {
     if (isRunning(stepperF)) {line1 += "Y ";} else {line1 += "N ";}
     lcdOut(0, 0, line1, 16);
     String line2 = "";
-    line2 += "v: " + int(stepperX.speed());
-    line2 += " d: " + int(stepperX.distanceToGo());
+    line2 += "v: " + int(trunc(stepperX.speed()));
+    String dtg;
+    sprintf(dtg,"d: %lu", stepperX.distanceToGo());
+    line2 += dtg;
     lcdOut(0, 1, line2, 16);
 }
 
