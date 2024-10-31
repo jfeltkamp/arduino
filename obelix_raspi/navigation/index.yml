@@ -6,7 +6,7 @@ base:
   home:
     name: "Home"
     pos:
-      x: -25456
+      x: -23900
       y: 0
       f: 500
   polaris:
