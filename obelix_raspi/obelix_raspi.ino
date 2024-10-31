@@ -16,11 +16,11 @@ const int enablePin = 8;
 // constants
 const int acc = 1000;
 // Axis steps per revolution.
-const int spr = 80000;
+const long spr = 80000;
 // max position axis from 0 (absolute: plus or minus).
-const int mpa = 20000;
-int minpx = -mpa;
-int maxpx = mpa;
+const long mpa = 20000;
+long minpx = -mpa;
+long maxpx = mpa;
 // Speed axis.
 const int va = 800;
 // Min speed axis.
@@ -29,7 +29,7 @@ const int va1 = 100;
 const int va2 = 2000;
 
 // Max position focus from 0 (absolute: plus or minus).
-const int mpf = 5000;
+const long mpf = 5000;
 // Speed focus.
 const int vf = 500;
 // Min speed focus.
