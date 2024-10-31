@@ -58,8 +58,8 @@ class ObelixParams:
         self.calc_deg()
 
     def calc_deg(self):
-        self.deg_x = round(360 * self.x / self.spr, 2)
-        if (self.deg_x < 0):
+        self.deg_x = round(360 * (self.x % 360) / self.spr, 2)
+        if self.deg_x < 0:
             self.deg_x = 360 + self.deg_x
         self.deg_y = round(360 * self.y / self.spr, 2)
 
