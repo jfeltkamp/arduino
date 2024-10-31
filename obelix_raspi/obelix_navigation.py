@@ -20,6 +20,6 @@ class ObelixNavigation:
     def navigate(self, nav_type, nav_id):
         item = self.position[nav_type][nav_id]
         if item is not None:
-            self.obelix.command_list_push(ObelixCommands("ard_goto", f"{item.pos.x},{item.pos.y},{item.pos.f}", "await"))
-            return item.pos
+            self.obelix.command_list_push(ObelixCommands("ard_goto", f"{item['pos']['x']},{item['pos']['y']},{item['pos']['f']}", "await"))
+            return item['pos']
         return {}
