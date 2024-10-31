@@ -113,16 +113,25 @@ class Horizon {
     console.log('NEW POS: ', newPos);
     if (typeof newPos.x === 'number') {
       this.conf.x = newPos.x;
-      this.conf.deg_x = Math.round((newPos.x % this.conf.spr) / this.conf.spr * 36000) / 100;
-      if (this.conf.deg_x < 0) {
-        this.conf.deg_x = 360 + this.conf.deg_x;
+
+      if (typeof newPos.deg_x === 'number') {
+        this.conf.deg_x = newPos.deg_x;
+      } else {
+        this.conf.deg_x = Math.round(((newPos.x % this.conf.spr) / this.conf.spr) * 36000) / 100;
+        if (this.conf.deg_x < 0) {
+          this.conf.deg_x = 360 + this.conf.deg_x;
+        }
       }
     }
     if (typeof newPos.y === 'number') {
       this.conf.y = newPos.y;
-      this.conf.deg_y = Math.round((newPos.y % this.conf.spr) / this.conf.spr * 36000) / 100;
-      if (this.conf.deg_y < 0) {
-        this.conf.deg_y = 360 + this.conf.deg_y;
+      if (typeof newPos.deg_y === 'number') {
+        this.conf.deg_y = newPos.deg_y;
+      } else {
+        this.conf.deg_y = Math.round(((newPos.y % this.conf.spr) / this.conf.spr) * 36000) / 100;
+        if (this.conf.deg_y < 0) {
+          this.conf.deg_y = 360 + this.conf.deg_y;
+        }
       }
     }
     if (typeof newPos.f === 'number') {
