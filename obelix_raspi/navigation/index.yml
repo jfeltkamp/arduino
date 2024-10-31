@@ -1,0 +1,28 @@
+geo:
+  addr: "Wischhofsweg 4"
+  lat: 53.606071
+  lon: 9.902575
+base:
+  home:
+    name: "Home"
+    pos:
+      x: -25456
+      y: 0
+      f: 500
+  polaris:
+    name: "Polaris"
+    pos:
+      x: 0
+      y: 11912
+      f: 600
+custom:
+  - name: "Elisabeth Kirche"
+    pos:
+      x: -30000
+      y: 250
+      f: 400
+  - name: "CCH Hamburg"
+    pos:
+      x: -15000
+      y: -1250
+      f: 100

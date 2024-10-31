@@ -29,6 +29,7 @@
       <ul id="tool-selector" class="uk-tab" uk-tab>
         <li><a href="#" onclick="UIkit.tab('#tool-selector').show(0);">Joystick</a></li>
         <li><a href="#" onclick="UIkit.tab('#tool-selector').show(1);">Adjust</a></li>
+        <li><a href="#" onclick="UIkit.tab('#tool-selector').show(2);">Pos</a></li>
       </ul>
       <ul id="tools" class="uk-switcher">
         <li>
@@ -41,6 +42,17 @@
             {% include 'adjust.svg' %}
           </div>
         </li>
+        <li>
+          <div class="pos-wrapper uk-padding-small">
+            <div id="nav-geo"></div>
+            <ul id="nav-nav" class="uk-iconnav uk-iconnav-vertical">
+              <li><a href="#"><span uk-icon="icon: home"></span> <span>Starting point</span></a></li>
+              <li><a href="#"><span uk-icon="icon: world"></span> Polaris</a></li>
+              <li><a href="#"><span uk-icon="icon: crosshairs"></span> Elisabeth Kirche</a></li>
+              <li><a href="#"><span uk-icon="icon: plus"></span> (2)</a></li>
+            </ul>
+          </div>
+        </li>
       </ul>
     </div>
   </div>
@@ -48,9 +60,11 @@
 
   <script type="module" src="/static/js/socket.io.min.js"></script>
   <script src="/static/js/uikit.min.js"></script>
+  <script src="/static/js/uikit-icons.min.js"></script>
   <script type="module" src="/static/js/joystick.js"></script>
   <script type="module" src="/static/js/focus.js"></script>
   <script type="module" src="/static/js/adjust.js"></script>
+  <script type="module" src="/static/js/navigation.js"></script>
   <script type="module" src="/static/js/socket.js"></script>
 
 </body>

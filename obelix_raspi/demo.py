@@ -1,6 +1,7 @@
 #!/usr/bin/env_python3
 from flask import Flask, render_template, send_from_directory
 from obelix_tools import ObelixParams
+from obelix_navigation import ObelixNavigation
 from flask_socketio import SocketIO, emit
 
 app = Flask(__name__)
@@ -8,6 +9,8 @@ app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app)
 
 params = ObelixParams()
+
+navi = ObelixNavigation()
 
 @socketio.on('connect')
 def connect():
@@ -22,6 +25,9 @@ def hello():
 def set_static(path):
     return send_from_directory('static', path)
 
+@app.route('/get-navigation')
+def get_navigation():
+    return navi.get_navigation()
 
 @app.route('/get-config')
 def get_config():

@@ -7,7 +7,6 @@ socket.on('connect', function() {
 });
 
 socket.on('message', function(data) {
-  console.log(data);
   if (typeof data === 'object' && !Array.isArray(data) && data !== null) {
     horizon.initUpdate(data)
   }
