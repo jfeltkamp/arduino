@@ -252,7 +252,7 @@ void cmd_enable(String value) {
 }
 
 /* Set home position. */
-void cmd_set_home(String value, options) {
+void cmd_set_home(String value) {
     int posx = getStringPartial(value, ',', 0).toInt();
     int posy = getStringPartial(value, ',', 1).toInt();
     int posf = getStringPartial(value, ',', 2).toInt();
@@ -431,7 +431,7 @@ void cmd_interpreter(const String& cmd_raw) {
             cmd_lcd(params, options);
         }
         else if (command == "ard_home") {
-            cmd_set_home(params, options);
+            cmd_set_home(params);
         }
         if (op_mode != MODE_ANALOG) {
             if (command == "ard_goto") {
