@@ -110,10 +110,9 @@ class Horizon {
    * @param newPos
    */
   setPosition(newPos) {
-    console.log('NEW POS: ', newPos);
+    console.log('NEW POS: ', newPos, this.conf);
     if (typeof newPos.x === 'number') {
       this.conf.x = newPos.x;
-
       if (typeof newPos.deg_x === 'number') {
         this.conf.deg_x = newPos.deg_x;
       } else {
