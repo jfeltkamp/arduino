@@ -64,7 +64,7 @@ class Navigation {
     linkEl.append(label);
     linkEl.addEventListener('click', (e) => {
       e.preventDefault();
-      this._call(`/nav/${type}/${name}`);
+      this._call(type, name);
     })
     return linkEl;
   }
