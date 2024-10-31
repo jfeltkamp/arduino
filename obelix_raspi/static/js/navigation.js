@@ -1,4 +1,4 @@
-import horizon from 'horizon.js'
+import horizon from './horizon.js'
 
 class Navigation {
   constructor() {
