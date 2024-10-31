@@ -75,9 +75,9 @@ class Horizon {
    */
   updateSvg() {
     // Calc
-    const stepsF = this.conf.f + this.conf.pmf;
-    const rangeF = this.conf.pmf - (this.conf.pmf / Math.pow((1.5/this.conf.pmf) * stepsF + 1,2));
-    const rateF = rangeF / this.conf.pmf;
+    const stepsF = this.conf.f + this.conf.mpf;
+    const rangeF = this.conf.mpf - (this.conf.mpf / Math.pow((1.5/this.conf.mpf) * stepsF + 1,2));
+    const rateF = rangeF / this.conf.mpf;
     this.focusRangeMeter.style.y = `${(1-rateF) * 133}%`;
 
     // Set X axis params in SVG.
@@ -110,6 +110,7 @@ class Horizon {
    * @param newPos
    */
   setPosition(newPos) {
+    console.log('NEW POS: ', newPos);
     if (typeof newPos.x === 'number') {
       this.conf.x = newPos.x;
       this.conf.deg_x = Math.round(newPos.x / this.conf.spr * 36000) / 100;
@@ -123,11 +124,11 @@ class Horizon {
     }
     if (typeof newPos.f === 'number') {
       this.conf.f = newPos.f;
-      if (this.conf.f >  this.conf.pmf) {
-        this.conf.f = this.conf.pmf;
+      if (this.conf.f >  this.conf.mpf) {
+        this.conf.f = this.conf.mpf;
       }
-      if (this.conf.f < -this.conf.pmf) {
-        this.conf.f = -this.conf.pmf;
+      if (this.conf.f < -this.conf.mpf) {
+        this.conf.f = -this.conf.mpf;
       }
     }
   }
