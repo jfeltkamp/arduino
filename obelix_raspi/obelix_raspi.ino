@@ -252,10 +252,10 @@ void cmd_enable(String value) {
 }
 
 /* Set home position. */
-void cmd_set_home(String value) {
-    int posx = getStringPartial(pos, ',', 0).toInt();
-    int posy = getStringPartial(pos, ',', 1).toInt();
-    int posf = getStringPartial(pos, ',', 2).toInt();
+void cmd_set_home(String value, options) {
+    int posx = getStringPartial(value, ',', 0).toInt();
+    int posy = getStringPartial(value, ',', 1).toInt();
+    int posf = getStringPartial(value, ',', 2).toInt();
     minpx = posx - mpa;
     maxpx = posx + mpa;
     stepperX.setCurrentPosition(posx);
