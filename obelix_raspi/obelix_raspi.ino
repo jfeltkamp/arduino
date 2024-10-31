@@ -19,6 +19,8 @@ const int acc = 1000;
 const int spr = 80000;
 // max position axis from 0 (absolute: plus or minus).
 const int mpa = 20000;
+int minpx = -mpa;
+int maxpx = mpa;
 // Speed axis.
 const int va = 800;
 // Min speed axis.
@@ -186,6 +188,8 @@ void sendStatus(String respStatus, bool config) {
         data["spr"] = spr;
 
         data["mpa"] = mpa;
+        data["minpx"] = minpx;
+        data["maxpx"] = maxpx;
         data["va"] = va;
         data["va1"] = va1;
         data["va2"] = va2;
@@ -247,6 +251,19 @@ void cmd_enable(String value) {
   }
 }
 
+/* Set home position. */
+void cmd_set_home(String value) {
+    int posx = getStringPartial(pos, ',', 0).toInt();
+    int posy = getStringPartial(pos, ',', 1).toInt();
+    int posf = getStringPartial(pos, ',', 2).toInt();
+    minpx = posx - mpa;
+    maxpx = posx + mpa;
+    stepperX.setCurrentPosition(posx);
+    stepperY.setCurrentPosition(posy);
+    stepperF.setCurrentPosition(posf);
+    sendStatus("success", true);
+}
+
 /* CMD LCD */
 void cmd_lcd(String value, String pos) {
     if (!debug) {
@@ -305,9 +322,9 @@ void cmd_focus(String value, String await) {
 void cmd_goto(String value, String await) {
     if (setMode(MODE_AUTO) && setAwaitedResponse(await, "gt")) {
         // move X axis to.
-        int target = getMinMaxIntFromStr(getStringPartial(value, ',', 0), -mpa, mpa);
+        int target = getMinMaxIntFromStr(getStringPartial(value, ',', 0), minpx, maxpx);
         int speed = 0;
-        if (target >= -mpa) {
+        if (target >= minpx) {
             speed = getMinMaxIntFromStr(getStringPartial(value, ',', 3), va1, va2);
             if (speed >= va1) {
                 stepperX.setMaxSpeed(speed);
@@ -412,6 +429,9 @@ void cmd_interpreter(const String& cmd_raw) {
         }
         else if (command == "ard_lcd") {
             cmd_lcd(params, options);
+        }
+        else if (command == "ard_home") {
+            cmd_set_home(params, options);
         }
         if (op_mode != MODE_ANALOG) {
             if (command == "ard_goto") {
