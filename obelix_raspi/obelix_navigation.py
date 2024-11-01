@@ -3,7 +3,7 @@ from obelix_tools import ObelixCommands
 
 
 class ObelixNavigation:
-    def __init__(self, obelix):
+    def __init__(self, obelix=None):
         self.position = {}
         self.obelix = obelix
         with open("navigation/index.yml") as stream:
@@ -29,6 +29,7 @@ class ObelixNavigation:
         else:
             item = self.position[nav_type][nav_id]
         if item is not None:
-            self.obelix.command_list_push(ObelixCommands("ard_goto", f"{item['pos']['x']},{item['pos']['y']},{item['pos']['f']}", "await"))
+            if self.obelix is not None:
+                self.obelix.command_list_push(ObelixCommands("ard_goto", f"{item['pos']['x']},{item['pos']['y']},{item['pos']['f']}", "await"))
             return item['pos']
         return {}

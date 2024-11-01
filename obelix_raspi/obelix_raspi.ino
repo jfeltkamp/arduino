@@ -126,8 +126,8 @@ bool isCommand(String data) {
 }
 
 /* Get steps 1-directional */
-int getStepsOneDirect(String value, String cmd) {
-  int steps = value.toInt();
+long getStepsOneDirect(String value, String cmd) {
+  long steps = value.toInt();
   if (steps <= 0) {
       sendStatus("error", false);
       return 0;
@@ -136,8 +136,8 @@ int getStepsOneDirect(String value, String cmd) {
 }
 
 /* Get steps 1-directional */
-int getMinMaxIntFromStr(String value, int min, int max) {
-  int steps = value.toInt();
+long getMinMaxIntFromStr(String value, long min, long max) {
+  long steps = value.toInt();
   if ((String(steps) != value) || (min >= max)) {
     // Error value.
     return min - 1;
@@ -253,9 +253,9 @@ void cmd_enable(String value) {
 
 /* Set home position. */
 void cmd_set_home(String value) {
-    int posx = getStringPartial(value, ',', 0).toInt();
-    int posy = getStringPartial(value, ',', 1).toInt();
-    int posf = getStringPartial(value, ',', 2).toInt();
+    long posx = getStringPartial(value, ',', 0).toInt();
+    long posy = getStringPartial(value, ',', 1).toInt();
+    long posf = getStringPartial(value, ',', 2).toInt();
     minpx = posx - mpa;
     maxpx = posx + mpa;
     stepperX.setCurrentPosition(posx);
@@ -267,15 +267,15 @@ void cmd_set_home(String value) {
 /* CMD LCD */
 void cmd_lcd(String value, String pos) {
     if (!debug) {
-        int posx = getStringPartial(pos, '_', 0).toInt();
-        int posy = getStringPartial(pos, '_', 1).toInt();
+        long posx = getStringPartial(pos, '_', 0).toInt();
+        long posy = getStringPartial(pos, '_', 1).toInt();
         lcdOut(posx, posy, value, 16);
     }
 }
 
 /* CMD up */
 void cmd_up(String value, String await) {
-    int steps = getStepsOneDirect(getStringPartial(value, ',', 0), "cmd_up");
+    long steps = getStepsOneDirect(getStringPartial(value, ',', 0), "cmd_up");
     if (steps > 0 && setMode(MODE_AUTO) && setAwaitedResponse(await, "up")) {
         busy = true;
         stepperY.move(-steps * DIR_Y);
@@ -284,7 +284,7 @@ void cmd_up(String value, String await) {
 
 /* CMD down */
 void cmd_down(String value, String await) {
-    int steps = getStepsOneDirect(getStringPartial(value, ',', 0), "cmd_down");
+    long steps = getStepsOneDirect(getStringPartial(value, ',', 0), "cmd_down");
     if (steps > 0 && setMode(MODE_AUTO) && setAwaitedResponse(await, "dw")) {
         busy = true;
         stepperY.move(steps * DIR_Y);
@@ -293,7 +293,7 @@ void cmd_down(String value, String await) {
 
 /* CMD left */
 void cmd_left(String value, String await) {
-    int steps = getStepsOneDirect(getStringPartial(value, ',', 0), "cmd_left");
+    long steps = getStepsOneDirect(getStringPartial(value, ',', 0), "cmd_left");
     if (steps > 0 && setMode(MODE_AUTO) && setAwaitedResponse(await, "le")) {
         busy = true;
         stepperX.move(-steps * DIR_X);
@@ -302,7 +302,7 @@ void cmd_left(String value, String await) {
 
 /* CMD right */
 void cmd_right(String value, String await) {
-    int steps = getStepsOneDirect(getStringPartial(value, ',', 0), "cmd_right");
+    long steps = getStepsOneDirect(getStringPartial(value, ',', 0), "cmd_right");
     if (steps > 0 && setMode(MODE_AUTO) && setAwaitedResponse(await, "ri")) {
         busy = true;
         stepperX.move(steps * DIR_X);
@@ -311,7 +311,7 @@ void cmd_right(String value, String await) {
 
 /* CMD focus */
 void cmd_focus(String value, String await) {
-    int steps = getMinMaxIntFromStr(getStringPartial(value, ',', 0), -mpf, mpf);
+    long steps = getMinMaxIntFromStr(getStringPartial(value, ',', 0), -mpf, mpf);
     if ((steps >= -mpf) && (steps != 0) && setMode(MODE_AUTO) && setAwaitedResponse(await, "fc")) {
         busy = true;
         stepperF.move(steps * DIR_F);
@@ -322,7 +322,7 @@ void cmd_focus(String value, String await) {
 void cmd_goto(String value, String await) {
     if (setMode(MODE_AUTO) && setAwaitedResponse(await, "gt")) {
         // move X axis to.
-        int target = getMinMaxIntFromStr(getStringPartial(value, ',', 0), minpx, maxpx);
+        long target = getMinMaxIntFromStr(getStringPartial(value, ',', 0), minpx, maxpx);
         int speed = 0;
         if (target >= minpx) {
             speed = getMinMaxIntFromStr(getStringPartial(value, ',', 3), va1, va2);
