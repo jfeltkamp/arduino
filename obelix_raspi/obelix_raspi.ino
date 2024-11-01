@@ -18,7 +18,7 @@ const int acc = 1000;
 // Axis steps per revolution.
 const long spr = 80000;
 // max position axis from 0 (absolute: plus or minus).
-const long mpa = 20000;
+const long mpa = spr / 2;
 long minpx = -mpa;
 long maxpx = mpa;
 // Speed axis.
