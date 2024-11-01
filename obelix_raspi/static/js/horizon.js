@@ -127,10 +127,7 @@ class Horizon {
       if (typeof newPos.deg_y === 'number') {
         this.conf.deg_y = newPos.deg_y;
       } else {
-        this.conf.deg_y = Math.round(((newPos.y % this.conf.spr) / this.conf.spr) * 36000) / 100;
-        if (this.conf.deg_y < 0) {
-          this.conf.deg_y = 360 + this.conf.deg_y;
-        }
+        this.conf.deg_y = Math.round((newPos.y / this.conf.spr) * 36000) / 100;
       }
     }
     if (typeof newPos.f === 'number') {
