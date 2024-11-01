@@ -6,7 +6,7 @@ base:
   home:
     name: "Home"
     pos:
-      x: -17900
+      x: -23900
       y: 0
       f: 500
   polaris:
@@ -18,7 +18,7 @@ base:
 custom:
   - name: "Elisabeth Kirche"
     pos:
-      x: 13000
+      x: -3000
       y: 250
       f: 400
   - name: "CCH Hamburg"
