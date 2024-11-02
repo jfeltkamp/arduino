@@ -60,7 +60,7 @@ if __name__ == "__main__":
     def navigate(nav_type, nav_id):
         return navigation.navigate(nav_type, nav_id)
 
-    @app.route('/camera/stream.jpg')
+    @app.route('/camera/stream')
     def camera_stream():
         return Response(obelix.camera.generate_frames(), mimetype='application/x-multipart-replace; boundary=frame')
 
