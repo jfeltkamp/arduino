@@ -15,6 +15,7 @@ class ObelixCamera:
         self.prev_config = self.picam.create_preview_configuration()
         self.stream_config = self.picam.create_preview_configuration(main={"format": 'XRGB8888', "size": (640,480)})
         time.sleep(1)
+        self.started = False
 
 
     def __del__(self):
@@ -29,11 +30,17 @@ class ObelixCamera:
             if e.errno != errno.EEXIST:
                 raise
 
+    def start_stream(self):
+        if self.started:
+            pass
+        else:
+            self.started = True
+            self.picam.configure(self.stream_config)
+            self.picam.start()
+            time.sleep(1)
+
     # Delivers camera streaming content.
     def generate_frames(self):
-        self.picam.configure(self.stream_config)
-        self.picam.start()
-        time.sleep(1)
         while True:
             frame = self.picam.capture_array()
             ret, buffer = cv2.imencode('.jpg', frame)

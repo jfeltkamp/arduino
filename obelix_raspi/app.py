@@ -62,6 +62,7 @@ if __name__ == "__main__":
 
     @app.route('/camera/stream')
     def camera_stream():
+        obelix.camera.start_stream()
         return Response(obelix.camera.generate_frames(), mimetype='application/x-multipart-replace; boundary=frame')
 
 
