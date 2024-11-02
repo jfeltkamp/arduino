@@ -1,7 +1,7 @@
 #!/usr/bin/env_python3
 import time
 import os, errno, cv2
-from picamera2 import Picamera2, Preview
+from picamera2 import Picamera2
 
 class ObelixCamera:
     base_path = ""
