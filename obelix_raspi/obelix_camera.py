@@ -1,6 +1,6 @@
 #!/usr/bin/env_python3
 import time
-import os, errno
+import os, errno, cv2
 from picamera2 import Picamera2, Preview
 
 class ObelixCamera:
@@ -13,6 +13,7 @@ class ObelixCamera:
         self.picam=Picamera2()
         self.still_config = self.picam.create_still_configuration()
         self.prev_config = self.picam.create_preview_configuration()
+        self.stream_config = self.picam.create_preview_configuration(main={"format": 'XRGB8888', "size": (640,480)})
         time.sleep(1)
 
 
@@ -27,6 +28,17 @@ class ObelixCamera:
         except OSError as e:
             if e.errno != errno.EEXIST:
                 raise
+
+    # Delivers camera streaming content.
+    def generate_frames(self):
+        self.picam.configure(self.stream_config)
+        time.sleep(1)
+        while True:
+            frame = self.picam.capture_array()
+            ret, buffer = cv2.imencode('.jpg', frame)
+            frame = buffer.tobytes()
+            yield (b'--frame\r\n'
+                   b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
     def capture_image(self, name):
         if self.path == "":

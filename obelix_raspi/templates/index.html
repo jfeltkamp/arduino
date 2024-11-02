@@ -20,8 +20,19 @@
   <div class="grid-container">
     <div>
       <div class="uk-card">
-        <div id="horizon-wrapper">
-          {% include 'horizon.svg' %}
+        <div class="uk-position-relative uk-visible-toggle" tabindex="-1" uk-slider>
+          <div class="uk-slider-items uk-child-width-1-1">
+            <div>
+              <div id="horizon-wrapper">
+                {% include 'horizon.svg' %}
+              </div>
+            </div>
+            <div>
+              <div id="camera-stream">
+                <img src="/camera/stream.jpg" alt="Joachim" loading="lazy" width="640" height="480"/>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

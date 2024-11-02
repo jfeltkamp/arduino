@@ -3,7 +3,8 @@ import traceback
 from obelix import Obelix
 from obelix_analog import ObelixAnalog
 from obelix_navigation import ObelixNavigation
-from flask import Flask, render_template, send_from_directory
+from obelix_camera import ObelixCamera
+from flask import Flask, Response, render_template, send_from_directory
 from flask_socketio import SocketIO, emit
 
 if __name__ == "__main__":
@@ -17,6 +18,8 @@ if __name__ == "__main__":
 
     joystick_analog = ObelixAnalog(obelix)
     joystick_analog.enable()
+
+    camera = ObelixCamera()
 
     navigation = ObelixNavigation(obelix)
 
@@ -59,6 +62,11 @@ if __name__ == "__main__":
     @app.route('/nav/<string:nav_type>/<string:nav_id>')
     def navigate(nav_type, nav_id):
         return navigation.navigate(nav_type, nav_id)
+
+    @app.route('/camera/stream.jpg')
+    def camera_stream():
+        return Response(camera.generate_frames(), mimetype='application/x-multipart-replace; boundary=frame')
+
 
     app.run(host='0.0.0.0')
 
