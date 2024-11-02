@@ -43,7 +43,6 @@ class Obelix:
         self.listener_runs = False
         self.ser_listener.join()
         self.cmd_listener.join()
-        del self.camera
         del self.params
         print("Obelix: Service closed.")
 
@@ -137,10 +136,14 @@ class Obelix:
 
     def camera_command(self, prc, params, options):
         if prc == "cam_capimg":
-            self.camera.capture_image(params)
+            # self.camera.capture_image(params)
+            pass
         elif prc == "cam_preview":
-            self.camera.start_preview()
+            # self.camera.start_preview()
+            pass
         elif prc == "cam_stop_preview":
-            self.camera.stop_preview()
+            # self.camera.stop_preview()
+            pass
         elif prc == "cam_set_path":
-            self.camera.set_path(params)
+            # self.camera.set_path(params)
+            pass
