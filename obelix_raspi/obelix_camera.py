@@ -32,6 +32,7 @@ class ObelixCamera:
     # Delivers camera streaming content.
     def generate_frames(self):
         self.picam.configure(self.stream_config)
+        self.picam.start()
         time.sleep(1)
         while True:
             frame = self.picam.capture_array()
