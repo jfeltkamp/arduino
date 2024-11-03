@@ -13,7 +13,7 @@ class ObelixCamera:
         self.picam=Picamera2()
         self.still_config = self.picam.create_still_configuration()
         self.prev_config = self.picam.create_preview_configuration()
-        self.stream_config = self.picam.create_preview_configuration(main={"format": 'XRGB8888', "size": (640,480)})
+        self.stream_config = self.picam.create_preview_configuration(main={"format": 'XRGB888', "size": (640,480)})
         time.sleep(1)
         self.started = False
 
