@@ -7,9 +7,9 @@
 import io
 import logging
 import socketserver
+import threading
 from http import server
 from threading import Condition
-
 from picamera2.encoders import JpegEncoder
 from picamera2.outputs import FileOutput
 
@@ -62,8 +62,13 @@ class ObelixStream:
     def __init__(self, picam2):
         self.picam2 = picam2
         self.config = picam2.create_video_configuration(main={"size": (640, 480)})
+        self.serv_listener = None
 
     def start(self):
+        self.serv_listener = threading.Thread(target=self.start_server)
+        self.serv_listener.start()
+
+    def start_server(self):
         self.picam2.configure(self.config)
         self.picam2.start_recording(JpegEncoder(), FileOutput(output))
         try:
