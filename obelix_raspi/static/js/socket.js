@@ -21,7 +21,7 @@ class TelescopeStream {
   }
 
   setSource() {
-      this.streamElement.src = 'http://' + location.hostname + ':' + '7777/stream.mjpg?t=' + Date.now();
+      this.streamElement.src = 'http://' + location.hostname + ':' + '7777/stream.mjpg';
   }
 }
 
