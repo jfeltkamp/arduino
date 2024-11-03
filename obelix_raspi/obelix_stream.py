@@ -61,7 +61,7 @@ class StreamingServer(socketserver.ThreadingMixIn, server.HTTPServer):
 class ObelixStream:
     def __init__(self, picam2):
         self.picam2 = picam2
-        self.config = picam2.create_video_configuration(main={"size": (640, 480)})
+        self.config = picam2.create_video_configuration(main={"size": (640, 640)})
         self.serv_listener = None
 
     def start(self):
