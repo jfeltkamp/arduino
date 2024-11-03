@@ -2,6 +2,7 @@
 import time
 import os, errno, cv2
 from picamera2 import Picamera2
+from obelix_stream import ObelixStream
 
 class ObelixCamera:
     base_path = ""
@@ -11,9 +12,9 @@ class ObelixCamera:
     def __init__(self, base_path="/home/admin/OBELIX/"):
         self.base_path = base_path
         self.picam=Picamera2()
+        self.stream = ObelixStream(self.picam)
         self.still_config = self.picam.create_still_configuration()
         self.prev_config = self.picam.create_preview_configuration()
-        self.stream_config = self.picam.create_preview_configuration(main={"format": 'XRGB888', "size": (640,480)})
         time.sleep(1)
         self.started = False
 
@@ -31,22 +32,7 @@ class ObelixCamera:
                 raise
 
     def start_stream(self):
-        if self.started:
-            pass
-        else:
-            self.started = True
-            self.picam.configure(self.stream_config)
-            self.picam.start()
-            time.sleep(1)
-
-    # Delivers camera streaming content.
-    def generate_frames(self):
-        while True:
-            frame = self.picam.capture_array()
-            ret, buffer = cv2.imencode('.jpg', frame)
-            frame = buffer.tobytes()
-            yield (b'--frame\r\n'
-                   b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+        self.stream.start()
 
     def capture_image(self, name):
         if self.path == "":
