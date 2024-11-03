@@ -11,7 +11,7 @@ class ObelixCamera:
 
     def __init__(self, base_path="/home/admin/OBELIX/"):
         self.base_path = base_path
-        self.picam=Picamera2()
+        self.picam = Picamera2()
         self.stream = ObelixStream(self.picam)
         self.still_config = self.picam.create_still_configuration()
         self.prev_config = self.picam.create_preview_configuration()

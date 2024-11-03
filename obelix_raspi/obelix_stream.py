@@ -67,9 +67,11 @@ class ObelixStream:
         self.picam2.configure(self.config)
         self.picam2.start_recording(JpegEncoder(), FileOutput(output))
         try:
+            print('Server starts')
             address = ('', 7777)
             server = StreamingServer(address, StreamingHandler)
             server.serve_forever()
+            print('Server loop running')
         except:
             pass
 
