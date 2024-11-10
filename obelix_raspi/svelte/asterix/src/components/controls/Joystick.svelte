@@ -1,5 +1,6 @@
 <script>
     import { onMount, onDestroy } from 'svelte';
+    import obelixAPI from '$lib/obelix-api.js'
     import JoystickController from '$lib/joystick.js';
     import FocusController from '$lib/focus.js';
 
@@ -7,10 +8,14 @@
     let focus = null;
     onMount(() => {
       joystick = new JoystickController(document.getElementById('joys-stick'), (path) => {
-        console.log('SVELTE callback', path);
+        obelixAPI(path, (data) => {
+          console.log('SVELTE Joystick', data);
+        })
       });
       focus = new FocusController(document.getElementById("joys-slide"), (path) => {
-        console.log('SVELTE callback', path);
+        obelixAPI(path, (data) => {
+          console.log('SVELTE Focus', data);
+        })
       });
     });
 

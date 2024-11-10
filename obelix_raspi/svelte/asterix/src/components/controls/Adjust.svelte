@@ -1,11 +1,14 @@
 <script>
   import { onMount, onDestroy } from 'svelte';
   import AdjustController from '$lib/adjust.js';
+  import obelixAPI from "$lib/obelix-api.js";
 
   let adjust = null;
   onMount(() => {
     adjust = new AdjustController(document.getElementById('adjust'), (path) => {
-      console.log('SVELTE callback', path);
+      obelixAPI(path, (data) => {
+        console.log('SVELTE Adjust', data);
+      })
     });
   });
 
