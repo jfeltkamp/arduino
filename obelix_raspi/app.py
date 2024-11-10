@@ -5,11 +5,13 @@ from obelix_analog import ObelixAnalog
 from obelix_navigation import ObelixNavigation
 from flask import Flask, Response, render_template, send_from_directory
 from flask_socketio import SocketIO, emit
+from flask_cors import CORS
 
 if __name__ == "__main__":
     app = Flask(__name__)
     app.config['SECRET_KEY'] = 'secret!'
-    socketio = SocketIO(app)
+    socketio = SocketIO(app, cors_allowed_origins="*")
+    cors = CORS(app)
 
 
     obelix = Obelix(socketio)
