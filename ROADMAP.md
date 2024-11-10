@@ -5,6 +5,7 @@
 1. [x] Enable/Create flight control instruments. (Finish ANALOG control)
 1. [x] Allow changing between ANALOG and AUTO control.
 1. [x] Disable Motors when passive.
+1. [ ] Build frontend in Svelte.
 1. [ ] BACK-UPs for Raspi !!!!
 
 ### Camera Integration
