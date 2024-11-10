@@ -1,8 +1,29 @@
 <script>
-  let focus = $state(50);
-  let azimuth = $state(270);
-  let altitude = $state(18);
-  let sphere = $derived(altitude / 90 * 400);
+  import { onDestroy } from 'svelte';
+  import { arduinoSettings } from '$lib/data-store.js'
+
+  let focus;
+  let azimuth;
+  let altitude;
+  let sphere;
+
+  const unsubscribe = arduinoSettings.subscribe(conf => {
+    // Calc focus arrow (asymptotic growth).
+    const stepsF = conf.f + conf.mpf;
+    const rangeF = conf.mpf - (conf.mpf / Math.pow((1.5/conf.mpf) * stepsF + 1,2));
+    const rateF = rangeF / conf.mpf;
+    focus = (1-rateF) * 133;
+
+    azimuth = conf.deg_x;
+    altitude = conf.deg_y;
+    sphere = altitude / 90 * 400
+  });
+
+  onDestroy(() => {
+    if (unsubscribe) {
+      unsubscribe();
+    }
+  })
 </script>
 
 

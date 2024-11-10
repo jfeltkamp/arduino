@@ -13,7 +13,7 @@
         const valueNew = range * rad + minValue;
         const valueNewStepped = parseFloat((Math.round(valueNew / steps) * steps).toFixed(pre));
         if (typeof callback === 'function') {
-            callback(index, valueNewStepped);
+            callback(id, valueNewStepped);
         }
       }, initialValue);
     });
