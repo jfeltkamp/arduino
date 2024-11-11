@@ -34,6 +34,16 @@ class ObelixCamera:
     def start_stream(self):
         self.stream.start()
 
+    def set_control(self, param, value):
+        params = {
+            'brightness': 'Brightness',
+            'contrast': 'Contrast',
+            'saturation': 'Saturation',
+            'sharpness': 'Sharpness'
+        }
+        if param in params:
+            self.picam.set_controls({ params[param]: value })
+
     def capture_image(self, name):
         if self.path == "":
             self.set_path(self.base_path + time.strftime("%Y_%m_%d-%H:%M"))

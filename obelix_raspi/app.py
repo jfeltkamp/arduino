@@ -49,6 +49,10 @@ if __name__ == "__main__":
     def focus(analog_f=0):
         return joystick_analog.set_focus_speed(analog_f)
 
+    @app.route("/cam/ctrl/<string:param>/<string:value>")
+    def cam_control(param="", value=""):
+        return obelix.camera.set_control(param=param, value=float(value))
+
     @app.route("/adjust/<string:direction>/<string:length>")
     def adjust(direction="none", length="0"):
         return joystick_analog.adjust(direction, int(length))
