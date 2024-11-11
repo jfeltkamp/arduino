@@ -1,10 +1,13 @@
 <script>
     import Slider from '../tools/Slider.svelte';
     import { camControls } from '$lib/data-store.js';
+    import obelixAPI from "$lib/obelix-api.js";
 
     const callback = (id, value) => {
       camControls.update(controls => controls.map(control => (control.id === id) ? { ...control, value: value } : { ...control }));
-      console.log('SVELTE callback', `/cam/controls/${id}/${value}`)
+      obelixAPI(`/cam/ctrl/${id}/${value}`, (data) => {
+        console.log('SVELTE CamCtrl', data);
+      })
     }
 </script>
 

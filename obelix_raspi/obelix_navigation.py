@@ -9,8 +9,8 @@ class ObelixNavigation:
         with open("navigation/index.yml") as stream:
             try:
                 self.position = yaml.safe_load(stream)
-                if type(self.position["base"]["home"]) is dict:
-                    self.set_home(self.position["base"]["home"]["pos"])
+                if type(self.position["base"][0]) is dict:
+                    self.set_home(self.position["base"][0]["pos"])
             except yaml.YAMLError as exc:
                 print(exc)
 
@@ -23,11 +23,8 @@ class ObelixNavigation:
         return self.position
 
     # Navigate ti loaded position item.
-    def navigate(self, nav_type, nav_id):
-        if type(self.position[nav_type]) is list:
-            item = self.position[nav_type][int(nav_id)]
-        else:
-            item = self.position[nav_type][nav_id]
+    def navigate(self, nav_id):
+        item = self.position["base"][int(nav_id)]
         if item is not None:
             if self.obelix is not None:
                 self.obelix.command_list_push(ObelixCommands("ard_goto", f"{item['pos']['x']},{item['pos']['y']},{item['pos']['f']}", "await"))
