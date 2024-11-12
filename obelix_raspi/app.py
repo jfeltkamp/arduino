@@ -8,7 +8,7 @@ from flask_socketio import SocketIO, emit
 from flask_cors import CORS
 
 if __name__ == "__main__":
-    app = Flask(__name__)
+    app = Flask(__name__, static_url_path='')
     app.config['SECRET_KEY'] = 'secret!'
     socketio = SocketIO(app, cors_allowed_origins="*")
     cors = CORS(app)
