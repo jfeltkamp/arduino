@@ -27,7 +27,7 @@ if __name__ == "__main__":
         emit('message', obelix.params.get_position())
 
     @app.route("/")
-    def hello():
+    def index():
         return render_template('index.html')
 
     # Deliver static files.
