@@ -1,6 +1,14 @@
+<script>
+  import { onMount } from "svelte";
+  let image = "starfield.jpg";
+  onMount(() => {
+    image = 'http://192.168.178.38:7777/stream.mjpg';
+  });
+
+</script>
 
 <div id="camera-stream">
-    <img id="telescope-stream" src="starfield.jpg" alt="Telescope stream" width="640" height="480"/>
+    <img id="telescope-stream" src={image} alt="Telescope stream" width="640" height="480"/>
 </div>
 
 <style>
