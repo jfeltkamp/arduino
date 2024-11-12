@@ -62,9 +62,9 @@ if __name__ == "__main__":
     def get_navigation():
         return navigation.get_navigation()
 
-    @app.route('/nav/<string:nav_type>/<string:nav_id>')
-    def navigate(nav_type, nav_id):
-        return navigation.navigate(nav_type, nav_id)
+    @app.route('/position/<string:nav_id>')
+    def navigate(nav_id):
+        return navigation.navigate(nav_id)
 
     @app.route('/camera/stream')
     def camera_stream():
