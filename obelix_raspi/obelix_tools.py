@@ -58,10 +58,15 @@ class ObelixParams:
         self.calc_deg()
 
     def calc_deg(self):
-        self.deg_x = round(360 * (self.x % self.spr) / self.spr, 2)
-        if self.deg_x < 0:
-            self.deg_x = 360 + self.deg_x
-        self.deg_y = round(360 * self.y / self.spr, 2)
+        self.get_deg_from_coords(self.__dict__)
+
+    # Complete given dict with derived degrees. (This can be used externally)
+    def get_deg_from_coords(self, pos):
+        if pos['x'] is not None and pos['y'] is not None:
+            pos['deg_x'] = round(360 * (pos['x'] % self.spr) / self.spr, 2)
+            if pos['deg_x'] < 0:
+                pos['deg_x'] = 360 + pos['deg_x']
+            pos['deg_y'] = round(360 * pos['y'] / self.spr, 2)
 
     def get_lcd(self, param):
         if param == "x":

@@ -64,7 +64,9 @@ if __name__ == "__main__":
 
     @app.route('/position/<string:nav_id>')
     def navigate(nav_id):
-        return navigation.navigate(nav_id)
+        pos = navigation.navigate(nav_id)
+        obelix.params.get_deg_from_coords(pos)
+        return pos
 
     @app.route('/camera/stream')
     def camera_stream():
