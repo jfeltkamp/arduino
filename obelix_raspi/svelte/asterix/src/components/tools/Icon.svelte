@@ -7,9 +7,8 @@
 <svg width={pxSize} height={pxSize} viewBox="0 0 20 20">
     {#if type === 'home'}
         <!-- Home -->
-        <polygon points="18.65 11.35 10 2.71 1.35 11.35 0.65 10.65 10 1.29 19.35 10.65"/>
-        <polygon points="15 4 18 4 18 7 17 7 17 5 15 5"/>
-        <polygon points="3 11 4 11 4 18 7 18 7 12 12 12 12 18 16 18 16 11 17 11 17 19 11 19 11 13 8 13 8 19 3 19"/>
+        <path fill="none" stroke="#000" stroke-width="1.01" d="M10,0.5 C6.41,0.5 3.5,3.39 3.5,6.98 C3.5,11.83 10,19 10,19 C10,19 16.5,11.83 16.5,6.98 C16.5,3.39 13.59,0.5 10,0.5 L10,0.5 Z"/>
+        <circle fill="none" stroke="#000" cx="10" cy="6.8" r="2.3"/>
     {:else if type === 'polaris'}
         <!-- Polaris -->
         <path fill="none" stroke="#000" d="M1,10.5 L19,10.5"/>

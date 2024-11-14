@@ -86,7 +86,7 @@ export const positions = writable({
       }
     },
     {
-      id: "1",
+      id: "elisabeth_kirche",
       name: "Elisabeth Kirche",
       pos: {
         x: -3000,
@@ -95,7 +95,7 @@ export const positions = writable({
       }
     },
     {
-      id: "2",
+      id: "cch_hamburg",
       name: "CCH Hamburg",
       pos: {
         x: -15000,

@@ -46,7 +46,7 @@
         fill: #DDD;
     }
     .slide {
-        fill: #00D;
+        fill: #1e87f0;
     }
     .label {
         font-size: 1.6666em;

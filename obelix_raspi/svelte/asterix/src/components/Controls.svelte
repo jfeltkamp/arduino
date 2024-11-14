@@ -19,7 +19,7 @@
 <div class="uk-card tools-wrapper">
     <ul id="tool-selector" class="uk-tab">
         {#each tabs as tab}
-            <li class={(active === tab.id) ? 'uk-active' : ''}><a href="#" onclick={(e) => switchTab(e, tab.id)}>{tab.name}</a></li>
+            <li class={(active === tab.id) ? 'uk-active' : ''}><a href="/" onclick={(e) => switchTab(e, tab.id)}>{tab.name}</a></li>
         {/each}
     </ul>
     <div class="tools">
@@ -41,10 +41,5 @@
     .tools {
         width: 100%;
         height: calc(100% - 52px);
-
-        > li {
-            width: 100%;
-            height: 100%;
-        }
     }
 </style>
