@@ -3,7 +3,7 @@ import traceback
 from obelix import Obelix
 from obelix_analog import ObelixAnalog
 from obelix_navigation import ObelixNavigation
-from flask import Flask, Response, render_template, send_from_directory
+from flask import Flask, Response, render_template, send_from_directory, request
 from flask_socketio import SocketIO, emit
 from flask_cors import CORS
 
@@ -49,10 +49,6 @@ if __name__ == "__main__":
     def focus(analog_f=0):
         return joystick_analog.set_focus_speed(analog_f)
 
-    @app.route("/cam/ctrl/<string:param>/<string:value>")
-    def cam_control(param="", value=""):
-        return obelix.camera.set_control(param=param, value=float(value))
-
     @app.route("/adjust/<string:direction>/<string:length>")
     def adjust(direction="none", length="0"):
         return joystick_analog.adjust(direction, int(length))
@@ -67,6 +63,17 @@ if __name__ == "__main__":
         pos = navigation.navigate(nav_id)
         obelix.params.get_deg_from_coords(pos)
         return pos
+
+    @app.route('/position/update/<string:file_id>', methods=['POST'])
+    def position_update(file_id):
+        data = request.json
+        navigation.position_update(file_id, data)
+        pass
+
+    # Camera
+    @app.route("/cam/ctrl/<string:param>/<string:value>")
+    def cam_control(param="", value=""):
+        return obelix.camera.set_control(param=param, value=float(value))
 
     @app.route('/camera/stream')
     def camera_stream():

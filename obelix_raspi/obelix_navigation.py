@@ -30,3 +30,6 @@ class ObelixNavigation:
                     self.obelix.command_list_push(ObelixCommands("ard_goto", f"{item['pos']['x']},{item['pos']['y']},{item['pos']['f']}", "await"))
                 return item['pos']
         return {}
+
+    def position_update(self, file_id, data):
+        print(file_id, data)

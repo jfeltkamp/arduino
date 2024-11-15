@@ -1,22 +1,44 @@
 <script>
   import {onDestroy} from "svelte";
   import Icon from "../tools/Icon.svelte";
-  import {positions, arduinoSettings} from "$lib/data-store.js";
-  import obelixAPI from "$lib/obelix-api.js";
+  import { positions, arduinoSettings } from "$lib/data-store.js";
+  import obelixAPI, { obelixPost } from "$lib/obelix-api.js";
 
+  let editHeaderOpen = $state(false);
   let addPosOpen = $state(false);
   let newName = $state();
+  let address = $state('');
+  let latitude = $state('');
+  let longitude = $state('');
   let items = $state([]);
 
   const unsubscribe = positions.subscribe((pos) => {
-    items = [...pos.base]
-  })
+    address = pos.geo.addr;
+    latitude = pos.geo.lat;
+    longitude = pos.geo.lon;
+    items = [...pos.base];
+
+    const posClone = {fid: pos.fid, geo: {...pos.geo}, base: [...pos.base]}
+    obelixPost(`/position/update/${pos.fid}`, posClone, (data) => {
+      console.log('SVELTE saved', data)
+    })
+  });
+
+  const saveHeader = () => {
+    const geo = {
+      addr: address,
+      lat: parseFloat(latitude),
+      lon: parseFloat(longitude)
+    }
+    positions.update((pos) => ({ ...pos, geo: geo }));
+    editHeaderOpen = false;
+  }
 
   const savePosition = () => {
     const id = newName.replace(/\W+/g, "_").toLowerCase();
     if (id) {
       let hasUpdated = false;
-      const {x, y, f} = {...$arduinoSettings}
+      const {x, y, f} = {...arduinoSettings}
       let updated = items.map((i) => {
         if (i.id !== id) {
           return i;
@@ -65,8 +87,17 @@
 
 <div class="nav-grid">
     <div class="nav-curr-pos uk-padding-small">
-        <h4>{$positions.geo.addr}</h4>
-        <div>{$positions.geo.lat}°, {$positions.geo.lon}°</div>
+        {#if editHeaderOpen}
+            <input type="text" id="address" bind:value={address} placeholder="Address" class="uk-input uk-margin-small-bottom"  />
+            <input type="text" id="latitude" bind:value={latitude} placeholder="Latitude" class="uk-input uk-margin-small-bottom" />
+            <input type="text" id="longitude" bind:value={longitude} placeholder="Longitude" class="uk-input uk-margin-small-bottom" />
+            <button class="uk-button uk-button-small" onclick={saveHeader}>Save</button>
+        {:else}
+            <div class="editable" onclick={() => { editHeaderOpen = true }} role="button" tabindex="0">
+                <h4>{address}</h4>
+                <div>{latitude}°, {longitude}°</div>
+            </div>
+        {/if}
     </div>
     <div class="nav-selector uk-padding-small">
         <select class="uk-select uk-margin-bottom">
@@ -112,5 +143,15 @@
     .nav-list {
         flex: 1 1 100%;
         width: 100%;
+    }
+    .editable:hover {
+        background: rgba(0,0,0,.2);
+        border-radius: 5px;
+        box-shadow: 0 0 0 .5em rgba(0,0,0,.2);
+
+        &::after {
+            content: 'EDIT';
+            color: #FFF;
+        }
     }
 </style>

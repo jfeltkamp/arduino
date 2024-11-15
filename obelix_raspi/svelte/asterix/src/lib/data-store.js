@@ -61,6 +61,7 @@ export const camControls = writable([
 
 
 export const positions = writable({
+  fid: "index",
   geo: {
     addr: "Wischhofsweg 4",
     lat: 53.606071,
