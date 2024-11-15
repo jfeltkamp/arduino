@@ -67,8 +67,7 @@ if __name__ == "__main__":
     @app.route('/position/update/<string:file_id>', methods=['POST'])
     def position_update(file_id):
         data = request.json
-        navigation.position_update(file_id, data)
-        pass
+        return navigation.position_update(file_id, data)
 
     # Camera
     @app.route("/cam/ctrl/<string:param>/<string:value>")

@@ -31,5 +31,18 @@ class ObelixNavigation:
                 return item['pos']
         return {}
 
+
     def position_update(self, file_id, data):
-        print(file_id, data)
+        try:
+            with open(f"navigation/{file_id}.yml", 'w') as fp:
+                yaml.dump(data, fp)
+            return {
+                'response': 200,
+                'message': f"Position updated successfully"
+            }
+        except yaml.YAMLError as exc:
+            print(exc)
+            return {
+                'response': 500,
+                'message': f"Position updated failed"
+            }
