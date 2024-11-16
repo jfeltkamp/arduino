@@ -20,12 +20,14 @@
     latitude = pos.geo.lat;
     longitude = pos.geo.lon;
     items = [...pos.base];
+  });
 
-    const posClone = {fid: pos.fid, geo: {...pos.geo}, base: [...pos.base]}
-    obelixPost(`/nav/position/update/${pos.fid}`, posClone, (data) => {
+  const writeStore = () => {
+    const posClone = {...$positions}
+    obelixPost(`/navi/position/update/${posClone.fid}`, posClone, (data) => {
       console.log('SVELTE saved', data)
     })
-  });
+  }
 
   const saveHeader = () => {
     const geo = {
@@ -34,6 +36,7 @@
       lon: parseFloat(longitude)
     }
     positions.update((pos) => ({ ...pos, geo: geo }));
+    writeStore();
     editHeaderOpen = false;
   }
 
@@ -57,7 +60,8 @@
           pos: pos
         });
       }
-      positions.update((pos) => ({ ...pos, base: updated }))
+      positions.update((pos) => ({ ...pos, base: updated }));
+      writeStore();
       newName = ''
     }
 
@@ -98,7 +102,7 @@
     <div class="nav-list uk-padding-small">
         <ul id="nav-nav" class="uk-iconnav uk-iconnav-vertical">
             {#each items as item}
-                <li><a href={`/nav/position/${item.id}`} onclick={(e) => callback(e, `/position/${item.id}`)}><span class="uk-icon" uk-icon=""><Icon type={item.id} size={1.35}/></span> <span>{item.name}</span></a></li>
+                <li><a href={`/navi/position/${item.id}`} onclick={(e) => callback(e, `/position/${item.id}`)}><span class="uk-icon" uk-icon=""><Icon type={item.id} size={1.35}/></span> <span>{item.name}</span></a></li>
             {/each}
         </ul>
     </div>

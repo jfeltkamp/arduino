@@ -25,7 +25,7 @@
   const setActive = (fid) => {
     console.log('setActive', fid)
     if (!isCurrent(fid)) {
-      obelixAPI(`/nav/location/${fid}`, (result) => {
+      obelixAPI(`/navi/location/${fid}`, (result) => {
         if (result?.fid === fid) {
           positions.update(result);
           console.log('Updated location from config')

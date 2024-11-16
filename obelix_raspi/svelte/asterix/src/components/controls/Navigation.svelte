@@ -9,7 +9,7 @@
   const toggleAdmin = () => { admin = !admin }
 
   onMount(() => {
-    obelixAPI('/nav/location/index', (result) => {
+    obelixAPI('/navi/location/index', (result) => {
       if (result?.fid === 'index') {
         positions.update(result);
         console.log('Updated location from config')
