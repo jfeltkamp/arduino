@@ -1,8 +1,11 @@
 <script>
-  import {onDestroy} from "svelte";
+  import { onDestroy } from "svelte";
   import Icon from "../tools/Icon.svelte";
   import { positions, arduinoSettings } from "$lib/data-store.js";
   import obelixAPI, { obelixPost } from "$lib/obelix-api.js";
+  import {strToId} from "$lib/helper.js";
+
+  let { toggleAdmin } = $props();
 
   let editHeaderOpen = $state(false);
   let addPosOpen = $state(false);
@@ -19,7 +22,7 @@
     items = [...pos.base];
 
     const posClone = {fid: pos.fid, geo: {...pos.geo}, base: [...pos.base]}
-    obelixPost(`/position/update/${pos.fid}`, posClone, (data) => {
+    obelixPost(`/nav/position/update/${pos.fid}`, posClone, (data) => {
       console.log('SVELTE saved', data)
     })
   });
@@ -35,33 +38,23 @@
   }
 
   const savePosition = () => {
-    const id = newName.replace(/\W+/g, "_").toLowerCase();
+    const id = strToId(newName);
     if (id) {
       let hasUpdated = false;
-      const {x, y, f} = {...arduinoSettings}
+      const pos = (({ x, y, f }) => ({  x, y, f }))($arduinoSettings);
       let updated = items.map((i) => {
         if (i.id !== id) {
           return i;
         } else {
           hasUpdated = true;
-          return {
-            ...i, pos: {
-              x: x,
-              y: y,
-              f: f
-            }
-          }
+          return {...i, pos: pos }
         }
       });
       if (!hasUpdated) {
         updated.push({
           id: id,
           name: newName,
-          pos: {
-            x: x,
-            y: y,
-            f: f
-          }
+          pos: pos
         });
       }
       positions.update((pos) => ({ ...pos, base: updated }))
@@ -100,16 +93,12 @@
         {/if}
     </div>
     <div class="nav-selector uk-padding-small">
-        <select class="uk-select uk-margin-bottom">
-            <option value="">- Your location -</option>
-            <option></option>
-        </select>
-        <button class="uk-button uk-button-primary uk-button-small uk-align-right">+ Add</button>
+        <button class="uk-button uk-button-small uk-align-right" onclick={toggleAdmin}>location</button>
     </div>
     <div class="nav-list uk-padding-small">
         <ul id="nav-nav" class="uk-iconnav uk-iconnav-vertical">
             {#each items as item}
-                <li><a href={`/position/${item.id}`} onclick={(e) => callback(e, `/position/${item.id}`)}><span class="uk-icon" uk-icon=""><Icon type={item.id} size={1.35}/></span> <span>{item.name}</span></a></li>
+                <li><a href={`/nav/position/${item.id}`} onclick={(e) => callback(e, `/position/${item.id}`)}><span class="uk-icon" uk-icon=""><Icon type={item.id} size={1.35}/></span> <span>{item.name}</span></a></li>
             {/each}
         </ul>
     </div>

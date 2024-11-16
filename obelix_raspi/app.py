@@ -54,17 +54,17 @@ if __name__ == "__main__":
         return joystick_analog.adjust(direction, int(length))
 
     # Navigation
-    @app.route('/get-navigation')
-    def get_navigation():
-        return navigation.get_navigation()
+    @app.route('/nav/location/<string:fid>')
+    def get_navigation(fid):
+        return navigation.get_navigation(fid)
 
-    @app.route('/position/<string:nav_id>')
+    @app.route('/nav/position/<string:nav_id>')
     def navigate(nav_id):
         pos = navigation.navigate(nav_id)
         obelix.params.get_deg_from_coords(pos)
         return pos
 
-    @app.route('/position/update/<string:file_id>', methods=['POST'])
+    @app.route('/nav/position/update/<string:file_id>', methods=['POST'])
     def position_update(file_id):
         data = request.json
         return navigation.position_update(file_id, data)

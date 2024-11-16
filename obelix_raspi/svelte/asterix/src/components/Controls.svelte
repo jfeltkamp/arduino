@@ -1,6 +1,6 @@
 <script>
     import Manual from "./controls/Manual.svelte";
-    import Positions from "./controls/Positions.svelte";
+    import Navigation from "./controls/Navigation.svelte";
     import CamOptions from "./controls/CamOptions.svelte";
 
     const tabs = [
@@ -26,7 +26,7 @@
         {#if active === 'manual'}
             <Manual />
         {:else if active === 'position'}
-            <Positions />
+            <Navigation />
         {:else if active === 'camera'}
             <CamOptions />
         {/if}

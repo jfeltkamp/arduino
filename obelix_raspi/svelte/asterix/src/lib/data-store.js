@@ -85,24 +85,6 @@ export const positions = writable({
         y: 11912,
         f: 600,
       }
-    },
-    {
-      id: "elisabeth_kirche",
-      name: "Elisabeth Kirche",
-      pos: {
-        x: -3000,
-        y: 250,
-        f: 400
-      }
-    },
-    {
-      id: "cch_hamburg",
-      name: "CCH Hamburg",
-      pos: {
-        x: -15000,
-        y: -1250,
-        f: 100,
-      }
     }
   ]
 });
