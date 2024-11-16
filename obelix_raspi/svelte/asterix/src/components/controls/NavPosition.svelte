@@ -15,12 +15,21 @@
   let longitude = $state('');
   let items = $state([]);
 
+
   const unsubscribe = positions.subscribe((pos) => {
-    address = pos.geo.addr;
-    latitude = pos.geo.lat;
-    longitude = pos.geo.lon;
-    items = [...pos.base];
+    if (pos?.fid) {
+        address = pos.geo.addr;
+        latitude = pos.geo.lat;
+        longitude = pos.geo.lon;
+        items = [...pos.base];
+    }
   });
+
+  onDestroy(() => {
+    if (unsubscribe) {
+      unsubscribe();
+    }
+  })
 
   const writeStore = () => {
     const posClone = {...$positions}
@@ -74,12 +83,6 @@
       console.log('SVELTE position', response)
     })
   }
-
-  onDestroy(() => {
-    if (unsubscribe) {
-      unsubscribe();
-    }
-  })
 </script>
 
 <div class="nav-grid">
@@ -102,7 +105,7 @@
     <div class="nav-list uk-padding-small">
         <ul id="nav-nav" class="uk-iconnav uk-iconnav-vertical">
             {#each items as item}
-                <li><a href={`/navi/position/${item.id}`} onclick={(e) => callback(e, `/position/${item.id}`)}><span class="uk-icon" uk-icon=""><Icon type={item.id} size={1.35}/></span> <span>{item.name}</span></a></li>
+                <li><a href={`/navi/position/${item.id}`} onclick={(e) => callback(e, `/navi/position/${item.id}`)}><span class="uk-icon" uk-icon=""><Icon type={item.id} size={1.35}/></span> <span>{item.name}</span></a></li>
             {/each}
         </ul>
     </div>

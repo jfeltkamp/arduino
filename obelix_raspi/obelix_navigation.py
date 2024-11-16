@@ -33,6 +33,8 @@ class ObelixNavigation:
 
 
     def position_update(self, file_id, data):
+        if "fid" in data:
+            self.position = data
         try:
             with open(f"navigation/{file_id}.yml", 'w') as fp:
                 yaml.dump(data, fp)

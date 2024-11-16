@@ -60,31 +60,4 @@ export const camControls = writable([
 ]);
 
 
-export const positions = writable({
-  fid: "index",
-  geo: {
-    addr: "Wischhofsweg 4",
-    lat: 53.606071,
-    lon: 9.902575,
-  },
-  base: [
-    {
-      id: "home",
-      name: "Home",
-      pos: {
-        x: -23900,
-        y: 0,
-        f: 500
-      }
-    },
-    {
-      id: "polaris",
-      name: "Polaris",
-      pos: {
-        x: 0,
-        y: 11912,
-        f: 600,
-      }
-    }
-  ]
-});
+export const positions = writable({});
