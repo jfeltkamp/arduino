@@ -23,7 +23,7 @@
   const isCurrent = (fid) => ((fid === current) ? 'active' : '')
 
   const setActive = (fid) => {
-      console.log('setActive', fid)
+    console.log('setActive', fid)
     if (!isCurrent(fid)) {
       obelixAPI(`/nav/location/${fid}`, (result) => {
         if (result?.fid === fid) {
