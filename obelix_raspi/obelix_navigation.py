@@ -54,6 +54,9 @@ class ObelixNavigation:
         extract = {}
         if "fid" in data:
             extract['fid'] = data['fid']
+            extract['addr'] = extract['fid']
+        else:
+            return False
         if "geo" in data:
             if "addr" in data['geo']:
                 extract['addr'] = data['geo']['addr']
@@ -67,7 +70,8 @@ class ObelixNavigation:
                 with open(file) as stream:
                     content = yaml.safe_load(stream)
                     header = self.read_yaml_header(content)
-                    yml_files.append(header)
+                    if header:
+                        yml_files.append(header)
             except Exception as e:
                 print(e)
         print(yml_files)
