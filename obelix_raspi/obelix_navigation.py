@@ -64,14 +64,14 @@ class ObelixNavigation:
 
 
     def get_location_list(self):
-        yml_files = []
+        location_list = []
         for file in glob.glob("navigation/*.yml"):
             try:
                 with open(file) as stream:
                     content = yaml.safe_load(stream)
                     header = self.read_yaml_header(content)
                     if header:
-                        yml_files.append(header)
+                        location_list.append(header)
             except Exception as e:
                 print(e)
-        print(yml_files)
+        return location_list

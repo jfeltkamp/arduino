@@ -1,34 +1,23 @@
 <script>
-  import { positions } from '$lib/data-store.js';
+  import { onMount } from "svelte";
+  import { positions, locations } from '$lib/data-store.js';
   import { strToId } from "$lib/helper.js";
   import obelixAPI from "$lib/obelix-api.js";
 
-  let {toggleAdmin} = $props();
+  let { toggleAdmin } = $props();
   let current = $positions.fid;
 
   let newLocation = $state('');
   let newLocationFid = $derived(strToId(newLocation));
 
-  const locations = [
-    {
-      fid: "index",
-      name: "Wischhofsweg 4"
-    },
-    {
-      fid: "barsbuettel_4",
-      name: "Barsbüttel 4"
-    }
-  ]
 
-  const isCurrent = (fid) => ((fid === current) ? 'active' : '')
-
-  const setActive = (fid) => {
-    console.log('setActive', fid)
+  // Executed when changing location.
+  const loadLocation = (fid) => {
     if (fid !== current) {
       obelixAPI(`/navi/location/${fid}`, (result) => {
         if (result?.fid === fid) {
           positions.update(result);
-          console.log('Updated location from config')
+          console.log('Loaded location')
         }
       })
     }
@@ -38,6 +27,14 @@
     console.log('addLocation')
   }
 
+  onMount(() => {
+    if ($locations.length === 0) {
+      obelixAPI("/navi/location-list", (result) => {
+        locations.update(result)
+        console.log('Loaded location list')
+      })
+    }
+  })
 </script>
 
 <div class="nav-grid">
@@ -49,8 +46,8 @@
     </div>
     <div class="nav-list uk-padding-small">
         <ul>
-            {#each locations as location}
-                <li class={(location.fid === current) ? 'active' : ''}><button class="loc-button" onclick={() => setActive(location.fid)}>{location.name}</button></li>
+            {#each $locations as location}
+                <li class={(location.fid === current) ? 'active' : ''}><button class="loc-button" onclick={() => loadLocation(location.fid)}>{location.name}</button></li>
             {/each}
         </ul>
     </div>

@@ -59,5 +59,7 @@ export const camControls = writable([
   }
 ]);
 
-
+// Navigation
+export const locations = writable([]);
 export const positions = writable({});
+
