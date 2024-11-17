@@ -3,6 +3,7 @@
   import {positions, locations} from '$lib/data-store.js';
   import { strToId, getLocationTmpl} from "$lib/helper.js";
   import obelixAPI, {obelixPost} from "$lib/obelix-api.js";
+  import Icon from "../tools/Icon.svelte";
 
   let {toggleAdmin} = $props();
   let current = $state('');
@@ -16,6 +17,11 @@
       unsubscribe();
     }
   })
+  // Edit locations
+  let editLocation = $state(false);
+  const toggleEdit = () => {
+    editLocation = !editLocation
+  }
 
   let newLocation = $state('');
   let newLocationFid = $derived(strToId(newLocation));
@@ -45,6 +51,19 @@
     }
   }
 
+  const deleteLocation = (fid) => {
+    if (confirm(`Do you really want to delete location: "${fid}"`)) {
+      obelixAPI(`/navi/location/delete/${fid}`, (result) => {
+        if (result.success) {
+          locations.update(locs => (locs.filter(loc => (loc.fid !== fid))));
+          alert(`Location "${fid}" deleted`);
+        }
+      });
+    } else {
+      alert(`Deletion of "${fid}" canceled.`)
+    }
+  }
+
   onMount(() => {
     if ($locations.length === 0) {
       obelixAPI("/navi/location-list", (result) => {
@@ -57,7 +76,8 @@
 
 <div class="nav-grid">
     <div class="nav-curr-pos uk-padding-small">
-        <h4>Locations</h4>
+        <h4>Locations <button class={'edit-button' + ((editLocation)?' active':'')}  onclick={toggleEdit}><Icon type="edit" size={1.0}/></button></h4>
+        <div><p>The location is the place where your telescope is placed.</p></div>
     </div>
     <div class="nav-selector uk-padding-small">
         <button class="uk-button uk-button-small uk-align-right" onclick={toggleAdmin}>Navigation</button>
@@ -66,24 +86,30 @@
         <ul>
             {#each $locations as location}
                 <li class={(location.fid === current) ? 'active' : ''}>
-                    <button class="loc-button" onclick={() => loadLocation(location.fid)}>{location.addr}</button>
+                    <button class="loc-button" onclick={() => loadLocation(location.fid)}><Icon type="home"/> {location.addr}</button>
+                    {#if editLocation && (location.fid !== current) && (location.fid !== 'index')}
+                        <button class="del-button" onclick={() => deleteLocation(location.fid)}><Icon type="delete" size={1.0}/></button>
+                    {/if}
                 </li>
             {/each}
         </ul>
     </div>
-    <div class="nav-add uk-padding-small">
-        <input type="text" id="new-location" bind:value={newLocation} class="uk-input"
-               placeholder="Enter a location name"/>
-        <button class="uk-button uk-align-right uk-margin-remove-vertical" onclick={() => addLocation()}>+&nbsp;Add
-        </button>
-    </div>
-    <div class="uk-padding-small uk-padding-remove-vertical">{newLocationFid}</div>
+    {#if editLocation}
+        <div class="nav-add uk-padding-small">
+            <input type="text" id="new-location" bind:value={newLocation} class="uk-input"
+                   placeholder="Enter a location name"/>
+            <button class="uk-button uk-align-right uk-margin-remove-vertical" onclick={() => addLocation()}>+&nbsp;Add
+            </button>
+        </div>
+        <div class="uk-padding-small uk-padding-remove-vertical">{newLocationFid}</div>
+    {/if}
 </div>
 
 
 <style>
     h4 {
         margin-bottom: 0;
+        display: flex;
     }
 
     h4 + div {
@@ -106,6 +132,18 @@
         width: 100%;
     }
 
+    .nav-list ul {
+        all: unset;
+        list-style: none;
+        display: flex;
+        flex-wrap: wrap;
+    }
+    .nav-list li {
+        flex: 1 1 50%;
+        list-style: none;
+        margin: .55em 0;
+    }
+
     .nav-add {
         flex: 1 1 100%;
         display: flex;
@@ -114,9 +152,26 @@
 
     .loc-button {
         all: unset;
+        display: inline-block;
         cursor: pointer;
     }
-
+    .del-button {
+        all: unset;
+        cursor: pointer;
+        display: inline-block;
+    }
+    .edit-button {
+        all: unset;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 1.3em;
+        height: 1.3em;
+        margin-left: 1em;
+        border: 1px solid currentColor;
+        border-radius: 50%;
+    }
     .active > .loc-button {
         color: #0a53be;
         font-size: 1.15em;

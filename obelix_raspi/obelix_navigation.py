@@ -1,5 +1,6 @@
 import yaml
 import glob
+import os
 from obelix_tools import ObelixCommands
 
 
@@ -75,3 +76,11 @@ class ObelixNavigation:
             except Exception as e:
                 print(e)
         return location_list
+
+    def delete_location(self, fid):
+        try:
+            os.remove(f"/navigation/{fid}.yml")
+            return { 'response': 200 }
+        except Exception as e:
+            print(e)
+            return { 'response': 500 }

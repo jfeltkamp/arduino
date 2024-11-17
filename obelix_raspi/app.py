@@ -62,6 +62,10 @@ if __name__ == "__main__":
     def get_navigation(fid):
         return navigation.get_navigation(fid)
 
+    @app.route('/navi/location/delete/<string:fid>')
+    def delete_location(fid):
+        return navigation.delete_location(fid)
+
     @app.route('/navi/position/<string:nav_id>')
     def navigate(nav_id):
         pos = navigation.navigate(nav_id)
