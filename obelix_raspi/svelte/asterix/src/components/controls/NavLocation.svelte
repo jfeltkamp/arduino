@@ -1,22 +1,31 @@
 <script>
-  import { onMount } from "svelte";
-  import { positions, locations } from '$lib/data-store.js';
-  import { strToId } from "$lib/helper.js";
-  import obelixAPI from "$lib/obelix-api.js";
+  import { onMount, onDestroy } from "svelte";
+  import {positions, locations} from '$lib/data-store.js';
+  import { strToId, getLocationTmpl} from "$lib/helper.js";
+  import obelixAPI, {obelixPost} from "$lib/obelix-api.js";
 
-  let { toggleAdmin } = $props();
-  let current = $positions.fid;
+  let {toggleAdmin} = $props();
+  let current = $state('');
+
+  const unsubscribe = positions.subscribe(pos => {
+    current = pos.fid;
+  });
+
+  onDestroy(() => {
+    if (unsubscribe) {
+      unsubscribe();
+    }
+  })
 
   let newLocation = $state('');
   let newLocationFid = $derived(strToId(newLocation));
-
 
   // Executed when changing location.
   const loadLocation = (fid) => {
     if (fid !== current) {
       obelixAPI(`/navi/location/${fid}`, (result) => {
         if (result?.fid === fid) {
-          positions.update(result);
+          positions.update(loc => ({...result}));
           console.log('Loaded location')
         }
       })
@@ -24,13 +33,22 @@
   }
 
   const addLocation = () => {
-    console.log('addLocation')
+    if (newLocationFid.length >= 3) {
+      const location = getLocationTmpl(newLocationFid, newLocation);
+      obelixPost(`/navi/position/update/${newLocationFid}`, location, (data) => {
+        positions.update(pos => location);
+        locations.update(loc => ([...loc, {fid: newLocationFid, addr: newLocation}]));
+        console.log('SVELTE added new location', data);
+      })
+    } else {
+      console.error('ID is too short. At least 3 char are required.');
+    }
   }
 
   onMount(() => {
     if ($locations.length === 0) {
       obelixAPI("/navi/location-list", (result) => {
-        locations.update(result)
+        locations.update(loc => [...result])
         console.log('Loaded location list')
       })
     }
@@ -47,13 +65,17 @@
     <div class="nav-list uk-padding-small">
         <ul>
             {#each $locations as location}
-                <li class={(location.fid === current) ? 'active' : ''}><button class="loc-button" onclick={() => loadLocation(location.fid)}>{location.name}</button></li>
+                <li class={(location.fid === current) ? 'active' : ''}>
+                    <button class="loc-button" onclick={() => loadLocation(location.fid)}>{location.addr}</button>
+                </li>
             {/each}
         </ul>
     </div>
     <div class="nav-add uk-padding-small">
-        <input type="text" id="new-location" bind:value={newLocation} class="uk-input" placeholder="Enter a location name"/>
-        <button class="uk-button uk-align-right uk-margin-remove-vertical" onclick={() => addLocation()}>+&nbsp;Add</button>
+        <input type="text" id="new-location" bind:value={newLocation} class="uk-input"
+               placeholder="Enter a location name"/>
+        <button class="uk-button uk-align-right uk-margin-remove-vertical" onclick={() => addLocation()}>+&nbsp;Add
+        </button>
     </div>
     <div class="uk-padding-small uk-padding-remove-vertical">{newLocationFid}</div>
 </div>
@@ -89,10 +111,12 @@
         display: flex;
         flex-direction: row;
     }
+
     .loc-button {
         all: unset;
         cursor: pointer;
     }
+
     .active > .loc-button {
         color: #0a53be;
         font-size: 1.15em;
