@@ -1,4 +1,5 @@
 import yaml
+import glob
 from obelix_tools import ObelixCommands
 
 
@@ -48,3 +49,25 @@ class ObelixNavigation:
                 'response': 500,
                 'message': f"Position updated failed"
             }
+
+    def read_yaml_header(self, data):
+        extract = {}
+        if "fid" in data:
+            extract['fid'] = data['fid']
+        if "geo" in data:
+            if "addr" in data['geo']:
+                extract['addr'] = data['geo']['addr']
+        return extract
+
+
+    def get_location_list(self):
+        yml_files = []
+        for file in glob.glob("navigation/*.yml"):
+            try:
+                with open(file) as stream:
+                    content = yaml.safe_load(stream)
+                    header = self.read_yaml_header(content)
+                    yml_files.append(header)
+            except Exception as e:
+                print(e)
+        print(yml_files)

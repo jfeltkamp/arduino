@@ -24,7 +24,7 @@
 
   const setActive = (fid) => {
     console.log('setActive', fid)
-    if (!isCurrent(fid)) {
+    if (fid !== current) {
       obelixAPI(`/navi/location/${fid}`, (result) => {
         if (result?.fid === fid) {
           positions.update(result);
@@ -50,7 +50,7 @@
     <div class="nav-list uk-padding-small">
         <ul>
             {#each locations as location}
-                <li class={isCurrent(location.fid)}><button class="loc-button" onclick={() => setActive(location.fid)}>{location.name}</button></li>
+                <li class={(location.fid === current) ? 'active' : ''}><button class="loc-button" onclick={() => setActive(location.fid)}>{location.name}</button></li>
             {/each}
         </ul>
     </div>

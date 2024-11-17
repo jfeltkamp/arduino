@@ -54,6 +54,10 @@ if __name__ == "__main__":
         return joystick_analog.adjust(direction, int(length))
 
     # Navigation
+    @app.route('/navi/location-list')
+    def get_location_list():
+        return navigation.get_location_list()
+
     @app.route('/navi/location/<string:fid>')
     def get_navigation(fid):
         return navigation.get_navigation(fid)
