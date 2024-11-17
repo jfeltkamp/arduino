@@ -44,7 +44,8 @@
       obelixPost(`/navi/position/update/${newLocationFid}`, location, (data) => {
         positions.update(pos => location);
         locations.update(loc => ([...loc, {fid: newLocationFid, addr: newLocation}]));
-        console.log('SVELTE added new location', data);
+        newLocation = '';
+        console.log('Added new location', data);
       })
     } else {
       console.error('ID is too short. At least 3 char are required.');
@@ -54,7 +55,7 @@
   const deleteLocation = (fid) => {
     if (confirm(`Do you really want to delete location: "${fid}"`)) {
       obelixAPI(`/navi/location/delete/${fid}`, (result) => {
-        if (result.success) {
+        if (result.response === 200) {
           locations.update(locs => (locs.filter(loc => (loc.fid !== fid))));
           alert(`Location "${fid}" deleted`);
         }
