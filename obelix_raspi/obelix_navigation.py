@@ -79,7 +79,7 @@ class ObelixNavigation:
 
     def delete_location(self, fid):
         try:
-            os.remove(f"/navigation/{fid}.yml")
+            os.remove(f"./navigation/{fid}.yml")
             return { 'response': 200 }
         except Exception as e:
             print(e)
