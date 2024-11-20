@@ -1,12 +1,16 @@
 
 export function strToId (name) {
-  let newName = name.toLowerCase().trim()
-    .replaceAll('ä', 'ae')
-    .replaceAll('ö', 'oe')
-    .replaceAll('ü', 'ue')
-    .replaceAll('ß', 'ss')
-    .replace(/\W+/g, "_");
-  return newName.replace(/^_|_$/g, "");
+  if (typeof name === 'string') {
+    let newName = name.toLowerCase().trim()
+      .replaceAll('ä', 'ae')
+      .replaceAll('ö', 'oe')
+      .replaceAll('ü', 'ue')
+      .replaceAll('ß', 'ss')
+      .replace(/\W+/g, "_");
+    return newName.replace(/^_|_$/g, "");
+  } else {
+    return null
+  }
 }
 
 

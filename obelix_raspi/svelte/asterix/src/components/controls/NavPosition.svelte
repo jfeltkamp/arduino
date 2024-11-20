@@ -7,9 +7,9 @@
 
   let { toggleAdmin } = $props();
 
-  let editHeaderOpen = $state(false);
-  let addPosOpen = $state(false);
-  let newName = $state();
+  let editPositions = $state(false);
+  let newName = $state('');
+  let newNameId = $derived(strToId(newName));
   let address = $state('');
   let latitude = $state('');
   let longitude = $state('');
@@ -46,10 +46,11 @@
     }
     positions.update((pos) => ({ ...pos, geo: geo }));
     writeStore();
-    editHeaderOpen = false;
+    editPositions = false;
   }
 
   const savePosition = () => {
+
     const id = strToId(newName);
     if (id) {
       let hasUpdated = false;
@@ -74,7 +75,16 @@
       newName = ''
     }
 
-    addPosOpen = false;
+    editPositions = false;
+  }
+
+  const deletePosition = (pid) => {
+    if (confirm(`Do you really want to delete position: "${pid}"`)) {
+      const base = [...$positions.base].filter(item => (item.id !== pid))
+      positions.update(pos => ({...pos, base: base}))
+      writeStore();
+      editPositions = false;
+    }
   }
 
   const callback = (e, path) => {
@@ -87,16 +97,19 @@
 
 <div class="nav-grid">
     <div class="nav-curr-pos uk-padding-small">
-        {#if editHeaderOpen}
+        <h3>Navigation</h3>
+        {#if editPositions}
             <input type="text" id="address" bind:value={address} placeholder="Address" class="uk-input uk-margin-small-bottom"  />
             <input type="text" id="latitude" bind:value={latitude} placeholder="Latitude" class="uk-input uk-margin-small-bottom" />
             <input type="text" id="longitude" bind:value={longitude} placeholder="Longitude" class="uk-input uk-margin-small-bottom" />
-            <button class="uk-button uk-button-small" onclick={saveHeader}>Save</button>
+            <button class="uk-button uk-button-small" onclick={saveHeader}>Save</button> <button class="uk-button uk-button-small" onclick={() => { editPositions = false; }}>Cancel</button>
         {:else}
-            <div class="editable" onclick={() => { editHeaderOpen = true }} role="button" tabindex="0">
-                <h4>{address}</h4>
+            {#if address}
+                <h4>{address} <button class="edit-button" onclick={() => { editPositions = true }}><Icon type="edit"/></button></h4>
+            {/if}
+            {#if latitude && longitude}
                 <div>{latitude}°, {longitude}°</div>
-            </div>
+            {/if}
         {/if}
     </div>
     <div class="nav-selector uk-padding-small">
@@ -105,17 +118,21 @@
     <div class="nav-list uk-padding-small">
         <ul id="nav-nav" class="uk-iconnav uk-iconnav-vertical">
             {#each items as item}
-                <li><a href={`/navi/position/${item.id}`} onclick={(e) => callback(e, `/navi/position/${item.id}`)}><span class="uk-icon" uk-icon=""><Icon type={item.id} size={1.35}/></span> <span>{item.name}</span></a></li>
+                <li>
+                    <button class="goto-button" onclick={(e) => callback(e, `/navi/position/${item.id}`)}><Icon type={item.id} size={1.35}/> {item.name}</button>
+                    {#if editPositions  && (item.id !== 'home') && (item.id !== 'polaris')}
+                        <button class="delete-button" onclick={() => deletePosition(item.id)}><Icon type="delete" size={.85}/></button>
+                    {/if}
+                </li>
             {/each}
         </ul>
     </div>
     <div class="nav-add uk-padding-small">
-        {#if addPosOpen}
+        {#if editPositions}
             <label for="new-name">Save/update current position as ...</label>
-            <input type="text" id="new-name" bind:value={newName} class="uk-input uk-margin-bottom" placeholder="Enter a position name" />
-            <button class="uk-button uk-button-small" onclick={savePosition}>Save</button>
-        {:else}
-            <button class="uk-button uk-button-small" onclick={() => { addPosOpen = true }}>+ Add</button>
+            <input type="text" id="new-name" bind:value={newName} class="uk-input" placeholder="Enter a position name" />
+            <div class="uk-margin-bottom"><sub>ID: {newNameId}</sub></div>
+            <button class="uk-button uk-button-small" disabled={newNameId.length < 3} onclick={savePosition}>Save</button>
         {/if}
     </div>
 </div>
@@ -123,6 +140,7 @@
 <style>
     h4 {
         margin-bottom: 0;
+        display: flex;
     }
     h4 + div {
         margin-bottom: .75em;
@@ -140,14 +158,26 @@
         flex: 1 1 100%;
         width: 100%;
     }
-    .editable:hover {
-        background: rgba(0,0,0,.2);
-        border-radius: 5px;
-        box-shadow: 0 0 0 .5em rgba(0,0,0,.2);
 
-        &::after {
-            content: 'EDIT';
-            color: #FFF;
-        }
+    .edit-button {
+        all: unset;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 1.3em;
+        height: 1.3em;
+        margin-left: 1em;
+        border: 1px solid currentColor;
+        border-radius: 50%;
+    }
+    .goto-button {
+        all: unset;
+        cursor: pointer;
+    }
+    .delete-button {
+        all: unset;
+        cursor: pointer;
+        margin-left: .35em;
     }
 </style>

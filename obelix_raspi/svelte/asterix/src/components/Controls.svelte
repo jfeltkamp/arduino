@@ -41,5 +41,6 @@
     .tools {
         width: 100%;
         height: calc(100% - 52px);
+        overflow: auto;
     }
 </style>
