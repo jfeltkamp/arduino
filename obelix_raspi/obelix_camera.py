@@ -39,7 +39,9 @@ class ObelixCamera:
             'brightness': 'Brightness',
             'contrast': 'Contrast',
             'saturation': 'Saturation',
-            'sharpness': 'Sharpness'
+            'sharpness': 'Sharpness',
+            'exposure_time': 'ExposureTime',
+            'analogue_gain': 'AnalogueGain',
         }
         if param in params:
             self.picam.set_controls({ params[param]: value })
@@ -69,5 +71,6 @@ class ObelixCamera:
         try:
             self.picam.stop_preview()
             self.picam.stop()
-        except: pass
+        except:
+            pass
 
