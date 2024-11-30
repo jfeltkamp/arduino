@@ -56,6 +56,22 @@ export const camControls = writable([
     minValue: 0,
     maxValue: 16,
     steps: 0.1,
+  },
+  {
+    id: 'exposure_value',
+    name: 'Exposure time',
+    value: 0,
+    minValue: -8.0,
+    maxValue: 8.0,
+    steps: 0.1,
+  },
+  {
+    id: 'analogue_gain',
+    name: 'Analogue Gain',
+    value: 1,
+    minValue: 1,
+    maxValue: 8,
+    steps: 0.1,
   }
 ]);
 

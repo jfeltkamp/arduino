@@ -80,7 +80,12 @@ if __name__ == "__main__":
     # Camera
     @app.route("/cam/ctrl/<string:param>/<string:value>")
     def cam_control(param="", value=""):
-        return obelix.camera.set_control(param=param, value=float(value))
+        if param in ('AfMode', 'AeConstraintMode', 'AeExposureMode', 'AeFlickerMode', 'AeFlickerPeriod', 'AeMeteringMode', 'AfRange', 'AfSpeed', 'AwbMode', 'ExposureTime') :
+            return obelix.camera.set_control(param=param, value=int(value))
+        elif param in ('Brightness', 'Contrast', 'Saturation', 'Sharpness', 'ExposureValue', 'LensPosition', 'AnalogueGain'):
+            return obelix.camera.set_control(param=param, value=float(value))
+        elif param in ('AeEnable', 'AwbEnable', 'ScalerCrop'):
+            return obelix.camera.set_control(param=param, value=value)
 
     @app.route('/camera/stream')
     def camera_stream():

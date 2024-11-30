@@ -41,10 +41,12 @@ class ObelixCamera:
             'saturation': 'Saturation',
             'sharpness': 'Sharpness',
             'exposure_time': 'ExposureTime',
+            'exposure_value': 'ExposureValue',
             'analogue_gain': 'AnalogueGain',
         }
         if param in params:
             self.picam.set_controls({ params[param]: value })
+        return self.picam.camera_controls
 
     def capture_image(self, name):
         if self.path == "":
