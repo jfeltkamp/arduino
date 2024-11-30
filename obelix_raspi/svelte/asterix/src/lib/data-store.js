@@ -26,7 +26,7 @@ export const arduinoSettings = writable({
 
 export const camControls = writable([
   {
-    id: 'brightness',
+    id: 'Brightness',
     name: 'Brightness',
     value: 0,
     minValue: -1,
@@ -34,7 +34,7 @@ export const camControls = writable([
     steps: 0.01,
   },
   {
-    id: 'contrast',
+    id: 'Contrast',
     name: 'Contrast',
     value: 1,
     minValue: 0,
@@ -42,7 +42,7 @@ export const camControls = writable([
     steps: 0.1,
   },
   {
-    id: 'saturation',
+    id: 'Saturation',
     name: 'Saturation',
     value: 1,
     minValue: 0,
@@ -50,7 +50,7 @@ export const camControls = writable([
     steps: 0.1,
   },
   {
-    id: 'sharpness',
+    id: 'Sharpness',
     name: 'Sharpness',
     value: 1,
     minValue: 0,
@@ -58,16 +58,24 @@ export const camControls = writable([
     steps: 0.1,
   },
   {
-    id: 'exposure_value',
-    name: 'Exposure time',
+    id: 'ExposureValue',
+    name: 'Exposure value',
     value: 0,
     minValue: -8.0,
     maxValue: 8.0,
     steps: 0.1,
   },
   {
-    id: 'analogue_gain',
-    name: 'Analogue Gain',
+    id: 'ExposureTime',
+    name: 'Exposure time',
+    value: 10000,
+    minValue: 100,
+    maxValue: 250000,
+    steps: 100,
+  },
+  {
+    id: 'AnalogueGain',
+    name: 'Analogue gain',
     value: 1,
     minValue: 1,
     maxValue: 8,

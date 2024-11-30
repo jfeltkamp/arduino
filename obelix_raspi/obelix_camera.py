@@ -36,20 +36,22 @@ class ObelixCamera:
 
     def set_control(self, param, value):
         try:
-            params = {
-                'brightness': 'Brightness',
-                'contrast': 'Contrast',
-                'saturation': 'Saturation',
-                'sharpness': 'Sharpness',
-                'exposure_time': 'ExposureTime',
-                'exposure_value': 'ExposureValue',
-                'analogue_gain': 'AnalogueGain',
-            }
-            if param in params:
-                self.picam.set_controls({ params[param]: value })
+            if param == 'ExposureTime':
+                exp_time = int(value)
+                if exp_time > 33333:
+                    frame_dur = exp_time
+                else:
+                    frame_dur = 33333
+                self.picam.set_controls({ 'ExposureTime': exp_time, 'FrameDurationLimits': (frame_dur, frame_dur) })
+            elif param in ('AfMode', 'AeConstraintMode', 'AeExposureMode', 'AeFlickerMode', 'AeFlickerPeriod', 'AeMeteringMode', 'AfRange', 'AfSpeed', 'AwbMode'):
+                self.picam.set_controls({ param: int(value) })
+            elif param in ('Brightness', 'Contrast', 'Saturation', 'Sharpness', 'ExposureValue', 'LensPosition', 'AnalogueGain'):
+                self.picam.set_controls({ param: float(value) })
+            elif param in ('AeEnable', 'AwbEnable', 'ScalerCrop'):
+                self.picam.set_controls({ param: value })
         except:
             pass
-        return self.picam.camera_controls
+        return self.picam.video_configuration.controls
 
     def capture_image(self, name):
         if self.path == "":
