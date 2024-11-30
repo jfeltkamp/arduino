@@ -35,17 +35,20 @@ class ObelixCamera:
         self.stream.start()
 
     def set_control(self, param, value):
-        params = {
-            'brightness': 'Brightness',
-            'contrast': 'Contrast',
-            'saturation': 'Saturation',
-            'sharpness': 'Sharpness',
-            'exposure_time': 'ExposureTime',
-            'exposure_value': 'ExposureValue',
-            'analogue_gain': 'AnalogueGain',
-        }
-        if param in params:
-            self.picam.set_controls({ params[param]: value })
+        try:
+            params = {
+                'brightness': 'Brightness',
+                'contrast': 'Contrast',
+                'saturation': 'Saturation',
+                'sharpness': 'Sharpness',
+                'exposure_time': 'ExposureTime',
+                'exposure_value': 'ExposureValue',
+                'analogue_gain': 'AnalogueGain',
+            }
+            if param in params:
+                self.picam.set_controls({ params[param]: value })
+        except:
+            pass
         return self.picam.camera_controls
 
     def capture_image(self, name):
