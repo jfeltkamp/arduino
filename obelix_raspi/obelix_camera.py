@@ -51,7 +51,7 @@ class ObelixCamera:
                 self.picam.set_controls({ param: value })
         except:
             pass
-        return self.picam.video_configuration.controls
+        return self.picam.capture_metadata()
 
     def capture_image(self, name):
         if self.path == "":
