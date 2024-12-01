@@ -38,7 +38,7 @@ class ObelixCamera:
         try:
             if param == 'ExposureTime':
                 exp_setting = float(value)
-                exp_time = round(math.pow(0.63095734, exp_setting) * 33000)
+                exp_time = round(math.pow(0.63095734, -exp_setting) * 33000)
                 if exp_time > 33000:
                     frame_dur = exp_time
                 else:
