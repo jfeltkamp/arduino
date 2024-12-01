@@ -82,6 +82,11 @@ if __name__ == "__main__":
     def cam_control(param="", value=""):
         return obelix.camera.set_control(param=param, value=value)
 
+    @app.route("/cam/controls", methods=['POST'])
+    def cam_controls():
+        values = request.json
+        return obelix.camera.set_controls(values)
+
     @app.route('/camera/stream')
     def camera_stream():
         obelix.camera.start_stream()

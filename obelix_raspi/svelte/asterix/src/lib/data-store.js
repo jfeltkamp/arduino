@@ -28,6 +28,7 @@ export const camControls = writable([
   {
     id: 'Brightness',
     name: 'Brightness',
+    defaultValue: 0,
     value: 0,
     minValue: -1,
     maxValue: 1,
@@ -36,6 +37,7 @@ export const camControls = writable([
   {
     id: 'Contrast',
     name: 'Contrast',
+    defaultValue: 1,
     value: 1,
     minValue: 0,
     maxValue: 6,
@@ -44,6 +46,7 @@ export const camControls = writable([
   {
     id: 'Saturation',
     name: 'Saturation',
+    defaultValue: 1,
     value: 1,
     minValue: 0,
     maxValue: 32,
@@ -52,6 +55,7 @@ export const camControls = writable([
   {
     id: 'Sharpness',
     name: 'Sharpness',
+    defaultValue: 1,
     value: 1,
     minValue: 0,
     maxValue: 16,
@@ -61,6 +65,7 @@ export const camControls = writable([
     id: 'ExposureTime',
     name: 'Exposure time (exp. 0.3ms-3.3s)',
     description: 'Value > 0 will reduce video framerate.',
+    defaultValue: 0,
     value: 0,
     minValue: -10,
     maxValue: 10,
@@ -69,6 +74,7 @@ export const camControls = writable([
   {
     id: 'AnalogueGain',
     name: 'Analogue gain',
+    defaultValue: 1,
     value: 1,
     minValue: 1,
     maxValue: 8,

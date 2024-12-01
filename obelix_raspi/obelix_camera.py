@@ -35,23 +35,13 @@ class ObelixCamera:
         self.stream.start()
 
     def set_control(self, param, value):
-        try:
-            if param == 'ExposureTime':
-                exp_setting = float(value)
-                exp_time = round(math.pow(0.63095734, -exp_setting) * 33000)
-                if exp_time > 33000:
-                    frame_dur = exp_time
-                else:
-                    frame_dur = 33000
-                self.picam.set_controls({ 'ExposureTime': exp_time, 'FrameDurationLimits': (frame_dur, frame_dur) })
-            elif param in ('AfMode', 'AeConstraintMode', 'AeExposureMode', 'AeFlickerMode', 'AeFlickerPeriod', 'AeMeteringMode', 'AfRange', 'AfSpeed', 'AwbMode'):
-                self.picam.set_controls({ param: int(value) })
-            elif param in ('Brightness', 'Contrast', 'Saturation', 'Sharpness', 'ExposureValue', 'LensPosition', 'AnalogueGain'):
-                self.picam.set_controls({ param: float(value) })
-            elif param in ('AeEnable', 'AwbEnable', 'ScalerCrop'):
-                self.picam.set_controls({ param: value })
-        except:
-            pass
+        self.picam.set_controls(self.cast_controls({param: value}))
+        time.sleep(0.5)
+        return self.picam.capture_metadata()
+
+    def set_controls(self, values):
+        self.picam.set_controls(self.cast_controls(values))
+        time.sleep(0.5)
         return self.picam.capture_metadata()
 
     def capture_image(self, name):
@@ -82,3 +72,24 @@ class ObelixCamera:
         except:
             pass
 
+    # To avoid errors all params are cast to correct data type.
+    def cast_controls(self, object):
+        casted = {}
+        for key, value in object.items():
+            if key == 'ExposureTime':
+                exp_setting = float(value)
+                exp_time = round(math.pow(0.63095734, -exp_setting) * 33000)
+                if exp_time > 33000:
+                    frame_dur = exp_time
+                else:
+                    frame_dur = 33000
+                casted.ExposureTime = exp_time
+                casted.FrameDurationLimits = (frame_dur, frame_dur)
+            elif key in ('AfMode', 'AeConstraintMode', 'AeExposureMode', 'AeFlickerMode', 'AeFlickerPeriod', 'AeMeteringMode', 'AfRange', 'AfSpeed', 'AwbMode'):
+                casted[key] = int(value)
+            elif key in ('Brightness', 'Contrast', 'Saturation', 'Sharpness', 'ExposureValue', 'LensPosition', 'AnalogueGain'):
+                casted[key] = float(value)
+            else:
+                # enum(AeEnable, AwbEnable, ScalerCrop)
+                casted[key] = value
+        return casted

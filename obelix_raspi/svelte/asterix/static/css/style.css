@@ -8,32 +8,6 @@ html, body {
   background: #333;
 }
 
-/* Focus */
-input[type="range"] {
-  -webkit-appearance: none;
-  height: 80%;
-  width: 25px;
-  position: relative;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: rgba(0,0,0,.3);
-  border: 3px solid rgba(0,0,0,.8);
-  border-radius: 10px;
-  outline: none;
-}
-
-input[type="range"]::-moz-range-thumb,
-input[type="range"]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 35px;
-  height: 35px;
-  background: #7C7C7C;
-  border: 3px solid rgba(0,0,0,.8);
-  cursor: pointer;
-}
-
 /* Analog controls */
 .analog-controls {
   display: flex;
