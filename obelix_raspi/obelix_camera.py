@@ -83,8 +83,8 @@ class ObelixCamera:
                     frame_dur = exp_time
                 else:
                     frame_dur = 33000
-                casted.ExposureTime = exp_time
-                casted.FrameDurationLimits = (frame_dur, frame_dur)
+                casted['ExposureTime'] = exp_time
+                casted['FrameDurationLimits'] = (frame_dur, frame_dur)
             elif key in ('AfMode', 'AeConstraintMode', 'AeExposureMode', 'AeFlickerMode', 'AeFlickerPeriod', 'AeMeteringMode', 'AfRange', 'AfSpeed', 'AwbMode'):
                 casted[key] = int(value)
             elif key in ('Brightness', 'Contrast', 'Saturation', 'Sharpness', 'ExposureValue', 'LensPosition', 'AnalogueGain'):
