@@ -80,7 +80,7 @@ if __name__ == "__main__":
     # Camera
     @app.route("/cam/ctrl/<string:param>/<string:value>")
     def cam_control(param="", value=""):
-        obelix.camera.set_control(param=param, value=value)
+        return obelix.camera.set_control(param=param, value=value)
 
     @app.route('/camera/stream')
     def camera_stream():

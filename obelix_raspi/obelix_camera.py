@@ -1,6 +1,6 @@
 #!/usr/bin/env_python3
 import time
-import os, errno, cv2
+import os, errno, math
 from picamera2 import Picamera2
 from obelix_stream import ObelixStream
 
@@ -37,11 +37,12 @@ class ObelixCamera:
     def set_control(self, param, value):
         try:
             if param == 'ExposureTime':
-                exp_time = int(value)
-                if exp_time > 33333:
+                exp_setting = float(value)
+                exp_time = round(math.pow(0.63095734, exp_setting) * 33000)
+                if exp_time > 33000:
                     frame_dur = exp_time
                 else:
-                    frame_dur = 33333
+                    frame_dur = 33000
                 self.picam.set_controls({ 'ExposureTime': exp_time, 'FrameDurationLimits': (frame_dur, frame_dur) })
             elif param in ('AfMode', 'AeConstraintMode', 'AeExposureMode', 'AeFlickerMode', 'AeFlickerPeriod', 'AeMeteringMode', 'AfRange', 'AfSpeed', 'AwbMode'):
                 self.picam.set_controls({ param: int(value) })
