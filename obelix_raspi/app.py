@@ -24,7 +24,7 @@ if __name__ == "__main__":
 
     @socketio.on('connect')
     def connect():
-        emit('message', obelix.params.get_position())
+        emit('update_settings', obelix.params.get_position())
 
     @socketio.on('message')
     def message(data):

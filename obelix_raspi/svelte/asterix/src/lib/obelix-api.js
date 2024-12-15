@@ -1,6 +1,10 @@
 import { dev } from '$app/environment';
+import socketIo from './socket.js'
 
 export default function obelixAPI (path, callback){
+  socketIo.emit({get: 'foo'})
+
+
   const base_path = (dev) ? 'http://192.168.178.33:5000' : '';
   fetch(base_path + path)
     .then(response => response.json())
@@ -12,6 +16,7 @@ export default function obelixAPI (path, callback){
 }
 
 export function obelixPost (path, postObject, callback) {
+  socketIo.emit({post: 'foo'})
   const base_path = (dev) ? 'http://192.168.178.33:5000' : '';
   fetch(base_path + path, {
     method: "post",

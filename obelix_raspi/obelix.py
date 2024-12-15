@@ -70,7 +70,7 @@ class Obelix:
                         self.arduino_command('ard_lcd', self.params.get_lcd("x"))
                         self.arduino_command('ard_lcd', self.params.get_lcd("y"))
                         self.cmd_go_next = True
-                        self.socketio.emit('message', self.params.get_position())
+                        self.socketio.emit('update_settings', self.params.get_position())
                 except Exception:
                     self.cmd_go_next = True
                     traceback.print_exc()
