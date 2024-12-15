@@ -2,7 +2,7 @@
   import { onMount } from "svelte";
   let image = "starfield.jpg";
   onMount(() => {
-    image = 'http://192.168.178.38:7777/stream.mjpg';
+    image = 'http://192.168.178.33:7777/stream.mjpg';
   });
 
 </script>

@@ -7,7 +7,8 @@
 
   let socketIo;
   const connectIO = (io) => {
-    socketIo = io.connect('http://192.168.178.38:5000');
+    console.log('location:', location);
+    socketIo = io.connect('http://192.168.178.33:5000');
     // io.connect('http://' + location.hostname + ':' + location.port);
 
     socketIo.on('connect', () => {

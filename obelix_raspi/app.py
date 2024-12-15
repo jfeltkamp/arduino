@@ -26,6 +26,10 @@ if __name__ == "__main__":
     def connect():
         emit('message', obelix.params.get_position())
 
+    @socketio.on('message')
+    def message(data):
+        print('received message: ' + data)
+
     @app.route("/")
     def index():
         return render_template('index.html')
