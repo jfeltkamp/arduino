@@ -4,7 +4,7 @@ from obelix import Obelix
 from obelix_analog import ObelixAnalog
 from obelix_navigation import ObelixNavigation
 from flask import Flask, Response, render_template, send_from_directory, request
-from flask_socketio import SocketIO, emit
+from flask_socketio import SocketIO, send
 from flask_cors import CORS
 
 if __name__ == "__main__":
@@ -24,7 +24,7 @@ if __name__ == "__main__":
 
     @socketio.on('connect')
     def connect():
-        emit('update_settings', obelix.params.get_position())
+        send('update_settings', message=obelix.params.get_position(), broadcast=False)
 
     @socketio.on('message')
     def message(data):
