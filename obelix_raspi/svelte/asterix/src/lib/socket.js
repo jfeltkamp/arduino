@@ -18,6 +18,7 @@ class Socket {
 
         // Update settings.
         this.socket.on('update_settings',  (data) => {
+          console.log('SOCKETio', data);
           if (typeof data === 'object' && !Array.isArray(data) && data !== null) {
             arduinoSettings.update((storeData) => { return { ...storeData, ...data }; });
           }
@@ -37,9 +38,13 @@ class Socket {
     }
   }
 
-  call(data) {
+  emitReply(data, callback) {
     if (this.enabled) {
-      this.socket.emit('message', data)
+      this.socket.emit('message_reply', data, (response) => {
+        if (typeof callback === "function") {
+          callback(response);
+        }
+      })
     }
   }
 

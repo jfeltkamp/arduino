@@ -30,6 +30,11 @@ if __name__ == "__main__":
     def message(data):
         print('received message: ', data)
 
+    @socketio.on('message_reply')
+    def message(data):
+        print('received message + acknowledge: ', data)
+        return { 'huhu': 'danke' }
+
     @app.route("/")
     def index():
         return render_template('index.html')
