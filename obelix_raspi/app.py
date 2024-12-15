@@ -28,7 +28,7 @@ if __name__ == "__main__":
 
     @socketio.on('message')
     def message(data):
-        print('received message: ' + data)
+        print('received message: ', data)
 
     @app.route("/")
     def index():
