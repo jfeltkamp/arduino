@@ -4,7 +4,7 @@ from obelix import Obelix
 from obelix_analog import ObelixAnalog
 from obelix_navigation import ObelixNavigation
 from flask import Flask, Response, render_template, send_from_directory, request
-from flask_socketio import SocketIO, emit
+from flask_socketio import SocketIO, emit, send
 from flask_cors import CORS
 
 if __name__ == "__main__":
@@ -31,9 +31,9 @@ if __name__ == "__main__":
         print('received message: ', data)
 
     @socketio.on('message_reply')
-    def message(data):
+    def message_reply(data):
         print('received message + acknowledge: ', data)
-        return { 'huhu': 'danke' }
+        send({"huhu": 'danke'}, json=True)
 
     @app.route("/")
     def index():
