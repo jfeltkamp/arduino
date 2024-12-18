@@ -33,7 +33,7 @@ if __name__ == "__main__":
     @socketio.on('message_reply')
     def message_reply(data):
         print('received message + acknowledge: ', data)
-        send({"huhu": 'danke'}, json=True)
+        return {"huhu": 'danke'}
 
     @app.route("/")
     def index():

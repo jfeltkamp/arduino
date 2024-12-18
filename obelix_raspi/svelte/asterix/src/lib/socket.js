@@ -41,8 +41,8 @@ class Socket {
   emitReply(data, callback) {
     if (this.enabled) {
       console.log('emitReply')
-      this.socket.emit('message_reply', data, (response) => {
-        console.log('emitReply response', response)
+      this.socket.emit('message_reply', data, (err, response) => {
+        console.log('emitReply response', err, response)
         if (typeof callback === "function") {
           callback(response);
         }
