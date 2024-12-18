@@ -11,16 +11,18 @@ class ObelixCamera:
 
     def __init__(self, base_path="/home/admin/OBELIX/"):
         self.base_path = base_path
-        self.picam = Picamera2()
-        self.stream = ObelixStream(self.picam)
-        self.still_config = self.picam.create_still_configuration()
-        self.prev_config = self.picam.create_preview_configuration()
+        self.picam_a = Picamera2(0)
+        self.picam_b = Picamera2(1)
+        self.stream = ObelixStream(self.picam_a, self.picam_b)
+        self.still_config = self.picam_a.create_still_configuration()
+        self.prev_config = self.picam_a.create_preview_configuration()
         time.sleep(1)
         self.started = False
 
 
     def __del__(self):
-        self.picam.stop()
+        self.picam_a.stop()
+        self.picam_b.stop()
 
     def set_path(self, path):
         try:
@@ -35,40 +37,44 @@ class ObelixCamera:
         self.stream.start()
 
     def set_control(self, param, value):
-        self.picam.set_controls(self.cast_controls({param: value}))
+        control = self.cast_controls({param: value})
+        self.picam_a.set_controls(control)
+        self.picam_b.set_controls(control)
         time.sleep(0.5)
-        return self.picam.capture_metadata()
+        return self.picam_a.capture_metadata()
 
     def set_controls(self, values):
-        self.picam.set_controls(self.cast_controls(values))
+        controls = self.cast_controls(values)
+        self.picam_a.set_controls(controls)
+        self.picam_b.set_controls(controls)
         time.sleep(0.5)
-        return self.picam.capture_metadata()
+        return self.picam_a.capture_metadata()
 
     def capture_image(self, name):
         if self.path == "":
             self.set_path(self.base_path + time.strftime("%Y_%m_%d-%H:%M"))
-        self.picam.stop()
-        self.picam.configure(self.still_config)
-        self.picam.start(show_preview=False)
+        self.picam_a.stop()
+        self.picam_a.configure(self.still_config)
+        self.picam_a.start(show_preview=False)
         image_name = f"{self.path}/{name}_{self.counter}.jpg"
-        self.picam.capture_file(image_name)
+        self.picam_a.capture_file(image_name)
         print(f"Captured image {image_name}")
         self.counter += 1
 
 
     def start_preview(self):
-        self.picam.stop()
-        self.picam.configure(self.prev_config)
-        self.picam.start()
+        self.picam_a.stop()
+        self.picam_a.configure(self.prev_config)
+        self.picam_a.start()
         time.sleep(2)
-        self.picam.stop_preview()
-        self.picam.start_preview(True)
+        self.picam_a.stop_preview()
+        self.picam_a.start_preview(True)
         time.sleep(2)
 
     def stop_preview(self):
         try:
-            self.picam.stop_preview()
-            self.picam.stop()
+            self.picam_a.stop_preview()
+            self.picam_a.stop()
         except:
             pass
 

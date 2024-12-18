@@ -23,11 +23,12 @@ class StreamingOutput(io.BufferedIOBase):
             self.frame = buf
             self.condition.notify_all()
 
-output = StreamingOutput()
+output_a = StreamingOutput()
+output_b = StreamingOutput()
 
 class StreamingHandler(server.BaseHTTPRequestHandler):
     def do_GET(self):
-        if self.path == '/stream.mjpg':
+        if self.path == '/stream_a.mjpg':
             self.send_response(200)
             self.send_header('Age', 0)
             self.send_header('Cache-Control', 'no-cache, private')
@@ -36,9 +37,31 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
             self.end_headers()
             try:
                 while True:
-                    with output.condition:
-                        output.condition.wait()
-                        frame = output.frame
+                    with output_a.condition:
+                        output_a.condition.wait()
+                        frame = output_a.frame
+                    self.wfile.write(b'--FRAME\r\n')
+                    self.send_header('Content-Type', 'image/jpeg')
+                    self.send_header('Content-Length', len(frame))
+                    self.end_headers()
+                    self.wfile.write(frame)
+                    self.wfile.write(b'\r\n')
+            except Exception as e:
+                logging.warning(
+                    'Removed streaming client %s: %s',
+                    self.client_address, str(e))
+        if self.path == '/stream_b.mjpg':
+            self.send_response(200)
+            self.send_header('Age', 0)
+            self.send_header('Cache-Control', 'no-cache, private')
+            self.send_header('Pragma', 'no-cache')
+            self.send_header('Content-Type', 'multipart/x-mixed-replace; boundary=FRAME')
+            self.end_headers()
+            try:
+                while True:
+                    with output_b.condition:
+                        output_b.condition.wait()
+                        frame = output_b.frame
                     self.wfile.write(b'--FRAME\r\n')
                     self.send_header('Content-Type', 'image/jpeg')
                     self.send_header('Content-Length', len(frame))
@@ -59,9 +82,11 @@ class StreamingServer(socketserver.ThreadingMixIn, server.HTTPServer):
     daemon_threads = True
 
 class ObelixStream:
-    def __init__(self, picam2):
-        self.picam2 = picam2
-        self.config = picam2.create_video_configuration(main={"size": (640, 640)})
+    def __init__(self, picam2_a, picam2_b):
+        self.picam2_a = picam2_a
+        self.config_a = picam2_a.create_video_configuration(main={"size": (640, 640)})
+        self.picam2_b = picam2_b
+        self.config_b = picam2_b.create_video_configuration(main={"size": (640, 640)})
         self.serv_listener = None
 
     def start(self):
@@ -69,8 +94,10 @@ class ObelixStream:
         self.serv_listener.start()
 
     def start_server(self):
-        self.picam2.configure(self.config)
-        self.picam2.start_recording(JpegEncoder(), FileOutput(output))
+        self.picam2_a.configure(self.config_a)
+        self.picam2_a.start_recording(JpegEncoder(), FileOutput(output_a))
+        self.picam2_b.configure(self.config_b)
+        self.picam2_b.start_recording(JpegEncoder(), FileOutput(output_b))
         try:
             print('Server starts')
             address = ('', 7777)
@@ -81,4 +108,5 @@ class ObelixStream:
             pass
 
     def stop(self):
-        self.picam2.stop_recording()
+        self.picam2_a.stop_recording()
+        self.picam2_b.stop_recording()
