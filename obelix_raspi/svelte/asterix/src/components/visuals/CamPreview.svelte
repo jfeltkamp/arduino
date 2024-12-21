@@ -10,9 +10,9 @@
 </script>
 
 <div id="camera-stream">
-    <img id="stream-object" src={imageA} alt="Telescope stream" width="640" height="480"/>
+    <img id="stream-object" src={imageA} alt="Telescope stream" width="1080" height="810"/>
     <div id="viewfinder-stream">
-        <img id="stream-object" src={imageB} alt="Viewfinder stream" width="640" height="480"/>
+        <img id="stream-object" src={imageB} alt="Viewfinder stream" width="1080" height="810"/>
     </div>
 </div>
 
@@ -32,6 +32,17 @@
         border: 1px solid rgba(255,255,255,.4);
         border-radius: 3px;
         overflow: hidden;
+
+        &::after {
+            content: '';
+            position: absolute;
+            width: 4%;
+            height: 4%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%,-50%);
+            border: 1px solid yellow;
+        }
     }
     #stream-object {
         object-fit: cover;

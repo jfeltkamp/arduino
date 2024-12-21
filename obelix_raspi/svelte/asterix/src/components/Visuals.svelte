@@ -9,7 +9,7 @@
     }
 </script>
 
-<div class="uk-card visuals">
+<div class="visuals">
     <a href="/" onclick={toggleDisplay}>
         {#if display === 'horizon'}
             <Horizon />
@@ -21,7 +21,7 @@
 
 <style>
     .visuals {
-        width: 100%;
-        height: 100%;
+        width: 100vw;
+        height: 100vh;
     }
 </style>

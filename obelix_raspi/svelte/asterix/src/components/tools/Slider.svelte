@@ -16,6 +16,7 @@
 <style>
     .slider-wrapper {
         margin: .3em 0;
+        padding: .3em 0;
     }
     label {
         font-size: 1.2em;
@@ -25,21 +26,25 @@
 
     /* Focus */
     input[type="range"] {
+        -webkit-appearance: none;
+        -moz-appearance: none;
         height: 80%;
         width: 100%;
-        background: rgba(0,0,0,.3);
-        border: 2px solid rgba(0,0,0,.8);
+        background: rgba(255,255,255,.3);
+        border: 2px solid rgba(255,255,255,.8);
         border-radius: 10px;
         outline: none;
     }
 
     input[type="range"]::-moz-range-thumb,
     input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        -moz-appearance: none;
         width: 35px;
         height: 35px;
         background: #7C7C7C;
         border-radius: 50%;
-        border: 2px solid rgba(0,0,0,.8);
+        border: 2px solid rgba(255,255,255,.8);
         cursor: pointer;
     }
 </style>

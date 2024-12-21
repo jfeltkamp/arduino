@@ -6,6 +6,7 @@
 
     let joystick = null;
     let focus = null;
+
     onMount(() => {
       joystick = new JoystickController(document.getElementById('joys-stick'), (path) => {
         obelixAPI(path, (data) => {
@@ -60,9 +61,9 @@
         object-position: center center;
     }
     #joys use {
-        fill: rgba(0,0,0,.3);
-        stroke: #333;
-        stroke-width: 6;
+        fill: rgba(255,255,255,.3);
+        stroke: #FFF;
+        stroke-width: 4;
         stroke-linejoin: round;
     }
     #joys #joys-slide,

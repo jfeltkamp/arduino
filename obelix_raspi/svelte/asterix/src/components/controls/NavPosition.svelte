@@ -96,13 +96,13 @@
 </script>
 
 <div class="nav-grid">
-    <div class="nav-curr-pos uk-padding-small">
+    <div class="nav-curr-pos">
         <h3>Navigation</h3>
         {#if editPositions}
-            <input type="text" id="address" bind:value={address} placeholder="Address" class="uk-input uk-margin-small-bottom"  />
-            <input type="text" id="latitude" bind:value={latitude} placeholder="Latitude" class="uk-input uk-margin-small-bottom" />
-            <input type="text" id="longitude" bind:value={longitude} placeholder="Longitude" class="uk-input uk-margin-small-bottom" />
-            <button class="uk-button uk-button-small" onclick={saveHeader}>Save</button> <button class="uk-button uk-button-small" onclick={() => { editPositions = false; }}>Cancel</button>
+            <input type="text" id="address" bind:value={address} placeholder="Address" class="input"  />
+            <input type="text" id="latitude" bind:value={latitude} placeholder="Latitude" class="input" />
+            <input type="text" id="longitude" bind:value={longitude} placeholder="Longitude" class="input" />
+            <button class="button button-small" onclick={saveHeader}>Save</button> <button class="button" onclick={() => { editPositions = false; }}>Cancel</button>
         {:else}
             {#if address}
                 <h4>{address} <button class="edit-button" onclick={() => { editPositions = true }}><Icon type="edit"/></button></h4>
@@ -112,11 +112,11 @@
             {/if}
         {/if}
     </div>
-    <div class="nav-selector uk-padding-small">
-        <button class="uk-button uk-button-small uk-align-right" onclick={toggleAdmin}>location</button>
+    <div class="nav-selector">
+        <button class="button button-small" onclick={toggleAdmin}>location</button>
     </div>
-    <div class="nav-list uk-padding-small">
-        <ul id="nav-nav" class="uk-iconnav uk-iconnav-vertical">
+    <div class="nav-list">
+        <ul id="nav-nav" class="iconnav iconnav-vertical">
             {#each items as item}
                 <li>
                     <button class="goto-button" onclick={(e) => callback(e, `/navi/position/${item.id}`)}><Icon type={item.id} size={1.35}/> {item.name}</button>
@@ -127,12 +127,12 @@
             {/each}
         </ul>
     </div>
-    <div class="nav-add uk-padding-small">
+    <div class="nav-add">
         {#if editPositions}
             <label for="new-name">Save/update current position as ...</label>
-            <input type="text" id="new-name" bind:value={newName} class="uk-input" placeholder="Enter a position name" />
-            <div class="uk-margin-bottom"><sub>ID: {newNameId}</sub></div>
-            <button class="uk-button uk-button-small" disabled={newNameId.length < 3} onclick={savePosition}>Save</button>
+            <input type="text" id="new-name" bind:value={newName} class="input" placeholder="Enter a position name" />
+            <div class="margin-bottom"><sub>ID: {newNameId}</sub></div>
+            <button class="button button-small" disabled={newNameId.length < 3} onclick={savePosition}>Save</button>
         {/if}
     </div>
 </div>

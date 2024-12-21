@@ -6,7 +6,8 @@
     const tabs = [
       {id: 'manual', name: 'Manual'},
       {id: 'position', name: 'Position'},
-      {id: 'camera', name: 'Camera'}
+      {id: 'camera', name: 'Camera'},
+      {id: 'view', name: '<span class="icon-eye"></span>'}
     ]
     let active = $state('manual');
 
@@ -16,12 +17,7 @@
     }
 </script>
 
-<div class="uk-card tools-wrapper">
-    <ul id="tool-selector" class="uk-tab">
-        {#each tabs as tab}
-            <li class={(active === tab.id) ? 'uk-active' : ''}><a href="/" onclick={(e) => switchTab(e, tab.id)}>{tab.name}</a></li>
-        {/each}
-    </ul>
+<div class="tools-wrapper">
     <div class="tools">
         {#if active === 'manual'}
             <Manual />
@@ -31,6 +27,11 @@
             <CamOptions />
         {/if}
     </div>
+    <ul class="tool-selector">
+        {#each tabs as tab}
+            <li class={(active === tab.id) ? 'active' : ''}><a href="/" onclick={(e) => switchTab(e, tab.id)}>{@html tab.name}</a></li>
+        {/each}
+    </ul>
 </div>
 
 <style>
@@ -42,5 +43,26 @@
         width: 100%;
         height: calc(100% - 52px);
         overflow: auto;
+    }
+    .tool-selector {
+        margin: 0;
+        padding: 0 2em 0 0;
+        list-style: none;
+        display: flex;
+        justify-content: space-around;
+        height: 52px;
+
+        a {
+            display: flex;
+            height: 100%;
+            justify-content: center;
+            align-items: center;
+            margin: 0 .5em;
+            padding: 0 .5em;
+        }
+
+        .active a {
+            color: #FD0;
+        }
     }
 </style>

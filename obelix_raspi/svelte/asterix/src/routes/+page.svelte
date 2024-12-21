@@ -3,45 +3,40 @@
   import Controls from "../components/Controls.svelte";
 </script>
 
-<div class="grid-container">
-    <div>
-        <Visuals/>
-    </div>
-    <div>
+<div class="container">
+    <Visuals/>
+    <div class="controls">
         <Controls/>
     </div>
 </div>
 
 <style>
-    .grid-container {
-        display: flex;
+    .container {
+        box-sizing: border-box;
         width: 100vw;
         height: 100vh;
-        justify-content: center;
-        align-items: center;
-        background: #333;
+        overflow: hidden;
+        background: #333333;
 
-        > div {
-            background: #FFF;
-            overflow: hidden;
-        }
+    }
+
+    .controls {
+        background: transparent;
+        overflow: hidden;
+        position: fixed;
+        bottom: 0;
+        right: 0;
 
         @media (orientation: landscape) {
-            flex-direction: row;
-            > div {
-                width: 50vw;
-                height: 50vw;
-                max-height: 100vh;
-            }
+            width: 50vw;
+            height: 50vw;
+            max-height: 100vh;
         }
 
         @media (orientation: portrait) {
-            flex-direction: column;
-            > div {
-                width: 50vh;
-                height: 50vh;
-                max-width: 100vw;
-            }
+            width: 50vh;
+            height: 50vh;
+            max-width: 100vw;
         }
     }
 </style>

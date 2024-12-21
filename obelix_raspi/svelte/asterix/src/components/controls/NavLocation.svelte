@@ -76,14 +76,14 @@
 </script>
 
 <div class="nav-grid">
-    <div class="nav-curr-pos uk-padding-small">
+    <div class="nav-curr-pos">
         <h4>Locations <button class={'edit-button' + ((editLocation)?' active':'')}  onclick={toggleEdit}><Icon type="edit" size={1.0}/></button></h4>
         <div><p>The location is the place where your telescope is placed.</p></div>
     </div>
-    <div class="nav-selector uk-padding-small">
-        <button class="uk-button uk-button-small uk-align-right" onclick={toggleAdmin}>Navigation</button>
+    <div class="nav-selector">
+        <button class="button button-small" onclick={toggleAdmin}>Navigation</button>
     </div>
-    <div class="nav-list uk-padding-small">
+    <div class="nav-list">
         <ul>
             {#each $locations as location}
                 <li class={(location.fid === current) ? 'active' : ''}>
@@ -96,13 +96,12 @@
         </ul>
     </div>
     {#if editLocation}
-        <div class="nav-add uk-padding-small">
-            <input type="text" id="new-location" bind:value={newLocation} class="uk-input"
+        <div class="nav-add">
+            <input type="text" id="new-location" bind:value={newLocation} class="input"
                    placeholder="Enter a location name"/>
-            <button class="uk-button uk-align-right uk-margin-remove-vertical" onclick={() => addLocation()}>+&nbsp;Add
-            </button>
+            <button class="button" onclick={() => addLocation()}>+&nbsp;Add</button>
         </div>
-        <div class="uk-padding-small uk-padding-remove-vertical">{newLocationFid}</div>
+        <div class="">{newLocationFid}</div>
     {/if}
 </div>
 

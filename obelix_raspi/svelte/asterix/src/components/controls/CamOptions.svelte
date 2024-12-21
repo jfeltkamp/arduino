@@ -28,7 +28,7 @@
     {#each $camControls as option, i (option.name)}
         <Slider {...option} index={i} callback={callback} />
     {/each}
-    <button class="uk-button uk-button-small uk-align-left uk-margin-medium" onclick={resetDefaults}>Reset defaults</button>
+    <button class="button button-small" onclick={resetDefaults}>Reset defaults</button>
 </div>
 
 <style>
