@@ -2,14 +2,21 @@
     import Manual from "./controls/Manual.svelte";
     import Navigation from "./controls/Navigation.svelte";
     import CamOptions from "./controls/CamOptions.svelte";
+    import { toolTab } from '$lib/data-store.js';
+    import {onDestroy} from "svelte";
 
-    const tabs = [
-      {id: 'manual', name: 'Manual'},
-      {id: 'position', name: 'Position'},
-      {id: 'camera', name: 'Camera'},
-      {id: 'view', name: '<span class="icon-eye"></span>'}
-    ]
-    let active = $state('manual');
+
+    let active = $state('');
+    const unsubscribe = toolTab.subscribe((tab) => {
+      active = tab
+    });
+
+    onDestroy(() => {
+      if (unsubscribe) {
+        unsubscribe();
+      }
+    })
+
 
     const switchTab = (e, tab) => {
       e.preventDefault();
@@ -19,50 +26,30 @@
 
 <div class="tools-wrapper">
     <div class="tools">
-        {#if active === 'manual'}
+        {#if active === 'target'}
             <Manual />
-        {:else if active === 'position'}
+        {:else if active === 'location'}
             <Navigation />
-        {:else if active === 'camera'}
+        {:else if active === 'adjust'}
             <CamOptions />
+        {:else if active === 'video'}
+            <h1>Video</h1>
+        {:else if active === 'picture'}
+            <h1>Picture</h1>
         {/if}
     </div>
-    <ul class="tool-selector">
-        {#each tabs as tab}
-            <li class={(active === tab.id) ? 'active' : ''}><a href="/" onclick={(e) => switchTab(e, tab.id)}>{@html tab.name}</a></li>
-        {/each}
-    </ul>
 </div>
 
 <style>
     .tools-wrapper {
+        position: relative;
         height: 100%;
+        padding-bottom: 52px;
     }
 
     .tools {
         width: 100%;
         height: calc(100% - 52px);
         overflow: auto;
-    }
-    .tool-selector {
-        margin: 0;
-        padding: 0 2em 0 0;
-        list-style: none;
-        display: flex;
-        justify-content: space-around;
-        height: 52px;
-
-        a {
-            display: flex;
-            height: 100%;
-            justify-content: center;
-            align-items: center;
-            margin: 0 .5em;
-            padding: 0 .5em;
-        }
-
-        .active a {
-            color: #FD0;
-        }
     }
 </style>

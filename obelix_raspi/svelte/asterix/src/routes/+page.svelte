@@ -1,6 +1,7 @@
 <script>
   import Visuals from "../components/Visuals.svelte";
   import Controls from "../components/Controls.svelte";
+  import OptionsMenu from "../components/OptionsMenu.svelte";
 </script>
 
 <div class="container">
@@ -8,6 +9,7 @@
     <div class="controls">
         <Controls/>
     </div>
+    <OptionsMenu/>
 </div>
 
 <style>

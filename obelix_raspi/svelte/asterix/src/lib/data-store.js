@@ -85,4 +85,7 @@ export const camControls = writable([
 // Navigation
 export const locations = writable([]);
 export const positions = writable({});
+export const toolTab = writable('');
+export const displayCompass = writable(false);
+export const swapPreview = writable(false);
 

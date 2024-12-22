@@ -28,43 +28,11 @@
 
 
 <div id="horizon-wrapper">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300">
-        <defs>
-            <g id="sphere">
-                <ellipse rx="100" ry="400" fill="none" stroke="#FFF4" />
-                <ellipse rx="200" ry="400" fill="none" stroke="#FFF4" />
-                <ellipse rx="300" ry="400" fill="none" stroke="#FFF4" />
-                <ellipse rx="400" ry="400" fill="none" stroke="#FFF4" />
-                <ellipse rx="550" ry="400" fill="none" stroke="#FFF4" />
-                <ellipse rx="800" ry="400" fill="none" stroke="#FFF4" />
-            </g>
-            <linearGradient id="floor" x1="0%" x2="0%" y1="0%" y2="100%">
-                <stop offset="0%" stop-color="#4f3922" />
-                <stop offset="15%" stop-color="#785633" />
-            </linearGradient>
-        </defs>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" preserveAspectRatio="xMinYMin slice">
         <defs>
             <g id="horizon">
-                <g transform="translate(-150,-450)">
-                    <rect width="600" height="800" y="-200" fill="#2874b2"/>
-                    <use href="#sphere" transform="translate(300, 600)"/>
-                    <use href="#sphere" transform="translate(300, -200)"/>
-
-                    <g transform="translate(300, 200)">
-                        <ellipse rx="200" ry="80" fill="#2874b2" stroke="#FFF4" />
-                        <ellipse rx="400" ry=".1" fill="none" stroke="#FFF4" />
-                        <ellipse rx="400" ry="160" fill="none" stroke="#FFF4" />
-                        <ellipse rx="800" ry="240" fill="none" stroke="#FFF4" />
-                        <ellipse rx="1600" ry="320" fill="none" stroke="#FFF4" />
-                        <path d="M0,-200 0,800" fill="none" stroke="#FFF4" />
-                        <circle r="20" fill="#2874b2" stroke="#FFF4"/>
-                    </g>
-                    <rect width="600" height="800" y="600" fill="url(#floor)"/>
-                    <g transform="translate(300, 1000)">
-                        <circle r="10" fill="#A00" stroke="#FFF"/>
-                        <text font-size="8" fill="#FFF" text-anchor="middle" transform="translate(0 3)">You</text>
-                    </g>
-                </g>
+                <line x1="0" x2="0" y1="-600" y2="600" stroke="#FFF" stroke-dashoffset="6.75" stroke-dasharray="0.5,44" stroke-width="10"/>
+                <line x1="-200" x2="200" y1="150" y2="150" stroke="#FFF" stroke-dashoffset="30" stroke-dasharray="40.5,9.5,0.5,9.5" stroke-width=".5"/>
             </g>
         </defs>
 
@@ -84,12 +52,12 @@
             <rect id="focus-range-meter" style="y:{focus}%" width="400" height="400"/>
         </clipPath>
         <!-- Adjust here (0-90), formular: arc * 400 / 90°  -->
-        <use id="azimuth-sphere" href="#horizon" style="transform: translate(0, {sphere}px)" />
-        <g transform="translate(75 150) scale(0.375)">
+        <use id="azimuth-sphere" href="#horizon" style="transform: translate(200px, {sphere}px)" />
+        <!--g transform="translate(125 150) scale(0.375)">
             <use clip-path="url(#focusRangeMeterClip)" href="#focusArrow" fill="url(#focusArrowGradClip)" />
             <use clip-path="url(#arrowStripesClip)" href="#focusArrow" fill="rgba(255,255,255,.5)" />
-        </g>
-        <g transform="translate(150 150)">
+        </g -->
+        <g transform="translate(200 150)">
             <!-- Adjust here                                 v  -->
             <g id="altitude-visual" style="transform: rotate({altitude}deg)">
                 <circle r="1" fill="#FFF"/>
@@ -97,13 +65,13 @@
                 <text id="altitude-text" text-anchor="middle" transform="translate(-45 -5)" fill="#FFF" font-size="15">∠ {altitude}°</text>
             </g>
         </g>
-        <g transform="translate(150 150)">
+        <g transform="translate(200 150)">
             <path d="M-10 0 A 10 10 0 0 0 10 0 L 70 0" fill="none" stroke-width="1.22" stroke="#FFF"/>
             <path d="M -4,-87 0,-100 4,-87z" fill="#FFF" />
             <text id="azimuth-text" transform="translate(0 -70)" text-anchor="middle" fill="#FFF" font-size="15">{azimuth}°</text>
         </g>
 
-        <g transform="translate(150 -390)">
+        <g transform="translate(200 -390)">
             <g id="compass" transform="rotate({azimuth})">
                 <circle r="400" class="grade" stroke-dasharray="1 5.98131701" stroke-width="20"/>
                 <circle r="400" class="grade" stroke-dasharray="1 33.90658504" stroke-width="30"/>
@@ -205,9 +173,17 @@
 
 <style>
     #horizon-wrapper {
-        width: 100%;
-        height: 100%;
+        width: 100vw;
+        height: 100vh;
     }
+    svg {
+        min-height: 100vh;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+    }
+
     .grade {
         fill: none;
         stroke: #FFF;
