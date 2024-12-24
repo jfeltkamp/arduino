@@ -16,14 +16,13 @@
         <Adjust />
     {/if}
 
-    <button class="button" type="button" onclick={toggleStatus}>{(status === 'mov') ? 'ADJ' : 'MOV'}</button>
+    <button class="button {(status === 'mov') ? 'icon-resize-small' : 'icon-move'}" type="button" onclick={toggleStatus}><span>{(status === 'mov') ? 'ADJ' : 'MOV'}</span></button>
 </div>
 
 <style>
     .joystick-wrapper {
-        flex: 1 1 80%;
         position: relative;
-        padding: 0 15px;
+        padding: 0 1em;
         height: 100%;
 
     }
@@ -34,6 +33,18 @@
         width: 45px;
         height: 45px;
         border-radius: 50%;
-        border: 2px solid #333;
+        background: rgba(255,255,255,.3);
+        color: #FFF;
+        text-align: center;
+        border: 2px solid #FFF;
+
+        &::before {
+            font-size: 2em;
+            margin: 0;
+            padding: 0;
+        }
+        span {
+            display: none;
+        }
     }
 </style>

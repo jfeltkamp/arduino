@@ -22,6 +22,7 @@
         font-size: 1.2em;
         display: block;
         margin-bottom: .5em;
+        text-align: right;
     }
 
     /* Focus */

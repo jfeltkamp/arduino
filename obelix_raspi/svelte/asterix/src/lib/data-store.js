@@ -63,7 +63,7 @@ export const camControls = writable([
   },
   {
     id: 'ExposureTime',
-    name: 'Exposure time (exp. 0.3ms-3.3s)',
+    name: 'Exposure time',
     description: 'Value > 0 will reduce video framerate.',
     defaultValue: 0,
     value: 0,

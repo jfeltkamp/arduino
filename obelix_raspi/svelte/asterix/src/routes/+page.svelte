@@ -26,19 +26,20 @@
         background: transparent;
         overflow: hidden;
         position: fixed;
-        bottom: 0;
+        display: flex;
+        justify-content: flex-end;
+        align-items: flex-end;
+        bottom: 52px;
         right: 0;
 
         @media (orientation: landscape) {
-            width: 50vw;
-            height: 50vw;
-            max-height: 100vh;
+            width: 45vw;
+            height: calc(100vh - 52px);
         }
 
         @media (orientation: portrait) {
-            width: 50vh;
-            height: 50vh;
-            max-width: 100vw;
+            width: 100vw;
+            height: calc(45vh - 52px);
         }
     }
 </style>

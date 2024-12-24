@@ -33,6 +33,8 @@
 
 <style>
     .camera-options {
-        padding: 0.75em
+        padding: 0.75em;
+        max-height: 100%;
+        overflow: auto;
     }
 </style>

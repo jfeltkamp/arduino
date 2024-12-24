@@ -34,21 +34,39 @@
         position: fixed;
         width: 25%;
         height: 25%;
-        top: 3%;
-        right: 3%;
         z-index: 1;
         border: 1px solid rgba(255,255,255,.4);
         border-radius: 3px;
         overflow: hidden;
         transition: all ease .5s;
 
+        @media (orientation: landscape) {
+            bottom: calc(52px + 2%);
+            left: 3%;
+
+        }
+
+        @media (orientation: portrait) {
+            top: 3%;
+            right: 3%;
+        }
+
+
         &.large {
             border: 0;
             width: 100%;
             height: 100%;
-            top: 0;
-            right: 0;
             z-index: 0;
+
+            @media (orientation: landscape) {
+                bottom: 0;
+                left: 0;
+            }
+
+            @media (orientation: portrait) {
+                top: 0;
+                right: 0;
+            }
         }
     }
 
