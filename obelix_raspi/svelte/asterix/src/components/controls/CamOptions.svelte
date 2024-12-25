@@ -28,13 +28,27 @@
     {#each $camControls as option, i (option.name)}
         <Slider {...option} index={i} callback={callback} />
     {/each}
-    <button class="button button-small" onclick={resetDefaults}>Reset defaults</button>
+    <div class="actions-wrapper">
+        <button onclick={resetDefaults}>Reset defaults</button>
+    </div>
 </div>
 
 <style>
     .camera-options {
         padding: 0.75em;
         max-height: 100%;
-        overflow: auto;
+    }
+
+    .actions-wrapper {
+        margin: .3em 0 .3em auto;
+        padding: .3em 0;
+        max-width: 350px;
+        text-align: center;
+    }
+    button {
+        border: 2px solid rgba(255,255,255,.8);
+        background: rgba(255,255,255,.3);
+        border-radius: 5px;
+        color: inherit;
     }
 </style>

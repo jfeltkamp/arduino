@@ -42,4 +42,5 @@
             height: calc(45vh - 52px);
         }
     }
+
 </style>

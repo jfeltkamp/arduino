@@ -2,7 +2,7 @@
 <script>
 
   import {onDestroy} from "svelte";
-  import { toolTab, displayCompass, swapPreview } from '$lib/data-store.js';
+  import { toolTab, displayCompass } from '$lib/data-store.js';
 
   let active = $state('');
   const unsubscribe = toolTab.subscribe((tab) => {
@@ -12,10 +12,6 @@
   let compass = $state(false)
   const unsubCompass = displayCompass.subscribe((doDisplay) => {
     compass = doDisplay
-  });
-  let swap = $state(false)
-  const unsubSwap = swapPreview.subscribe((doSwap) => {
-    swap = doSwap
   });
 
   const switchTab = (to) => {
@@ -31,9 +27,6 @@
     if (unsubCompass) {
       unsubCompass();
     }
-    if (unsubSwap) {
-      unsubSwap();
-    }
   })
 
 
@@ -41,7 +34,6 @@
     {id: 'compass', name: 'Compass', icon: 'icon-compass', callback: () => {displayCompass.update(curr => !curr)}, enabled: () => compass},
     {id: 'location', name: 'Location', icon: 'icon-location', callback: () => {switchTab('location')}, enabled: () => (active === 'location')},
     {id: 'target', name: 'Target', icon: 'icon-target', callback: () => {switchTab('target')}, enabled: () => (active === 'target')},
-    {id: 'swap', name: 'Swap', icon: 'icon-swap', callback: () => {swapPreview.update(curr => !curr)}, enabled: () => swap},
     {id: 'adjust', name: 'Contrast', icon: 'icon-adjust', callback: () => {switchTab('adjust')}, enabled: () => (active === 'adjust')},
     {id: 'video', name: 'Video', icon: 'icon-video', callback: () => {switchTab('video')}, enabled: () => (active === 'video')},
     {id: 'picture', name: 'Picture', icon: 'icon-image', callback: () => {switchTab('picture')}, enabled: () => (active === 'picture')},

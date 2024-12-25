@@ -15,8 +15,10 @@
 
 <style>
     .slider-wrapper {
-        margin: .3em 0;
+        margin: .3em 0 .3em auto;
         padding: .3em 0;
+        width: 100%;
+        max-width: 350px;
     }
     label {
         font-size: 1.2em;

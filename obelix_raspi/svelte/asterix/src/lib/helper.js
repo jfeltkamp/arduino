@@ -24,7 +24,7 @@ const tmpl = {
   base: [
     {
       id: 'home',
-      name: 'Home',
+      name: 'Primary target',
       pos: {
         x: -23900,
         y: 0,

@@ -88,4 +88,5 @@ export const positions = writable({});
 export const toolTab = writable('');
 export const displayCompass = writable(false);
 export const swapPreview = writable(false);
+export const videoRecord = writable(false);
 
