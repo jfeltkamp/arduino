@@ -75,7 +75,7 @@
 </script>
 
 <div class="content-card">
-    <h1>Locations <button class="edit-button icon-edit{(editLocation)?' active':''}"  onclick={toggleEdit} aria-label="Edit"></button></h1>
+    <header>Locations <button class="edit-button icon-edit{(editLocation)?' active':''}"  onclick={toggleEdit} aria-label="Edit"></button></header>
     <div class="nav-curr-pos">
         <div><p>The location is the place where your telescope is placed.</p></div>
     </div>

@@ -25,7 +25,3 @@
 {:else}
     <NavPosition toggleAdmin={toggleAdmin} />
 {/if}
-
-<style>
-
-</style>

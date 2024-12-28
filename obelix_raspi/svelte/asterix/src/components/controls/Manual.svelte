@@ -3,7 +3,8 @@
     import Adjust from "./Adjust.svelte";
 
     let status = $state('mov');
-    const toggleStatus = () => {
+    const toggleStatus = (e) => {
+      e.preventDefault();
       status = (status === 'mov') ? 'adj' : 'mov';
     }
 </script>

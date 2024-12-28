@@ -107,7 +107,7 @@
 <div class="content-card">
     <div class="nav-curr-pos">
         {#if editPositions}
-            <h1><input type="text" id="address" bind:value={address} placeholder="Address" /></h1>
+            <header><input type="text" id="address" bind:value={address} placeholder="Address" /></header>
             <div class="flexbox">
                 <input type="text" id="latitude" bind:value={latitude} placeholder="Latitude" />
                 <input type="text" id="longitude" bind:value={longitude} placeholder="Longitude" />
@@ -115,7 +115,7 @@
             <button class="button button-small" onclick={saveHeader}>Save location</button> <button class="button" onclick={() => { editPositions = false; }}>Cancel</button>
         {:else}
             {#if address}
-                <h1>{address} <button class="edit-button icon-edit" onclick={() => { editPositions = true }} aria-label="Edit"></button></h1>
+                <header>{address} <button class="edit-button icon-edit" onclick={() => { editPositions = true }} aria-label="Edit"></button></header>
             {/if}
             {#if latitude && longitude}
                 <div>{latitude}°, {longitude}°</div>
@@ -158,10 +158,11 @@
             overflow: hidden;
             box-shadow: 2px 2px 7px 1px rgba(255,255,255,.4);
 
-            h1 {
+            header {
                 margin: -1rem -1rem 1rem -1rem;
                 padding: 1rem;
                 font-size: 1.25rem;
+                font-weight: bold;
                 line-height: 1.25em;
                 background: #000;
             }
@@ -189,7 +190,7 @@
             border-radius: .3em;
             max-width: 100%;
         }
-        h1 input[type="text"] {
+        header input[type="text"] {
             margin: 0;
         }
         .button {

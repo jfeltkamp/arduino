@@ -16,7 +16,7 @@ class ObelixNavigation:
     # Get configured positions from yml file.
     def get_navigation(self, fid):
         try:
-            with open(f"navigation/{fid}.yml") as stream:
+            with open(f"./navigation/{fid}.yml") as stream:
                 self.position = yaml.safe_load(stream)
                 if type(self.position["base"][0]) is dict:
                     self.set_home(self.position["base"][0]["pos"])
@@ -38,7 +38,7 @@ class ObelixNavigation:
         if "fid" in data:
             self.position = data
         try:
-            with open(f"navigation/{file_id}.yml", 'w') as fp:
+            with open(f"./navigation/{file_id}.yml", 'w') as fp:
                 yaml.dump(data, fp)
             return {
                 'response': 200,
@@ -66,7 +66,7 @@ class ObelixNavigation:
 
     def get_location_list(self):
         location_list = []
-        for file in glob.glob("navigation/*.yml"):
+        for file in glob.glob("./navigation/*.yml"):
             try:
                 with open(file) as stream:
                     content = yaml.safe_load(stream)

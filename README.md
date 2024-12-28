@@ -2,6 +2,43 @@
 
 ## ObelixCommands
 
+### Handle service 
+
+To create a service that starts the program:
+```
+cd /lib/systemd/system
+sudo nano arduino-raspi.service
+```
+Enter the following contents:
+
+```
+[Unit]
+Description=Obelix Telescope
+After=multi-user.target
+
+[Service]
+ExecStart=/usr/bin/python3 /home/admin/Arduino/Sketches/obelix_raspi/app.py
+User=admin
+
+[Install]
+WantedBy=multi-user.target
+```
+To start/stop the service use following commands.
+```
+sudo systemctl start arduino-raspi.service
+sudo systemctl stop arduino-raspi.service
+```
+To en-/disable the service in the boot sequence.
+```
+sudo systemctl enable arduino-raspi.service
+sudo systemctl disable arduino-raspi.service
+```
+To see list with enabled/running services
+```
+sudo systemctl list-unit-files
+```
+
+
 ### Start Obelix WebUI
 
 To start the Obelix controller enter:

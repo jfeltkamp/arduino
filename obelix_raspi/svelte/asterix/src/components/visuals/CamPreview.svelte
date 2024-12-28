@@ -79,6 +79,11 @@
         }
     }
 
+    button {
+        padding: 0;
+        margin: 0;
+    }
+
     #viewfinder-stream::after {
         content: '';
         position: absolute;
