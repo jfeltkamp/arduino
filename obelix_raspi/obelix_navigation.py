@@ -8,6 +8,7 @@ class ObelixNavigation:
     def __init__(self, obelix=None):
         self.position = {}
         self.obelix = obelix
+        self.file_path = os.path.dirname(__file__)
 
     # Set current stepper position as specified HOME position.
     def set_home(self, home):
@@ -16,7 +17,8 @@ class ObelixNavigation:
     # Get configured positions from yml file.
     def get_navigation(self, fid):
         try:
-            with open(f"./navigation/{fid}.yml") as stream:
+            abs_file_path = os.path.join(self.file_path, f"navigation/{fid}.yml")
+            with open(abs_file_path) as stream:
                 self.position = yaml.safe_load(stream)
                 if type(self.position["base"][0]) is dict:
                     self.set_home(self.position["base"][0]["pos"])
@@ -38,7 +40,8 @@ class ObelixNavigation:
         if "fid" in data:
             self.position = data
         try:
-            with open(f"./navigation/{file_id}.yml", 'w') as fp:
+            abs_file_path = os.path.join(self.file_path, f"navigation/{file_id}.yml")
+            with open(abs_file_path, 'w') as fp:
                 yaml.dump(data, fp)
             return {
                 'response': 200,
@@ -66,7 +69,8 @@ class ObelixNavigation:
 
     def get_location_list(self):
         location_list = []
-        for file in glob.glob("./navigation/*.yml"):
+        abs_file_path = os.path.join(self.file_path, "navigation/*.yml")
+        for file in glob.glob(abs_file_path):
             try:
                 with open(file) as stream:
                     content = yaml.safe_load(stream)
@@ -79,7 +83,8 @@ class ObelixNavigation:
 
     def delete_location(self, fid):
         try:
-            os.remove(f"./navigation/{fid}.yml")
+            abs_file_path = os.path.join(self.file_path, f"navigation/{fid}.yml")
+            os.remove(abs_file_path)
             return { 'response': 200 }
         except Exception as e:
             print(e)
