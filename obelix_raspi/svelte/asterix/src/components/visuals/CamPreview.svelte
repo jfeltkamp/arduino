@@ -1,12 +1,13 @@
 <script>
-  import { onMount } from "svelte";
-  import { swapPreview } from '$lib/data-store.js';
+  import {onDestroy, onMount} from "svelte";
+  import {swapPreview} from '$lib/data-store.js';
 
-  let camOrder = $state(true);
+  let largeImage = $state();
+  const unsubscribe = swapPreview.subscribe(curr => {largeImage = curr})
 
-  const swapClickSmall = (event) => {
-    if(!event.target.classList.contains('large')) {
-      swapPreview.update(curr => !curr)
+  const swapImages = (image) => {
+    if (largeImage !== image) {
+        swapPreview.update(curr => image)
     }
   }
 
@@ -18,13 +19,18 @@
     imageB = 'http://192.168.178.33:7777/stream_b.mjpg';
   });
 
+  onDestroy(() => {
+    if (unsubscribe) {
+      unsubscribe()
+    }
+  })
 </script>
 
 <div id="camera-stream">
-    <button id="telescope-stream" onclick={swapClickSmall} class={!$swapPreview ? 'stream-wrapper large' : 'stream-wrapper'}>
+    <button id="telescope-stream" onclick={() => swapImages('A')} class="stream-wrapper{$swapPreview === 'A' ? ' large' : ''}">
         <img id="stream-object" src={imageA} alt="Telescope" width="1080" height="810"/>
     </button>
-    <button id="viewfinder-stream" onclick={swapClickSmall} class={$swapPreview ? 'stream-wrapper large' : 'stream-wrapper'}>
+    <button id="viewfinder-stream" onclick={() => swapImages('B')} class="stream-wrapper{$swapPreview === 'B' ? ' large' : ''}">
         <img id="stream-object" src={imageB} alt="Viewfinder" width="1080" height="810"/>
     </button>
 </div>
