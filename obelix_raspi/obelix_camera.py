@@ -2,12 +2,16 @@
 import time
 import os, errno, math
 from picamera2 import Picamera2
+from picamera2.encoders import H264Encoder
 from obelix_stream import ObelixStream
 
 class ObelixCamera:
     base_path = ""
     path = ""
-    counter = 0
+    vid_name = ""
+    vid_encoder = H264Encoder()
+    img_counter = 0
+    vid_counter = 0
 
     def __init__(self, base_path="/home/admin/OBELIX/"):
         self.base_path = base_path
@@ -24,14 +28,16 @@ class ObelixCamera:
         self.picam_a.stop()
         self.picam_b.stop()
 
-    def set_path(self, path):
-        try:
-            if not os.path.exists(path):
-                os.makedirs(path, exist_ok=True)
-            self.path = path
-        except OSError as e:
-            if e.errno != errno.EEXIST:
-                raise
+    def set_path(self):
+        if self.path == "":
+            try:
+                path = self.base_path + time.strftime("%Y_%m_%d-%H:%M")
+                if not os.path.exists(path):
+                    os.makedirs(path, exist_ok=True)
+                self.path = path
+            except OSError as e:
+                if e.errno != errno.EEXIST:
+                    raise
 
     def start_stream(self):
         self.stream.start()
@@ -51,13 +57,26 @@ class ObelixCamera:
         return self.picam_a.capture_metadata()
 
     def capture_image(self, name):
-        if self.path == "":
-            self.set_path(self.base_path + time.strftime("%Y_%m_%d-%H:%M"))
-        image_name = f"{self.path}/{name}_{self.counter}.jpg"
+        self.set_path()
+        image_name = f"{self.path}/{name}_{self.img_counter}.jpg"
         self.picam_a.capture_file(image_name)
-        self.counter += 1
+        self.img_counter += 1
         print(f"Captured image {image_name}")
-        return {"file_name": image_name }
+        return {"image": image_name }
+
+    def video_rec_start(self, name):
+        self.set_path()
+        self.vid_name = f"{self.path}/{name}_{self.vid_counter}.h264"
+        self.picam_a.start_encoder(self.vid_encoder, self.vid_name)
+        self.vid_counter += 1
+        print(f"Started capture video {self.vid_name}")
+        return {"video": self.vid_name }
+
+    def video_rec_stop(self):
+        self.picam_a.stop_encoder(self.vid_encoder)
+        data = {"video": self.vid_name }
+        self.vid_name = ""
+        return data
 
     def start_preview(self):
         self.picam_a.stop()

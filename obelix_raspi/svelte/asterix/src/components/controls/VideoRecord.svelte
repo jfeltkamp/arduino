@@ -1,12 +1,17 @@
 <script>
   import { videoRecord } from '$lib/data-store.js';
   import {onDestroy} from "svelte";
+  import obelixAPI from "$lib/obelix-api.js";
 
   let recording = $state(false);
   const unRecord = videoRecord.subscribe(curr => {recording = curr})
 
   const toggleRecording = () => {
     videoRecord.update(curr => !curr)
+    const action = (recording) ? 'start' : 'stop'
+    obelixAPI(`/cam/video-rec/vid/${action}`, (data) => {
+      console.log('Video recording', data);
+    })
   }
 
   onDestroy(() => {

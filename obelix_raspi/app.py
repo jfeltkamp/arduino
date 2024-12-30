@@ -100,6 +100,13 @@ if __name__ == "__main__":
     def capture_img(name="img"):
         return obelix.camera.capture_image(name)
 
+    @app.route("/cam/capture-img/<string:name>/<string:action>")
+    def capture_img(name="vid", action=''):
+        if action == 'start':
+            return obelix.camera.video_rec_start(name)
+        elif action == 'stop':
+            return obelix.camera.video_rec_stop()
+
     @app.route('/camera/stream')
     def camera_stream():
         obelix.camera.start_stream()

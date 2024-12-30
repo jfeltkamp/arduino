@@ -1,7 +1,10 @@
 <script>
+  import obelixAPI from "$lib/obelix-api.js";
 
   const captureImage = () => {
-    console.log('Capture image ==> ;-)')
+    obelixAPI('/cam/capture-img/image', (data) => {
+        console.log('Capture image', data);
+    })
   }
 </script>
 
