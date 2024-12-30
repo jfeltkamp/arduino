@@ -53,14 +53,10 @@ class ObelixCamera:
     def capture_image(self, name):
         if self.path == "":
             self.set_path(self.base_path + time.strftime("%Y_%m_%d-%H:%M"))
-        self.picam_a.stop()
-        self.picam_a.configure(self.still_config)
-        self.picam_a.start(show_preview=False)
         image_name = f"{self.path}/{name}_{self.counter}.jpg"
         self.picam_a.capture_file(image_name)
         print(f"Captured image {image_name}")
         self.counter += 1
-
 
     def start_preview(self):
         self.picam_a.stop()

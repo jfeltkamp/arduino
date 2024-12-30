@@ -96,6 +96,10 @@ if __name__ == "__main__":
         values = request.json
         return obelix.camera.set_controls(values)
 
+    @app.route("/cam/capture-img/<string:name>")
+    def capture_img(name="img"):
+        return obelix.camera.capture_image(name)
+
     @app.route('/camera/stream')
     def camera_stream():
         obelix.camera.start_stream()
