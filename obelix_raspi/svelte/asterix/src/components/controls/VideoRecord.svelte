@@ -3,15 +3,19 @@
   import {onDestroy} from "svelte";
   import obelixAPI from "$lib/obelix-api.js";
 
-  let recording = $state(false);
-  const unRecord = videoRecord.subscribe(curr => {recording = curr})
+  let started = $state(false);
+  const unRecord = videoRecord.subscribe(recording => {
+    if (started !== recording) {
+        started = recording;
+        const action = (started) ? 'start' : 'stop';
+        obelixAPI(`/cam/video-rec/vid/${action}`, (data) => {
+          console.log('Video recording', data);
+        })
+    }
+  })
 
   const toggleRecording = () => {
     videoRecord.update(curr => !curr)
-    const action = (recording) ? 'start' : 'stop'
-    obelixAPI(`/cam/video-rec/vid/${action}`, (data) => {
-      console.log('Video recording', data);
-    })
   }
 
   onDestroy(() => {
@@ -26,10 +30,10 @@
         <svg  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 84 84" height="84" width="84" preserveAspectRatio="xMinYMin slice">
             <g transform="translate(42,42)">
                 <circle r="38" fill="none" stroke="#FFF" stroke-width="5"/>
-                {#if recording}
+                {#if started}
                     <polygon points="-15,-15 -15,15 15,15 15,-15" stroke-width="5" fill="#C00" stroke="#C00" stroke-linejoin="round" />
                 {:else }
-                    <polygon points="-10,-25 -10,25 22,0" stroke-width="5" fill="#C00" stroke="#C00" stroke-linejoin="round" />
+                    <polygon points="-7.5,-22.5 -7.5,22.5 20,0" stroke-width="10" fill="#C00" stroke="#C00" stroke-linejoin="round" />
                 {/if}
             </g>
         </svg>

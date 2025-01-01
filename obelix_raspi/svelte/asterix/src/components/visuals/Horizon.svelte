@@ -62,21 +62,21 @@
             <g id="altitude-visual" style="transform: rotate({altitude}deg)">
                 <circle r="1" fill="#FFF"/>
                 <path d="M-70 0 -10 0 A 10 10 0 0 0 10 0 " fill="none" stroke-width="1.2" stroke="#FFF"/>
-                <text id="altitude-text" text-anchor="middle" transform="translate(-45 -5)" fill="#FFF" font-size="15">∠ {altitude}°</text>
+                <text id="altitude-text" text-anchor="middle" transform="translate(-45 -5)" fill="#FFF" font-size="10">∠ {altitude}°</text>
             </g>
         </g>
         <g transform="translate(200 150)">
             <path d="M-10 0 A 10 10 0 0 0 10 0 L 70 0" fill="none" stroke-width="1.22" stroke="#FFF"/>
-            <path d="M -4,-87 0,-100 4,-87z" fill="#FFF" />
-            <text id="azimuth-text" transform="translate(0 -70)" text-anchor="middle" fill="#FFF" font-size="15">{azimuth}°</text>
+            <path d="M -4,-150 0,-140 4,-150" fill="#FFF" stroke="#FFF" stroke-width=".5" />
+            <text id="azimuth-text" transform="translate(30 -5)" text-anchor="middle" fill="#FFF" font-size="10">➢ {azimuth}°</text>
         </g>
 
         <g transform="translate(200 -390)">
             <g id="compass" transform="rotate({azimuth})">
-                <circle r="400" class="grade" stroke-dasharray="1 5.98131701" stroke-width="20"/>
-                <circle r="400" class="grade" stroke-dasharray="1 33.90658504" stroke-width="30"/>
-                <circle r="400" class="grade" stroke-dasharray="1 103.71975512" stroke-width="40"/>
-                <circle r="400" fill="none" stroke-dasharray="1 156.07963268" stroke="#F00" stroke-width="40"/>
+                <circle r="400" class="grade" stroke-dasharray=".5 6.48131701" stroke-dashoffset=".15" stroke-width="20"/>
+                <circle r="400" class="grade" stroke-dasharray=".5 34.40658504" stroke-dashoffset=".15" stroke-width="30"/>
+                <circle r="400" class="grade" stroke-dasharray=".5 104.21975512" stroke-dashoffset=".15" stroke-width="40"/>
+                <circle r="400" fill="none" stroke-dasharray=".5 156.57963268" stroke-dashoffset=".15" stroke="#F00" stroke-width="40"/>
                 <text class="cmp-text" transform="rotate(0) translate(0 432)">N</text>
                 <text class="cmp-text" transform="rotate(-15) translate(0 432)">15</text>
                 <text class="cmp-text" transform="rotate(-30) translate(0 432)">30</text>
@@ -101,7 +101,7 @@
                 <text class="cmp-text" transform="rotate(-315) translate(0 432)">315</text>
                 <text class="cmp-text" transform="rotate(-330) translate(0 432)">330</text>
                 <text class="cmp-text" transform="rotate(-345) translate(0 432)">345</text>
-                <text class="cmp-text-sm left" transform="rotate(0) translate(0 422)">0</text>
+                <text class="cmp-text-sm" transform="rotate(0) translate(0 422)">0</text>
                 <text class="cmp-text-sm" transform="rotate(-5) translate(0 422)">5</text>
                 <text class="cmp-text-sm" transform="rotate(-10) translate(0 422)">10</text>
                 <text class="cmp-text-sm" transform="rotate(-20) translate(0 422)">20</text>
@@ -190,7 +190,7 @@
     }
     .cmp-text {
         fill: #FFF;
-        font-size: 13px;
+        font-size: 10px;
         text-anchor: middle;
     }
     .cmp-text-sm {

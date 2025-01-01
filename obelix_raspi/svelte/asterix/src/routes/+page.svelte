@@ -2,9 +2,11 @@
   import Visuals from "../components/Visuals.svelte";
   import Controls from "../components/Controls.svelte";
   import OptionsMenu from "../components/OptionsMenu.svelte";
+  import Tasks from "../components/Tasks.svelte";
 </script>
 
 <div class="container">
+    <Tasks/>
     <Visuals/>
     <div class="controls">
         <Controls/>
@@ -19,7 +21,6 @@
         height: 100vh;
         overflow: hidden;
         background: #333333;
-
     }
 
     .controls {
