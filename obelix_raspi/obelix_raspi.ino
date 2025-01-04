@@ -3,11 +3,10 @@
 #include <ArduinoJson.h>
 
 #define motorInterfaceType 1
-const byte focusInterfaceType = 8;
 
-AccelStepper stepperX(motorInterfaceType, 3, 6);  //STEP-Pin, DIR-Pin
-AccelStepper stepperY(motorInterfaceType, 2, 5);  //STEP-Pin, DIR-Pin
-AccelStepper stepperF(focusInterfaceType, 4, 12, 7, 13); // Pins IN1-IN3-IN2-IN4
+AccelStepper stepperX(motorInterfaceType, 3, 6); // STEP-Pin, DIR-Pin
+AccelStepper stepperY(motorInterfaceType, 2, 5); // STEP-Pin, DIR-Pin
+AccelStepper stepperF(motorInterfaceType, 4, 7); // STEP-Pin, DIR-Pin
 
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 
