@@ -1,7 +1,7 @@
 #!/usr/bin/env_python3
 import traceback
 
-def get_snail_moves(width = 800, height = 600, steps_x = 100, steps_y = 75, debug = False):
+def get_snail_moves(width = 800, height = 600, steps_x = 200, steps_y = 150, debug = False):
 
     class Moves:
         def __init__(self, axis, direct, steps, diff_x, diff_y):
@@ -104,3 +104,6 @@ def get_snail_moves(width = 800, height = 600, steps_x = 100, steps_y = 75, debu
     except Exception:
         traceback.print_exc()
         print("Command failed.")
+
+
+# get_snail_moves(width=16,height=24,steps_x=4, steps_y=3,debug=True)
