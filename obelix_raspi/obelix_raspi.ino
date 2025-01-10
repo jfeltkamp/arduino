@@ -32,9 +32,9 @@ const long mpf = 5000;
 // Speed focus.
 const int vf = 500;
 // Min speed focus.
-const int vf1 = 100;
+const int vf1 = 200;
 // Max speed focus.
-const int vf2 = 2000;
+const int vf2 = 800;
 
 const int MODE_NEUTRAL = 0;
 const int MODE_ANALOG = 1;
