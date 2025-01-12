@@ -73,8 +73,8 @@ class ObelixCamera:
 
     def snail_shot(self, cols, rows, cam):
         repeat = ObelixCommands('cam_capimg', f"snail{rows}x{cols}", cam)
-        width = self.obelix.conf.get(['camera', cam, 'step_width'])
-        height = self.obelix.conf.get(['camera', cam, 'step_height'])
+        width = self.obelix.config.get(['camera', cam, 'step_width'])
+        height = self.obelix.config.get(['camera', cam, 'step_height'])
         cmd_list = get_snail_commands(cols, rows, width, height, repeat)
         self.obelix.command_list_push(cmd_list)
 
