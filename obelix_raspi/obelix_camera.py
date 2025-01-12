@@ -4,7 +4,7 @@ import os, errno, math
 from picamera2 import Picamera2
 from picamera2.encoders import H264Encoder
 
-from obelix_raspi.obelix_tools import ObelixCommands
+from obelix_tools import ObelixCommands
 from obelix_stream import ObelixStream
 from obelix_snail_shot import get_snail_commands
 
