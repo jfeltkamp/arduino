@@ -102,13 +102,16 @@ def get_snail_moves(facet_x_num=3, facet_y_num=3, steps_x=200, steps_y=150, debu
         print("Command failed.")
 
 
-def get_snail_commands(facets_x: int = 3, facets_y: int = 3, repeat=None, debug=False):
+def get_snail_commands(facets_x: int = 3, facets_y: int = 3, steps_x: int = 100, step_y: int = 75, repeat=None, debug=False):
     """
     Returns a complete command list for a snail shoot as working stack.
 
     :param facets_x: number of columns on x-axis.
     :param facets_y: number of rows on y-axis.
+    :param steps_x:
+    :param step_y:
     :param repeat: Commands to be executed when mount adjusted new position inside the snail.
+    :param debug:
     :return: List of ObelixCommands.
     """
     if repeat is None:
@@ -118,7 +121,7 @@ def get_snail_commands(facets_x: int = 3, facets_y: int = 3, repeat=None, debug=
 
     # Check if repeat is list of ObelixCommands.
     if isinstance(repeat, list) & all(isinstance(cmd_item, ObelixCommands) for cmd_item in repeat):
-        moves: list = get_snail_moves(facets_x, facets_y)
+        moves: list = get_snail_moves(facets_x, facets_y, steps_x, step_y)
         commands = []
         for move in moves:
             # Add repeat command before each move.

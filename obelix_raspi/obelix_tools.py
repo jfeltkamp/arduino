@@ -1,5 +1,28 @@
 #!/usr/bin/env_python3
 import json
+import os
+import yaml
+
+class ObelixConfig:
+    def __init__(self):
+        self.file_path = os.path.dirname(__file__)
+        self.config = yaml.safe_load(open(os.path.join(self.file_path, 'config/config.yml')))
+
+    def get(self, prop, default=None):
+        value = default
+        if isinstance(prop, str):
+            prop = [prop]
+        if isinstance(prop, list):
+            result = self.get_nd(self.config, prop)
+            if bool(result):
+                value = result
+        return value
+
+    def get_nd(self, d, keys):
+        if not keys:
+            return d
+        return self.get_nd(d.get(keys[0], {}), keys[1:])
+
 
 class ObelixCommands:
     def __init__(self, cmd, params, options):

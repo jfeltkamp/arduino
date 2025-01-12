@@ -71,9 +71,11 @@ class ObelixCamera:
         print(f"Captured image {image_name}")
         return {"image": image_name }
 
-    def snail_shot(self, rows, cols, cam):
+    def snail_shot(self, cols, rows, cam):
         repeat = ObelixCommands('cam_capimg', f"snail{rows}x{cols}", cam)
-        cmd_list = get_snail_commands(rows, cols, repeat)
+        width = self.obelix.conf.get(['camera', cam, 'step_width'])
+        height = self.obelix.conf.get(['camera', cam, 'step_height'])
+        cmd_list = get_snail_commands(cols, rows, width, height, repeat)
         self.obelix.command_list_push(cmd_list)
 
     def video_rec_start(self, name):

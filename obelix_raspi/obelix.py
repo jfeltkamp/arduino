@@ -25,6 +25,7 @@ class Obelix:
     # INIT: Start serial communication with Arduino and start serial read ser_listener daemon.
     def __init__(self, socketio):
         self.camera = ObelixCamera(self)
+        self.config = ObelixConfig()
         self.camera.start_stream()
         self.socketio = socketio
         self.cmd_go_next = True
