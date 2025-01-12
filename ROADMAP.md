@@ -2,7 +2,7 @@
 
 ## Next ToDos
 
-1. [ ] Change focus driver to TMC2208.
+1. [x] Change focus driver to TMC2208.
 1. [ ] Empower Raspi by step-down converter.
 1. [ ] Improve Camera mount on telescope.
 1. [ ] Improve cable channels from mount to telescope.
@@ -46,5 +46,5 @@
 3. [ ] Add power source for DJV Steppers. 
 
 ### Nice to have 
-1. [ ] Replace focus driver by TMC 2208.
+1. [x] Replace focus driver by TMC 2208.
 1. [ ] New focus motor, NEMA 17 ?? Reduce heat/voltage for motor.

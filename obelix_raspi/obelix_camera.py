@@ -3,7 +3,10 @@ import time
 import os, errno, math
 from picamera2 import Picamera2
 from picamera2.encoders import H264Encoder
+
+from obelix_raspi.obelix_tools import ObelixCommands
 from obelix_stream import ObelixStream
+from obelix_snail_shot import get_snail_commands
 
 class ObelixCamera:
     base_path = ""
@@ -13,7 +16,8 @@ class ObelixCamera:
     img_counter = 0
     vid_counter = 0
 
-    def __init__(self, base_path="/home/admin/OBELIX/"):
+    def __init__(self, obelix, base_path="/home/admin/OBELIX/"):
+        self.obelix = obelix
         self.base_path = base_path
         self.picam_a = Picamera2(0)
         self.picam_b = Picamera2(1)
@@ -56,13 +60,21 @@ class ObelixCamera:
         time.sleep(0.5)
         return self.picam_a.capture_metadata()
 
-    def capture_image(self, name):
+    def capture_image(self, name:str='image', cam:str='cam_a'):
         self.set_path()
         image_name = f"{self.path}/{name}_{self.img_counter}.jpg"
-        self.picam_a.capture_file(image_name)
+        if cam == 'cam_b':
+            self.picam_b.capture_file(image_name)
+        else:
+            self.picam_a.capture_file(image_name)
         self.img_counter += 1
         print(f"Captured image {image_name}")
         return {"image": image_name }
+
+    def snail_shot(self, rows, cols, cam):
+        repeat = ObelixCommands('cam_capimg', f"snail{rows}x{cols}", cam)
+        cmd_list = get_snail_commands(rows, cols, repeat)
+        self.obelix.command_list_push(cmd_list)
 
     def video_rec_start(self, name):
         self.set_path()

@@ -107,6 +107,10 @@ if __name__ == "__main__":
         elif action == "stop":
             return obelix.camera.video_rec_stop()
 
+    @app.route("/cam/snail-shot/<int:rows>/<int:cols>/<string:cam>")
+    def snail_shot(rows, cols, cam):
+        return obelix.camera.snail_shot(rows, cols, cam)
+
     @app.route('/camera/stream')
     def camera_stream():
         obelix.camera.start_stream()

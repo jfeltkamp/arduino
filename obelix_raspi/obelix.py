@@ -137,7 +137,7 @@ class Obelix:
 
     def camera_command(self, prc, params, options):
         if prc == "cam_capimg":
-            # self.camera.capture_image(params)
+            self.camera.capture_image(params, options)
             pass
         elif prc == "cam_preview":
             # self.camera.start_preview()

@@ -1,8 +1,8 @@
 #!/usr/bin/env_python3
 import traceback
+from obelix_tools import ObelixCommands
 
-def get_snail_moves(width = 800, height = 600, steps_x = 200, steps_y = 150, debug = False):
-
+def get_snail_moves(facet_x_num=3, facet_y_num=3, steps_x=200, steps_y=150, debug=False):
     class Moves:
         def __init__(self, axis, direct, steps, diff_x, diff_y):
             self.axis = axis
@@ -14,16 +14,13 @@ def get_snail_moves(width = 800, height = 600, steps_x = 200, steps_y = 150, deb
     # Fires commands.
     try:
         # define static image origin.
-        origin_x = round(width/2)
-        origin_y = round(height/2)
+        origin_x = round(facet_x_num * steps_x / 2)
+        origin_y = round(facet_y_num * steps_y / 2)
         # init relative deviation from origin.
         rel_x = 0
         rel_y = 0
         o_x = origin_x
         o_y = origin_y
-        # Calc number of facets in each direction
-        facet_x_num = round(width / steps_x)
-        facet_y_num = round(height / steps_y)
         # format
         facet_format = facet_x_num - facet_y_num
         snailMoves = []
@@ -65,7 +62,6 @@ def get_snail_moves(width = 800, height = 600, steps_x = 200, steps_y = 150, deb
                 o_y = origin_y + rel_y
                 snailMoves.append(Moves("y", direction, steps_y, o_x, o_y))
 
-
             if facet_format < 0:
                 curr_x = 0
                 while curr_x <= start_x:
@@ -106,4 +102,42 @@ def get_snail_moves(width = 800, height = 600, steps_x = 200, steps_y = 150, deb
         print("Command failed.")
 
 
-# get_snail_moves(width=16,height=24,steps_x=4, steps_y=3,debug=True)
+def get_snail_commands(facets_x: int = 3, facets_y: int = 3, repeat=None, debug=False):
+    """
+    Returns a complete command list for a snail shoot as working stack.
+
+    :param facets_x: number of columns on x-axis.
+    :param facets_y: number of rows on y-axis.
+    :param repeat: Commands to be executed when mount adjusted new position inside the snail.
+    :return: List of ObelixCommands.
+    """
+    if repeat is None:
+        repeat = []
+    elif isinstance(repeat, ObelixCommands):
+        repeat = [repeat]
+
+    # Check if repeat is list of ObelixCommands.
+    if isinstance(repeat, list) & all(isinstance(cmd_item, ObelixCommands) for cmd_item in repeat):
+        moves: list = get_snail_moves(facets_x, facets_y)
+        commands = []
+        for move in moves:
+            # Add repeat command before each move.
+            commands += repeat
+            # Add move command.
+            if move.axis == "x":
+                if move.direct > 0:
+                    commands.append(ObelixCommands("ard_right", str(move.steps), "await"))
+                else:
+                    commands.append(ObelixCommands("ard_left", str(move.steps), "await"))
+            elif move.axis == "y":
+                if move.direct > 0:
+                    commands.append(ObelixCommands("ard_down", str(move.steps), "await"))
+                else:
+                    commands.append(ObelixCommands("ard_up", str(move.steps), "await"))
+        if debug:
+            for command in commands:
+                print(command.cmd, command.params, command.options)
+            return []
+        else:
+            return commands
+
