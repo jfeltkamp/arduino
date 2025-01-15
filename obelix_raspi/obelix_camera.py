@@ -35,7 +35,7 @@ class ObelixCamera:
     def set_path(self):
         if self.path == "":
             try:
-                path = self.base_path + time.strftime("%Y_%m_%d-%H:%M")
+                path = self.base_path + time.strftime("%Y_%m_%d_%H%M")
                 if not os.path.exists(path):
                     os.makedirs(path, exist_ok=True)
                 self.path = path
