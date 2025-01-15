@@ -1,7 +1,7 @@
 camera:
   cam_a:
-    step_width: 80
-    step_height: 60
+    step_width: 64
+    step_height: 48
   cam_b:
     step_width: 1000
     step_height: 750
