@@ -1,7 +1,7 @@
 @font-face {
   font-family: 'fontello';
-  src: url('./fontello.woff2?59030121') format('woff2'),
-       url('./fontello.woff?59030121') format('woff');
+  src: url('./fontello.woff2?98999360') format('woff2'),
+       url('./fontello.woff?98999360') format('woff');
   font-weight: normal;
   font-style: normal;
 }
@@ -53,6 +53,7 @@
 
 .icon-target:before { content: '\e800'; } /* '' */
 .icon-home:before { content: '\e801'; } /* '' */
+.icon-settings:before { content: '\e802'; } /* '' */
 .icon-dark:before { content: '\e803'; } /* '' */
 .icon-eye:before { content: '\e804'; } /* '' */
 .icon-star:before { content: '\e805'; } /* '' */

@@ -6,7 +6,7 @@
 1. [ ] Empower Raspi by step-down converter.
 1. [ ] Improve Camera mount on telescope.
 1. [ ] Improve cable channels from mount to telescope.
-1. [ ] Repair snailshot (in astroMount_facet_img.py)
+1. [x] Repair snailshot (in obelix_snailshot.py)
 1. [ ] Integrate snailshot to camera UI.
 
 ## Software

@@ -60,7 +60,7 @@ class ObelixCamera:
         time.sleep(0.5)
         return self.picam_a.capture_metadata()
 
-    def capture_image(self, name:str='image', cam:str='cam_a'):
+    def capture_image(self, name: str='image', cam: str='cam_a'):
         self.set_path()
         image_name = f"{self.path}/{name}_{self.img_counter}.jpg"
         if cam == 'cam_b':
