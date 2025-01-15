@@ -3,7 +3,8 @@
   import { swapPreview } from '$lib/data-store.js';
 
   const captureImage = () => {
-    obelixAPI('/cam/capture-img/image', (data) => {
+    const cam = ($swapPreview === 'B') ? 'cam_b' : 'cam_a';
+    obelixAPI(`/cam/capture-img/image/${cam}`, (data) => {
       console.log('Capture image', data);
     })
   }
