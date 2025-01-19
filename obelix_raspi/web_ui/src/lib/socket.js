@@ -6,7 +6,7 @@ class Socket {
   constructor() {
     this.enabled = false;
     if (browser && (typeof io === 'function')) {
-      const host = (dev) ? 'http://192.168.178.33:5000' : location.origin
+      const host = location.origin
       this.socket = io(host);
 
       if (this.socket) {

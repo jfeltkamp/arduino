@@ -5,7 +5,7 @@ export default function obelixAPI (path, callback){
   socketIo.emit({get: 'foo'})
 
 
-  const base_path = (dev) ? 'http://192.168.178.33:5000' : '';
+  const base_path = location.origin;
   fetch(base_path + path)
     .then(response => response.json())
     .then(data => {
@@ -19,7 +19,7 @@ export function obelixPost (path, postObject, callback) {
   socketIo.emitReply({post: 'foo'}, callback)
 
 
-  const base_path = (dev) ? 'http://192.168.178.33:5000' : '';
+  const base_path = location.origin;
   fetch(base_path + path, {
     method: "post",
     headers: {

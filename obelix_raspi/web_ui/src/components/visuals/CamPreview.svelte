@@ -15,8 +15,8 @@
   let imageB = $state("starfield.jpg");
 
   onMount(() => {
-    imageA = 'http://192.168.178.33:7777/stream_a.mjpg';
-    imageB = 'http://192.168.178.33:7777/stream_b.mjpg';
+    imageA = `${location.protocol}//${location.hostname}:7777/stream_a.mjpg`;
+    imageB = `${location.protocol}//${location.hostname}/stream_b.mjpg`;
   });
 
   onDestroy(() => {
