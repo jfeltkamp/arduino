@@ -3,6 +3,7 @@ import time
 import os, errno, math
 from picamera2 import Picamera2
 from picamera2.encoders import H264Encoder
+from libcamera import Transform
 
 from obelix_tools import ObelixCommands
 from obelix_stream import ObelixStream
@@ -19,11 +20,11 @@ class ObelixCamera:
     def __init__(self, obelix, base_path="/home/admin/OBELIX/"):
         self.obelix = obelix
         self.base_path = base_path
-        self.picam_a = Picamera2(0)
-        self.picam_b = Picamera2(1)
+        self.picam_a = Picamera2(1)
+        self.picam_b = Picamera2(0)
         self.stream = ObelixStream(self.picam_a, self.picam_b)
-        self.still_config = self.picam_a.create_still_configuration()
-        self.prev_config = self.picam_a.create_preview_configuration()
+        self.still_config = self.picam_a.create_still_configuration(transform=Transform(hflip=True, vflip=True))
+        self.prev_config = self.picam_a.create_preview_configuration(transform=Transform(hflip=True, vflip=True))
         time.sleep(1)
         self.started = False
 

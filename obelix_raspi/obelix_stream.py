@@ -12,6 +12,7 @@ from http import server
 from threading import Condition
 from picamera2.encoders import JpegEncoder
 from picamera2.outputs import FileOutput
+from libcamera import Transform
 
 class StreamingOutput(io.BufferedIOBase):
     def __init__(self):
@@ -84,7 +85,7 @@ class StreamingServer(socketserver.ThreadingMixIn, server.HTTPServer):
 class ObelixStream:
     def __init__(self, picam2_a, picam2_b):
         self.picam2_a = picam2_a
-        self.config_a = picam2_a.create_video_configuration(main={"size": (1080, 810)})
+        self.config_a = picam2_a.create_video_configuration(main={"size": (1080, 810)}, transform=Transform(hflip=True, vflip=True))
         self.picam2_b = picam2_b
         self.config_b = picam2_b.create_video_configuration(main={"size": (1080, 810)})
         self.serv_listener = None
