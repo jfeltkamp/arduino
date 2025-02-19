@@ -1,17 +1,34 @@
 <script>
   import {onDestroy, onMount} from "svelte";
-  import {swapPreview} from '$lib/data-store.js';
+  import {swapPreview, sphereControls, crosshairSize, crosshairOffset, sphereScale} from '$lib/data-store.js';
+  import Sphere from "./Sphere.svelte";
+
+
+  let width = $state(0);
+  let height = $state(0);
 
   let largeImage = $state();
   const unsubscribe = swapPreview.subscribe(curr => {largeImage = curr})
-
   const swapImages = (image) => {
     if (largeImage !== image) {
         swapPreview.update(curr => image)
     }
   }
 
-  let imageA = $state("starfield.jpg");
+  let conf = $state({
+    CrosshairSize: 0.4,
+    CrosshairOffsetX: 0.0,
+    CrosshairOffsetY: 0.0,
+    SphereScaleVF: 1500,
+    SphereScaleTel: 24000,
+  });
+  let unsubSphere = sphereControls.subscribe(c => {
+    for (let item of c) {
+        conf[item.id] = item.value;
+    }
+  })
+
+  let imageA = $state("starfield-zoom.jpg");
   let imageB = $state("starfield.jpg");
 
   onMount(() => {
@@ -20,18 +37,26 @@
   });
 
   onDestroy(() => {
-    if (unsubscribe) {
-      unsubscribe()
-    }
+    if (unsubscribe) {unsubscribe()}
+    if (unsubSphere) {unsubSphere()}
   })
 </script>
 
-<div id="camera-stream">
-    <button id="telescope-stream" onclick={() => swapImages('A')} class="stream-wrapper{$swapPreview === 'A' ? ' large' : ''}">
-        <img id="stream-object" src={imageA} alt="Telescope" width="1080" height="810"/>
+<div id="camera-stream" bind:clientWidth={width} bind:clientHeight={height}>
+    <button id="telescope-stream" onclick={() => swapImages('A')} class="stream-wrapper {$swapPreview === 'A' ? 'large' : ''}">
+        <svg class="svg-img" {width} {height} viewBox="0 0 1080 810" preserveAspectRatio="xMidYMid slice">
+            <image href={imageA} width="1080" height="810" />
+            <Sphere scale={conf.SphereScaleTel} steps="1" {width} {height} />
+        </svg>
     </button>
-    <button id="viewfinder-stream" onclick={() => swapImages('B')} class="stream-wrapper{$swapPreview === 'B' ? ' large' : ''}">
-        <img id="stream-object" src={imageB} alt="Viewfinder" width="1080" height="810"/>
+    <button id="viewfinder-stream" onclick={() => swapImages('B')} class="stream-wrapper {$swapPreview === 'B' ? 'large' : ''}">
+        <svg class="svg-img" {width} {height} viewBox="0 0 1080 810" preserveAspectRatio="xMidYMid slice">
+            <image href={imageB} width="1080" height="810" />
+            <g transform="translate({width/4 * conf.CrosshairOffsetX} {height/4 * conf.CrosshairOffsetY})">
+                <rect class="crosshair" x="540" y="405" transform="translate({width * conf.CrosshairSize * -0.5} {height * conf.CrosshairSize * -0.5})" width={width * conf.CrosshairSize} height={height * conf.CrosshairSize} />
+                <Sphere scale={conf.SphereScaleVF} steps="5" {width} {height} />
+            </g>
+        </svg>
     </button>
 </div>
 
@@ -88,22 +113,17 @@
     button {
         padding: 0;
         margin: 0;
+        position: relative;
     }
 
-    #viewfinder-stream::after {
-        content: '';
-        position: absolute;
-        width: 4%;
-        height: 4%;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%,-50%);
-        border: 1px solid #FD0;
-    }
-    #stream-object {
-        object-fit: cover;
-        object-position: center center;
+    .svg-img {
         height: 100%;
         width: 100%;
     }
+
+    .crosshair {
+        stroke: yellow;
+        fill: none;
+    }
+
 </style>

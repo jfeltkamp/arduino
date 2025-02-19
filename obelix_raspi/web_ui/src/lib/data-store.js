@@ -90,3 +90,55 @@ export const displayCompass = writable(false);
 export const swapPreview = writable('B');
 export const videoRecord = writable(false);
 
+// Trim navigation
+export const crosshairSize = writable(0.04);
+export const crosshairOffset = writable({x: 0.0, y: 0.0});
+export const sphereScale = writable({viewfinder: 1500, telescope: 24000});
+
+export const sphereControls =  writable([
+  {
+    id: 'CrosshairSize',
+    name: 'Crosshair Size',
+    defaultValue: 0.04,
+    value: 0.04,
+    minValue: 0.005,
+    maxValue: 0.25,
+    steps: 0.005,
+  },
+  {
+    id: 'CrosshairOffsetX',
+    name: 'Crosshair Offset X',
+    defaultValue: 0.0,
+    value: 0.0,
+    minValue: -1,
+    maxValue: 1,
+    steps: 0.005,
+  },
+  {
+    id: 'CrosshairOffsetY',
+    name: 'Crosshair Offset Y',
+    defaultValue: 0.0,
+    value: 0.0,
+    minValue: -1,
+    maxValue: 1,
+    steps: 0.005,
+  },
+  {
+    id: 'SphereScaleVF',
+    name: 'Sphere Scale Viewfinder',
+    defaultValue: 1500,
+    value: 1500,
+    minValue: 1000,
+    maxValue: 10000,
+    steps: 10,
+  },
+  {
+    id: 'SphereScaleTel',
+    name: 'Sphere Scale Telescope',
+    defaultValue: 24000,
+    value: 24000,
+    minValue: 15000,
+    maxValue: 60000,
+    steps: 10,
+  }
+]);

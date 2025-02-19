@@ -3,9 +3,10 @@
     import Navigation from "./controls/Navigation.svelte";
     import CamOptions from "./controls/CamOptions.svelte";
     import VideoCapture from "./controls/VideoRecord.svelte";
+    import SphereConfig from "./controls/SphereConfig.svelte";
+    import ImageCapture from "./controls/ImageCapture.svelte";
     import { toolTab } from '$lib/data-store.js';
     import {onDestroy} from "svelte";
-    import ImageCapture from "./controls/ImageCapture.svelte";
 
 
     let active = $state('');
@@ -29,6 +30,8 @@
 <div class="tools">
     {#if active === 'target'}
         <Manual />
+    {:else if active === 'sphere'}
+        <SphereConfig />
     {:else if active === 'location'}
         <Navigation />
     {:else if active === 'adjust'}

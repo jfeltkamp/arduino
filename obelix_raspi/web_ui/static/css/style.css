@@ -56,3 +56,11 @@ a {
   background: rgba(0,0,0,.3);
   border-radius: 50%;
 }
+
+
+.graticule {
+  fill: none;
+  stroke: #DDD;
+  stroke-width: .5;
+  stroke-opacity: .8;
+}

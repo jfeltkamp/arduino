@@ -1,7 +1,7 @@
 <script>
-    import Horizon from "./visuals/Horizon.svelte";
-    import CamPreview from "./visuals/CamPreview.svelte";
-    import { displayCompass } from '$lib/data-store.js';
+  import Horizon from "./visuals/Horizon.svelte";
+  import CamPreview from "./visuals/CamPreview.svelte";
+  import { displayCompass } from '$lib/data-store.js';
 </script>
 
 <div class="visuals">

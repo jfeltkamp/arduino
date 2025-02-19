@@ -31,6 +31,7 @@
 
 
   const tabs = [
+    {id: 'sphere', name: 'Sphere', icon: 'icon-settings', callback: () => {switchTab('sphere')}, enabled: () => (active === 'sphere')},
     {id: 'compass', name: 'Compass', icon: 'icon-compass', callback: () => {displayCompass.update(curr => !curr)}, enabled: () => compass},
     {id: 'location', name: 'Location', icon: 'icon-location', callback: () => {switchTab('location')}, enabled: () => (active === 'location')},
     {id: 'target', name: 'Target', icon: 'icon-target', callback: () => {switchTab('target')}, enabled: () => (active === 'target')},

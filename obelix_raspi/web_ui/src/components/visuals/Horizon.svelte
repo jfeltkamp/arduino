@@ -30,13 +30,6 @@
 <div id="horizon-wrapper">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" preserveAspectRatio="xMinYMin slice">
         <defs>
-            <g id="horizon">
-                <line x1="0" x2="0" y1="-600" y2="600" stroke="#FFF" stroke-dashoffset="6.75" stroke-dasharray="0.5,44" stroke-width="10"/>
-                <line x1="-200" x2="200" y1="150" y2="150" stroke="#FFF" stroke-dashoffset="30" stroke-dasharray="40.5,9.5,0.5,9.5" stroke-width=".5"/>
-            </g>
-        </defs>
-
-        <defs>
             <polygon id="focusArrow" points="0,400 180,65 100,65 200,35 300,65 220,65 400,400"/>
             <linearGradient id="focusArrowGradClip" x1="0%" x2="0%" y1="0%" y2="100%">
                 <stop offset="0%" stop-color="#005" />
@@ -52,7 +45,6 @@
             <rect id="focus-range-meter" style="y:{focus}%" width="400" height="400"/>
         </clipPath>
         <!-- Adjust here (0-90), formular: arc * 400 / 90°  -->
-        <use id="azimuth-sphere" href="#horizon" style="transform: translate(200px, {sphere}px)" />
         <!--g transform="translate(125 150) scale(0.375)">
             <use clip-path="url(#focusRangeMeterClip)" href="#focusArrow" fill="url(#focusArrowGradClip)" />
             <use clip-path="url(#arrowStripesClip)" href="#focusArrow" fill="rgba(255,255,255,.5)" />
@@ -203,7 +195,6 @@
     }
 
     #compass,
-    #azimuth-sphere,
     #altitude-visual {
         transition: transform .25s linear;
     }

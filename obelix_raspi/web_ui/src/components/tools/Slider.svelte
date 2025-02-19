@@ -1,7 +1,14 @@
 <script>
-    let { id, name, callback, index, value = 0, minValue = 0, maxValue = 10, steps = 1 } = $props()
-
-
+    let {
+      id,
+      name,
+      callback,
+      index,
+      value = 0,
+      minValue = 0,
+      maxValue = 10,
+      steps = 1
+    } = $props();
 </script>
 
 

@@ -7,7 +7,7 @@ from obelix_tools import *
 from obelix_camera import ObelixCamera
 
 """
-Controls all communication with the arduino.
+Structures and controls all communication with arduino and cameras.
 """
 class Obelix:
     # Serial communication definitions.
