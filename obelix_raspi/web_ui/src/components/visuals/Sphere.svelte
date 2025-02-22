@@ -4,7 +4,8 @@
   import { onDestroy } from "svelte";
 
   // Get current angles from
-  let azimuth, altitude;
+  let azimuth = $state(0.0);
+  let altitude = $state(0.0);
   const unsubscribe = arduinoSettings.subscribe(conf => {
     azimuth = conf.deg_x;
     altitude = conf.deg_y;
@@ -28,7 +29,7 @@
   let projection = $derived(
     geoOrthographic()
       .scale(scale)
-      .rotate([azimuth, -altitude])
+      .rotate([-azimuth, -altitude])
       .translate([1080 / 2, 810 / 2])
       .clipAngle(40)
   );

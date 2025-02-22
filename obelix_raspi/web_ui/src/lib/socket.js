@@ -1,12 +1,14 @@
-import { io } from "socket.io-client"
+import { io } from "socket.io-client";
+import { get } from 'svelte/store';
+import { locOrigin } from '$lib/data-store.js';
 import { arduinoSettings } from "$lib/data-store.js";
-import { browser, dev } from "$app/environment";
+import { browser } from "$app/environment";
 
 class Socket {
   constructor() {
     this.enabled = false;
     if (browser && (typeof io === 'function')) {
-      const host = location.origin
+      const host = get(locOrigin)
       this.socket = io(host);
 
       if (this.socket) {

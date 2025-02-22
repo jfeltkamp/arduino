@@ -1,4 +1,8 @@
 import { writable } from "svelte/store";
+import { dev } from '$app/environment';
+
+export const locHost = writable(dev ? 'http://192.168.178.33' : `${location.protocol}//${location.hostname}`);
+export const locOrigin = writable(dev ? 'http://192.168.178.33:5000' : location.origin);
 
 export const arduinoSettings = writable({
   x: 0,
@@ -89,11 +93,6 @@ export const toolTab = writable('');
 export const displayCompass = writable(false);
 export const swapPreview = writable('B');
 export const videoRecord = writable(false);
-
-// Trim navigation
-export const crosshairSize = writable(0.04);
-export const crosshairOffset = writable({x: 0.0, y: 0.0});
-export const sphereScale = writable({viewfinder: 1500, telescope: 24000});
 
 export const sphereControls =  writable([
   {

@@ -14,7 +14,10 @@ class ObelixConfig:
     def get(self, prop, default=None):
         value = default
         if isinstance(prop, str):
-            prop = prop.split('.')
+            if len(str) == 0:
+                prop = []
+            else:
+                prop = prop.split('.')
         if isinstance(prop, list):
             result = self.get_nd(self.config, prop)
             if bool(result):

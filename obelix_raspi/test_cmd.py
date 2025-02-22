@@ -2,8 +2,9 @@
 
 from obelix_config import ObelixConfig
 
-conf = ObelixConfig('graticule.yml')
-conf.update('testval.asd.dfg', 0.04)
-cam = conf.get(['testval'], 'No value')
+file = 'graticule'
+conf = ObelixConfig(f"{file}.yml").get('settings')
+# conf.update('testval.asd.dfg', 0.04)
+# cam = conf.get(['testval'], 'No value')
 
-print(cam, '<--- huhu')
+print(conf, '<--- huhu')

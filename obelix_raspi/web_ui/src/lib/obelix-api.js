@@ -1,11 +1,11 @@
-import { dev } from '$app/environment';
-import socketIo from './socket.js'
+import { get } from 'svelte/store';
+import socketIo from './socket.js';
+import { locOrigin } from '$lib/data-store.js';
 
 export default function obelixAPI (path, callback){
   socketIo.emit({get: 'foo'})
 
-  const base_path = dev ? 'http://192.168.178.33:5000/' : location.origin;
-  fetch(base_path + path)
+  fetch(get(locOrigin) + path)
     .then(response => response.json())
     .then(data => {
       if (typeof callback === 'function') {
@@ -17,8 +17,7 @@ export default function obelixAPI (path, callback){
 export function obelixPost (path, postObject, callback) {
   socketIo.emitReply({post: 'foo'}, callback)
 
-  const base_path = dev ? 'http://192.168.178.33:5000/' : location.origin;
-  fetch(base_path + path, {
+  fetch(get(locOrigin) + path, {
     method: "post",
     headers: {
       'Accept': 'application/json',

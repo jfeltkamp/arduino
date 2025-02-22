@@ -1,7 +1,7 @@
 <script>
   import {onDestroy, onMount} from "svelte";
-  import obelixAPI, { obelixPost } from "$lib/obelix-api.js";
-  import {swapPreview, sphereControls } from '$lib/data-store.js';
+  import obelixAPI from "$lib/obelix-api.js";
+  import {swapPreview, sphereControls, locHost } from '$lib/data-store.js';
   import Sphere from "./Sphere.svelte";
 
 
@@ -23,9 +23,9 @@
     SphereScaleVF: 1500,
     SphereScaleTel: 24000,
   });
-  let unsubSphere = sphereControls.subscribe(c => {
-    for (let item of c) {
-        conf[item.id] = item.value;
+  let unsubSphere = sphereControls.subscribe(controls => {
+    for (let control of controls) {
+        conf[control.id] = control.value;
     }
   })
 
@@ -33,12 +33,14 @@
   let imageB = $state("starfield.jpg");
 
   onMount(() => {
-    imageA = `${location.protocol}//${location.hostname}:7777/stream_a.mjpg`;
-    imageB = `${location.protocol}//${location.hostname}:7777/stream_b.mjpg`;
+    imageA = `${$locHost}:7777/stream_a.mjpg`;
+    imageB = `${$locHost}:7777/stream_b.mjpg`;
 
-    obelixAPI('/config/graticule/settings', data => {
+    obelixAPI('/config/sphere/settings', data => {
+      console.log('MOUNT ',data);
+
       sphereControls.update(controls => controls.map(
-        control => (control?.id && Object.hasOwn(data, control.id)) ? {...controls, value: data[control.id]} : {...controls})
+        control => (control?.id && Object.hasOwn(data, control.id)) ? {...control, value: data[control.id]} : {...control})
       )
     });
   });

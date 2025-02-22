@@ -54,7 +54,7 @@ if __name__ == "__main__":
     @app.route('/config/<string:file>/<string:property>', methods=['GET', 'POST'])
     def config(file, property):
         if request.method == 'GET':
-            return ObelixConfig(f"{file}.yml").get(property)
+            return ObelixConfig(f"{file}.yml").get(property, {})
         else:
             data = request.json
             if bool(data):
