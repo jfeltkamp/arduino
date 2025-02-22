@@ -3,7 +3,7 @@
 from obelix_config import ObelixConfig
 
 file = 'graticule'
-conf = ObelixConfig(f"{file}.yml").get('settings')
+conf = ObelixConfig(f"{file}.yml").get('settings', {})
 # conf.update('testval.asd.dfg', 0.04)
 # cam = conf.get(['testval'], 'No value')
 

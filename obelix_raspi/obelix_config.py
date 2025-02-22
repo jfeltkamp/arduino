@@ -14,7 +14,7 @@ class ObelixConfig:
     def get(self, prop, default=None):
         value = default
         if isinstance(prop, str):
-            if len(str) == 0:
+            if len(prop) == 0:
                 prop = []
             else:
                 prop = prop.split('.')
