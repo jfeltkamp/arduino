@@ -1,6 +1,7 @@
 <script>
   import {onDestroy, onMount} from "svelte";
-  import {swapPreview, sphereControls, crosshairSize, crosshairOffset, sphereScale} from '$lib/data-store.js';
+  import obelixAPI, { obelixPost } from "$lib/obelix-api.js";
+  import {swapPreview, sphereControls } from '$lib/data-store.js';
   import Sphere from "./Sphere.svelte";
 
 
@@ -34,6 +35,12 @@
   onMount(() => {
     imageA = `${location.protocol}//${location.hostname}:7777/stream_a.mjpg`;
     imageB = `${location.protocol}//${location.hostname}:7777/stream_b.mjpg`;
+
+    obelixAPI('/config/graticule/settings', data => {
+      sphereControls.update(controls => controls.map(
+        control => (control?.id && Object.hasOwn(data, control.id)) ? {...controls, value: data[control.id]} : {...controls})
+      )
+    });
   });
 
   onDestroy(() => {
@@ -45,13 +52,17 @@
 <div id="camera-stream" bind:clientWidth={width} bind:clientHeight={height}>
     <button id="telescope-stream" onclick={() => swapImages('A')} class="stream-wrapper {$swapPreview === 'A' ? 'large' : ''}">
         <svg class="svg-img" {width} {height} viewBox="0 0 1080 810" preserveAspectRatio="xMidYMid slice">
-            <image href={imageA} width="1080" height="810" />
+            <foreignObject class="img-wrap" x="0" y="0" width="1080" height="810">
+                <img src={imageA} alt="Telescope" class="svg-img" />
+            </foreignObject>
             <Sphere scale={conf.SphereScaleTel} steps="1" {width} {height} />
         </svg>
     </button>
     <button id="viewfinder-stream" onclick={() => swapImages('B')} class="stream-wrapper {$swapPreview === 'B' ? 'large' : ''}">
         <svg class="svg-img" {width} {height} viewBox="0 0 1080 810" preserveAspectRatio="xMidYMid slice">
-            <image href={imageB} width="1080" height="810" />
+            <foreignObject class="img-wrap" x="0" y="0" width="1080" height="810">
+                <img src={imageB} alt="Viewfinder" class="svg-img" />
+            </foreignObject>
             <g transform="translate({width/4 * conf.CrosshairOffsetX} {height/4 * conf.CrosshairOffsetY})">
                 <rect class="crosshair" x="540" y="405" transform="translate({width * conf.CrosshairSize * -0.5} {height * conf.CrosshairSize * -0.5})" width={width * conf.CrosshairSize} height={height * conf.CrosshairSize} />
                 <Sphere scale={conf.SphereScaleVF} steps="5" {width} {height} />
@@ -119,6 +130,13 @@
     .svg-img {
         height: 100%;
         width: 100%;
+    }
+    .img-wrap {
+        > img {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
     }
 
     .crosshair {

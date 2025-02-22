@@ -2,6 +2,7 @@
 import traceback
 from obelix import Obelix
 from obelix_analog import ObelixAnalog
+from obelix_config import ObelixConfig
 from obelix_navigation import ObelixNavigation
 from flask import Flask, Response, render_template, send_from_directory, request
 from flask_socketio import SocketIO, emit, send
@@ -48,6 +49,18 @@ if __name__ == "__main__":
     @app.route('/get-config')
     def get_config():
         return obelix.params.__dict__
+
+    # Deliver arbitrary config to frontend.
+    @app.route('/config/<string:file>/<string:property>', methods=['GET', 'POST'])
+    def config(file, property):
+        if request.method == 'GET':
+            return ObelixConfig(f"{file}.yml").get(property)
+        else:
+            data = request.json
+            if bool(data):
+                if ObelixConfig(f"{file}.yml").update(property, data):
+                    return { 'response': 200 }
+        return { 'response': 500 }
 
     # Receive signals from virtuell Joystick.
     @app.route("/joystick/<int:analog_x>/<int:analog_y>")

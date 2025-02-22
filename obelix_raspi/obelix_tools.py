@@ -1,28 +1,5 @@
 #!/usr/bin/env_python3
 import json
-import os
-import yaml
-
-class ObelixConfig:
-    def __init__(self):
-        self.file_path = os.path.dirname(__file__)
-        self.config = yaml.safe_load(open(os.path.join(self.file_path, 'config/config.yml')))
-
-    def get(self, prop, default=None):
-        value = default
-        if isinstance(prop, str):
-            prop = [prop]
-        if isinstance(prop, list):
-            result = self.get_nd(self.config, prop)
-            if bool(result):
-                value = result
-        return value
-
-    def get_nd(self, d, keys):
-        if not keys:
-            return d
-        return self.get_nd(d.get(keys[0], {}), keys[1:])
-
 
 class ObelixCommands:
     def __init__(self, cmd, params, options):
@@ -69,7 +46,7 @@ class ObelixParams:
         self.df = 1 # increase steps focuses further => positive
         # Speed of focus
         self.mpf = 5000 # max position focus (+-)
-        self.vf = 500
+        self.vf = 800
         self.vf1 = 100
         self.vf2 = 1500
         self.calc_deg()

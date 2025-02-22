@@ -30,6 +30,7 @@
       .scale(scale)
       .rotate([azimuth, -altitude])
       .translate([1080 / 2, 810 / 2])
+      .clipAngle(40)
   );
 
   let path = $derived(
@@ -37,4 +38,4 @@
   );
 </script>
 
-<path d={path(graticule())} fill="none" stroke="rgba(200,200,200,.4)" stroke-width="1" />
+<path d={path(graticule())} fill="none" stroke="rgb(255,255,255)" stroke-width="0.3" />
