@@ -43,7 +43,7 @@
     {/if}
 
     {#each controls as option, i}
-        <Slider {...option} index={i} callback={callback} />
+        <Slider {...option} index={i} oninput={callback} />
     {/each}
 
     <div class="actions-wrapper">
@@ -71,8 +71,8 @@
         text-align: center;
     }
     button {
-        border: 2px solid rgba(255,255,255,.8);
-        background: rgba(255,255,255,.3);
+        border: 2px solid var(--border-color);
+        background: var(--background);
         border-radius: 5px;
         color: inherit;
     }

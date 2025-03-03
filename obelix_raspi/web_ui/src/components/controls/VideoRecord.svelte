@@ -29,7 +29,7 @@
     <button onclick={toggleRecording} aria-label="Record video">
         <svg  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 84 84" height="84" width="84" preserveAspectRatio="xMinYMin slice">
             <g transform="translate(42,42)">
-                <circle r="38" fill="none" stroke="#FFF" stroke-width="5"/>
+                <circle r="38"  stroke-width="5"/>
                 {#if started}
                     <polygon points="-15,-15 -15,15 15,15 15,-15" stroke-width="5" fill="#C00" stroke="#C00" stroke-linejoin="round" />
                 {:else }
@@ -51,6 +51,10 @@
         border: 0;
         margin: 5vmin;
         padding: 0;
+    }
+    circle {
+        fill: none;
+        stroke: var(--border-color);
     }
     svg {
         width: 15vmin;

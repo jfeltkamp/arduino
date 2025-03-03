@@ -2,7 +2,8 @@
     let {
       id,
       name,
-      callback,
+      oninput = () => {},
+      onchange = () => {},
       index,
       value = 0,
       minValue = 0,
@@ -16,7 +17,8 @@
     <label for="{'slider_slide_' + id}">{ name }</label>
     <input id={'slider_slide_' + id} type="range" min="{minValue}" max="{maxValue}" step="{steps}"
            bind:value={value}
-           onchange={() => {callback(id, value)}}
+           onchange={() => { onchange(id, value) }}
+           oninput={() => { oninput(id, value) }}
     />
 </div>
 
@@ -40,8 +42,8 @@
         -moz-appearance: none;
         height: 80%;
         width: 100%;
-        background: rgba(255,255,255,.3);
-        border: 2px solid rgba(255,255,255,.8);
+        background: var(--background);
+        border: 2px solid var(--border-color);
         border-radius: 10px;
         outline: none;
     }
@@ -54,7 +56,7 @@
         height: 35px;
         background: #7C7C7C;
         border-radius: 50%;
-        border: 2px solid rgba(255,255,255,.8);
+        border: 2px solid var(--border-color);
         cursor: pointer;
     }
 </style>

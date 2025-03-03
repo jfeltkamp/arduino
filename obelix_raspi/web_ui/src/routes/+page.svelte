@@ -3,9 +3,17 @@
   import Controls from "../components/Controls.svelte";
   import OptionsMenu from "../components/OptionsMenu.svelte";
   import Tasks from "../components/Tasks.svelte";
+
+  let daylight = $state(false);
+
+  function toggleDaylight() {
+    daylight = !daylight;
+  }
+
 </script>
 
-<div class="container">
+<div class={'container' + (daylight ? ' daylight' : '')}>
+    <button class="daylightButton" onclick={toggleDaylight} aria-label="Switch daylight mode"><span class={daylight ? 'icon-dark' : 'icon-light'} ></span></button>
     <Tasks/>
     <Visuals/>
     <div class="controls">
@@ -20,7 +28,8 @@
         width: 100vw;
         height: 100vh;
         overflow: hidden;
-        background: #333333;
+        background: #333;
+        color: var(--color);
     }
 
     .controls {
@@ -44,4 +53,19 @@
         }
     }
 
+    .daylightButton {
+        position: fixed;
+        top: 3%;
+        right: 3%;
+        z-index: 10;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 40px;
+        height: 40px;
+        border-radius: 20%;
+        background: #FFF;
+        border: none;
+        font-size: 20px;
+    }
 </style>

@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 220" width="200" height="200">
+    <defs>
+        <path id="altitude" d="M32 0 108 0" stroke="#000" stroke-width="2" stroke-linecap="round"/>
+        <path id="altitudeText" d="M40 -4 108 -4" stroke="#000" stroke-linecap="round"/>
+    </defs>
+    <g id="compass" transform="translate(110 110)">
+        <circle r="32" fill="none" stroke="#000" stroke-width="2" />
+        <circle r="30" stroke-dasharray="2 21.5619449019" stroke-dashoffset="1" fill="none" stroke="#000" stroke-width="6" />
+        <g transform="rotate(90)">
+            <polygon points="-10,10 0,-30 0,0" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" fill="#000" stroke="#000" />
+            <polygon points="10,10 0,-30 0,0" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" fill="#FFF" stroke="#000" />
+        </g>
+        <g transform="rotate(-45)">
+            <use href="#altitude" />
+            <text font-size="20">
+                <textPath href="#altitudeText" >45°</textPath>
+            </text>
+        </g>
+        <text font-size="20" text-anchor="middle" y="50">90,234°</text>
+    </g>
+</svg>

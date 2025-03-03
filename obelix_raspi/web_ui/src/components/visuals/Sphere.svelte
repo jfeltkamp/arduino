@@ -39,4 +39,10 @@
   );
 </script>
 
-<path d={path(graticule())} fill="none" stroke="rgb(255,255,255)" stroke-width="0.3" />
+<path d={path(graticule())} fill="none" class="graticule" stroke-width="0.3" />
+
+<style>
+    .graticule {
+        stroke: var(--border-color);
+    }
+</style>

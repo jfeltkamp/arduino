@@ -26,7 +26,7 @@
         <svg  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 84 84" height="84" width="84">
             <g transform="translate(42,42)">
                 <circle r="28" fill="#C00" stroke="#C00" />
-                <circle r="38" fill="none" stroke="#FFF" stroke-width="5" />
+                <circle r="38" class="capture-button" />
             </g>
         </svg>
     </button>
@@ -34,7 +34,7 @@
     <button onclick={ snailShot } aria-label="Snail shot">
         <svg  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 84 84" height="84" width="84">
             <g transform="translate(42,42)">
-                <polyline points="0,0 20,0 20,15 -20,15 -20,-15 40,-15 40,30 -20,30 -12,28 -12,32 -20,30" style="fill:none;stroke:#FFF;stroke-width:3;stroke-linejoin:round;" />
+                <polyline points="0,0 20,0 20,15 -20,15 -20,-15 40,-15 40,30 -20,30 -12,28 -12,32 -20,30" />
             </g>
         </svg>
     </button>
@@ -72,6 +72,17 @@
         max-width: 80px;
         max-height: 80px;
     }
+    .capture-button {
+        fill: none;
+        stroke: var(--border-color);
+        stroke-width: 5;
+    }
+    polyline {
+        fill: none;
+        stroke: var(--border-color);
+        stroke-width: 3;
+        stroke-linejoin: round;
+    }
     .dimensions {
         display: flex;
         flex-direction: column;
@@ -89,7 +100,8 @@
             background: transparent;
             color: inherit;
             font-size: inherit;
-            border: 1px solid #FFF;
+            border: 3px solid var(--border-color);
+            background: var(--background);
             border-radius: .3em;
         }
     }

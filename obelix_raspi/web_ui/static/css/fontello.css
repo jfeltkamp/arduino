@@ -23,7 +23,7 @@
 
   display: inline-block;
   text-decoration: inherit;
-  text-shadow: 0 0 5px #000;
+  text-shadow: var(--text-shadow);;
   width: 1em;
   margin-right: .2em;
   text-align: center;

@@ -1,12 +1,15 @@
 <script>
   import {onDestroy, onMount} from "svelte";
   import obelixAPI from "$lib/obelix-api.js";
-  import {swapPreview, sphereControls, locHost } from '$lib/data-store.js';
+  import {swapPreview, sphereControls, displayCompass} from '$lib/data-store.js';
   import Sphere from "./Sphere.svelte";
 
 
   let width = $state(0);
   let height = $state(0);
+
+  const imgWidth = 1080;
+  const imgHeight = 810;
 
   let largeImage = $state();
   const unsubscribe = swapPreview.subscribe(curr => {largeImage = curr})
@@ -33,8 +36,8 @@
   let imageB = $state("starfield.jpg");
 
   onMount(() => {
-    imageA = `${$locHost}:7777/stream_a.mjpg`;
-    imageB = `${$locHost}:7777/stream_b.mjpg`;
+    // imageA = `${$locHost}:7777/stream_a.mjpg`;
+    // imageB = `${$locHost}:7777/stream_b.mjpg`;
 
     obelixAPI('/config/sphere/settings', data => {
       console.log('MOUNT ',data);
@@ -53,21 +56,28 @@
 
 <div id="camera-stream" bind:clientWidth={width} bind:clientHeight={height}>
     <button id="telescope-stream" onclick={() => swapImages('A')} class="stream-wrapper {$swapPreview === 'A' ? 'large' : ''}">
-        <svg class="svg-img" {width} {height} viewBox="0 0 1080 810" preserveAspectRatio="xMidYMid slice">
-            <foreignObject class="img-wrap" x="0" y="0" width="1080" height="810">
+        <svg class="svg-img" {width} {height} viewBox="0 0 {imgWidth} {imgHeight}" preserveAspectRatio="xMidYMid slice">
+            <foreignObject class="img-wrap" x="0" y="0" width={imgWidth} height={imgHeight}>
                 <img src={imageA} alt="Telescope" class="svg-img" />
             </foreignObject>
-            <Sphere scale={conf.SphereScaleTel} steps="1" {width} {height} />
+            {#if $displayCompass}
+                <Sphere scale={conf.SphereScaleTel} steps="1" {width} {height} />
+            {/if}
         </svg>
     </button>
     <button id="viewfinder-stream" onclick={() => swapImages('B')} class="stream-wrapper {$swapPreview === 'B' ? 'large' : ''}">
-        <svg class="svg-img" {width} {height} viewBox="0 0 1080 810" preserveAspectRatio="xMidYMid slice">
-            <foreignObject class="img-wrap" x="0" y="0" width="1080" height="810">
+        <svg class="svg-img" {width} {height} viewBox="0 0 {imgWidth} {imgHeight}" preserveAspectRatio="xMidYMid slice">
+            <foreignObject class="img-wrap" x="0" y="0" width={imgWidth} height={imgHeight}>
                 <img src={imageB} alt="Viewfinder" class="svg-img" />
             </foreignObject>
-            <g transform="translate({width/4 * conf.CrosshairOffsetX} {height/4 * conf.CrosshairOffsetY})">
-                <rect class="crosshair" x="540" y="405" transform="translate({width * conf.CrosshairSize * -0.5} {height * conf.CrosshairSize * -0.5})" width={width * conf.CrosshairSize} height={height * conf.CrosshairSize} />
-                <Sphere scale={conf.SphereScaleVF} steps="5" {width} {height} />
+            <g transform="translate({imgWidth/4 * conf.CrosshairOffsetX} {imgHeight/4 * conf.CrosshairOffsetY})">
+                <rect class="crosshair" x="540" y="405"
+                      transform="translate({width * conf.CrosshairSize * -0.5} {height * conf.CrosshairSize * -0.5})"
+                      width={width * conf.CrosshairSize}
+                      height={height * conf.CrosshairSize} />
+                {#if $displayCompass}
+                    <Sphere scale={conf.SphereScaleVF} steps="5" {width} {height} />
+                {/if}
             </g>
         </svg>
     </button>

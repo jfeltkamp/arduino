@@ -34,14 +34,11 @@
 
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 781 710">
     <defs>
-        <circle id="joys-def-cir1" r="280" cy="0"/>
         <circle id="joys-def-cir2" r="80" cy="0"/>
         <path id="joys-def-arrow" d="M0 -120 -40 -100 40 -100z"/>
-        <rect id="joys-def-slider" width="70" height="560" transform="translate(350 -280)" rx="15" ry="15" />
         <rect id="joys-def-slide" width="100" height="100" transform="translate(335 -50)" rx="15" ry="15" />
     </defs>
     <g id="joys" transform="translate(320 355)">
-        <use id="joys-plate" href="#joys-def-cir1"/>
         <use id="joys-arrow-top" href="#joys-def-arrow"/>
         <use id="joys-arrow-right" href="#joys-def-arrow" transform="rotate(90)"/>
         <use id="joys-arrow-left" href="#joys-def-arrow" transform="rotate(-90)"/>
@@ -49,7 +46,9 @@
         <!-- Adjust here                                  v -->
         <use id="joys-stick" href="#joys-def-cir2" style="transform: translate(0px, 0px)"/>
 
-        <use id="joys-slider" href="#joys-def-slider"/>
+
+        <use id="joys-arrow-top" href="#joys-def-arrow" transform="translate(385 30)"/>
+        <use id="joys-arrow-top" href="#joys-def-arrow" transform="translate(385 -30) rotate(180)"/>
         <!-- Adjust here                                    v -->
         <use id="joys-slide" href="#joys-def-slide"  style="transform: translateY(0px)"/>
         <a href="#toggle" onclick={toggle} role="button" tabindex="0" aria-label="Change to adjustment tool">
@@ -72,18 +71,18 @@
     }
     .element,
     #joys use {
-        fill: rgba(255,255,255,.3);
-        stroke: #FFF;
+        fill: var(--background);
+        stroke: var(--border-color);
         stroke-width: 4;
         stroke-linejoin: round;
     }
     #joys #joys-swap {
-        fill: #FFF;
+        fill: var(--color);
         cursor: pointer;
     }
     #joys #joys-slide,
     #joys #joys-stick {
-        fill: #7c7c7c;
+        fill: #888;
         cursor: pointer;
     }
 </style>
