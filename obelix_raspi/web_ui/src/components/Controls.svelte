@@ -6,44 +6,51 @@
     import SphereConfig from "./controls/SphereConfig.svelte";
     import ImageCapture from "./controls/ImageCapture.svelte";
     import { toolTab } from '$lib/data-store.js';
-    import {onDestroy} from "svelte";
-
-
-    let active = $state('');
-    const unsubscribe = toolTab.subscribe((tab) => {
-      active = tab
-    });
-
-    onDestroy(() => {
-      if (unsubscribe) {
-        unsubscribe();
-      }
-    })
-
-
-    const switchTab = (e, tab) => {
-      e.preventDefault();
-      active = tab;
-    }
 </script>
 
-<div class="tools">
-    {#if active === 'target'}
-        <Manual />
-    {:else if active === 'sphere'}
-        <SphereConfig />
-    {:else if active === 'location'}
-        <Navigation />
-    {:else if active === 'adjust'}
-        <CamOptions />
-    {:else if active === 'video'}
-        <VideoCapture />
-    {:else if active === 'picture'}
-        <ImageCapture />
-    {/if}
-</div>
+
+{#if $toolTab}
+    <div class="controls">
+        <div class="tools">
+            {#if $toolTab === 'target'}
+                <Manual />
+            {:else if $toolTab === 'sphere'}
+                <SphereConfig />
+            {:else if $toolTab === 'location'}
+                <Navigation />
+            {:else if $toolTab === 'adjust'}
+                <CamOptions />
+            {:else if $toolTab === 'video'}
+                <VideoCapture />
+            {:else if $toolTab === 'picture'}
+                <ImageCapture />
+            {/if}
+        </div>
+    </div>
+{/if}
 
 <style>
+    .controls {
+        background: transparent;
+        overflow: hidden;
+        position: fixed;
+        display: flex;
+        justify-content: flex-end;
+        align-items: flex-end;
+        bottom: 52px;
+        right: 0;
+
+        @media (orientation: landscape) {
+            width: 45vw;
+            height: calc(100vh - 52px);
+        }
+
+        @media (orientation: portrait) {
+            width: 100vw;
+            height: calc(45vh - 52px);
+        }
+    }
+
     .tools {
         overflow: auto;
         min-width: 45vw;

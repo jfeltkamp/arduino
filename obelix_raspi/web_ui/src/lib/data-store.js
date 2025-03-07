@@ -90,7 +90,7 @@ export const camControls = writable([
 export const locations = writable([]);
 export const positions = writable({});
 export const toolTab = writable('');
-export const displayCompass = writable(false);
+export const displayCompass = writable(true);
 export const swapPreview = writable('B');
 export const videoRecord = writable(false);
 

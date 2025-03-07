@@ -1,7 +1,7 @@
 <script>
   import {onDestroy, onMount} from "svelte";
   import obelixAPI from "$lib/obelix-api.js";
-  import {swapPreview, sphereControls, displayCompass} from '$lib/data-store.js';
+  import {swapPreview, sphereControls, displayCompass, locHost, arduinoSettings} from '$lib/data-store.js';
   import Sphere from "./Sphere.svelte";
 
 
@@ -11,12 +11,61 @@
   const imgWidth = 1080;
   const imgHeight = 810;
 
-  let largeImage = $state();
-  const unsubscribe = swapPreview.subscribe(curr => {largeImage = curr})
-  const swapImages = (image) => {
-    if (largeImage !== image) {
-        swapPreview.update(curr => image)
+  // Get center position *including* adjustment from crosshair offset.
+  let centerB = $state();
+  const getAdjustment = () => {
+    const center = centerB.getBoundingClientRect();
+    return {
+      x: (currImage === 'B') ? center.x : (width / 2),
+      y: (currImage === 'B') ? center.y : (height / 2),
     }
+  }
+
+  let currImage = $state();
+  const unsubscribe = swapPreview.subscribe(curr => {currImage = curr})
+
+  // Get current angles from
+  let azimuth = $state(0.0);
+  let altitude = $state(0.0);
+  const unsubSettings = arduinoSettings.subscribe(conf => {
+    azimuth = conf.deg_x;
+    altitude = conf.deg_y;
+  });
+
+  const imageClick = (image, event) => {
+    if (currImage !== image) {
+        swapPreview.update(curr => image)
+    } else {
+      // Calculate centered coords.
+      const center = getAdjustment()
+      const dimScale = Math.max((width/imgWidth), (height/imgHeight))
+      const vpCoords = {
+        x: Math.round((event.clientX - center.x) / dimScale),
+        y: -1 * Math.round((event.clientY - center.y) / dimScale),
+      }
+
+      const sphereScale = (currImage === 'B') ? conf.SphereScaleVF : conf.SphereScaleTel;
+
+      const altRad = angleRad(altitude);
+      const aziRad = angleRad(azimuth);
+
+      const rho = Math.sqrt(Math.pow(vpCoords.x, 2) + Math.pow(vpCoords.y, 2));
+      const c = Math.asin(rho / sphereScale);
+      const alt = Math.asin((Math.cos(c) * Math.sin(altRad)) + (vpCoords.y * Math.sin(c) * Math.cos(altRad) / rho));
+      const azi = aziRad + Math.atan(vpCoords.x * Math.sin(c) / ((rho * Math.cos(c) * Math.cos(altRad)) - (vpCoords.y * Math.sin(c) * Math.sin(altRad))))
+
+
+      console.log('POS:', vpCoords, angleDeg(alt), angleDeg(azi))
+    }
+  }
+
+  function angleRad(deg) {
+    return Math.PI * deg / 180;
+  }
+
+
+  function angleDeg(rad) {
+    return rad * 180 / Math.PI;
   }
 
   let conf = $state({
@@ -51,11 +100,12 @@
   onDestroy(() => {
     if (unsubscribe) {unsubscribe()}
     if (unsubSphere) {unsubSphere()}
+    if (unsubSettings) {unsubSettings()}
   })
 </script>
 
 <div id="camera-stream" bind:clientWidth={width} bind:clientHeight={height}>
-    <button id="telescope-stream" onclick={() => swapImages('A')} class="stream-wrapper {$swapPreview === 'A' ? 'large' : ''}">
+    <button id="telescope-stream" onclick={(event) => imageClick('A', event)} class="stream-wrapper {$swapPreview === 'A' ? 'large' : ''}">
         <svg class="svg-img" {width} {height} viewBox="0 0 {imgWidth} {imgHeight}" preserveAspectRatio="xMidYMid slice">
             <foreignObject class="img-wrap" x="0" y="0" width={imgWidth} height={imgHeight}>
                 <img src={imageA} alt="Telescope" class="svg-img" />
@@ -65,18 +115,19 @@
             {/if}
         </svg>
     </button>
-    <button id="viewfinder-stream" onclick={() => swapImages('B')} class="stream-wrapper {$swapPreview === 'B' ? 'large' : ''}">
+    <button id="viewfinder-stream" onclick={(event) => imageClick('B', event)} class="stream-wrapper {$swapPreview === 'B' ? 'large' : ''}">
         <svg class="svg-img" {width} {height} viewBox="0 0 {imgWidth} {imgHeight}" preserveAspectRatio="xMidYMid slice">
             <foreignObject class="img-wrap" x="0" y="0" width={imgWidth} height={imgHeight}>
                 <img src={imageB} alt="Viewfinder" class="svg-img" />
             </foreignObject>
             <g transform="translate({imgWidth/4 * conf.CrosshairOffsetX} {imgHeight/4 * conf.CrosshairOffsetY})">
-                <rect class="crosshair" x="540" y="405"
+                <circle bind:this={centerB} r="0.0001" cx={imgWidth/2} cy={imgHeight/2} fill="none" stroke="none"  />
+                <rect class="crosshair" x={imgWidth/2} y={imgHeight/2}
                       transform="translate({width * conf.CrosshairSize * -0.5} {height * conf.CrosshairSize * -0.5})"
                       width={width * conf.CrosshairSize}
                       height={height * conf.CrosshairSize} />
                 {#if $displayCompass}
-                    <Sphere scale={conf.SphereScaleVF} steps="5" {width} {height} />
+                    <Sphere scale={conf.SphereScaleVF} steps="15" {width} {height} />
                 {/if}
             </g>
         </svg>

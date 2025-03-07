@@ -16,9 +16,7 @@
     <button class="daylightButton" onclick={toggleDaylight} aria-label="Switch daylight mode"><span class={daylight ? 'icon-dark' : 'icon-light'} ></span></button>
     <Tasks/>
     <Visuals/>
-    <div class="controls">
-        <Controls/>
-    </div>
+    <Controls/>
     <OptionsMenu/>
 </div>
 
@@ -30,27 +28,6 @@
         overflow: hidden;
         background: #333;
         color: var(--color);
-    }
-
-    .controls {
-        background: transparent;
-        overflow: hidden;
-        position: fixed;
-        display: flex;
-        justify-content: flex-end;
-        align-items: flex-end;
-        bottom: 52px;
-        right: 0;
-
-        @media (orientation: landscape) {
-            width: 45vw;
-            height: calc(100vh - 52px);
-        }
-
-        @media (orientation: portrait) {
-            width: 100vw;
-            height: calc(45vh - 52px);
-        }
     }
 
     .daylightButton {
