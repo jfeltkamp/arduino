@@ -75,9 +75,9 @@ if __name__ == "__main__":
     def adjust(direction="none", length="0"):
         return joystick_analog.adjust(direction, int(length))
 
-    @app.route("/goto/<int:azi>/<int:alt>")
-    def goto(azi=0, alt=0):
-        return joystick_analog.goto(azi, alt)
+    @app.route("/goto/<string:azi>/<string:alt>")
+    def goto(azi="0", alt="0"):
+        return joystick_analog.goto(int(azi), int(alt))
 
     # Navigation
     @app.route('/navi/location-list')
