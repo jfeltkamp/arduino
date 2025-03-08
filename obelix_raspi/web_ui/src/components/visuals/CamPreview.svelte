@@ -56,9 +56,10 @@
       const alt = Math.asin((Math.cos(c) * Math.sin(altRad)) + (vpCoords.y * Math.sin(c) * Math.cos(altRad) / rho));
       const azi = aziRad + Math.atan(vpCoords.x * Math.sin(c) / ((rho * Math.cos(c) * Math.cos(altRad)) - (vpCoords.y * Math.sin(c) * Math.sin(altRad))))
 
-      obelixAPI(`/goto/${angleRadToSteps(azi)}/${angleRadToSteps(alt)}`, (data) => { console.log('GoTo cmd', data) })
+      console.log(`/goto/${angleRadToSteps(azi)}/${angleRadToSteps(alt)}`)
+      // obelixAPI(`/goto/${angleRadToSteps(azi)}/${angleRadToSteps(alt)}`, (data) => { console.log('GoTo cmd', data) })
 
-      console.log('POS:', vpCoords, angleRadToDeg(alt), angleRadToDeg(azi), angleRadToSteps(azi) , angleRadToSteps(azi))
+      console.log('POS:', vpCoords, angleRadToDeg(alt), angleRadToDeg(azi), angleRadToSteps(azi) , angleRadToSteps(alt))
     }
   }
 

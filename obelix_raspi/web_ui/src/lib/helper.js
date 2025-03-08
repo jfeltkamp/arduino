@@ -89,7 +89,11 @@ export function angleRadToDeg(rad) {
  */
 export function angleDegToSteps(deg) {
   const spr = get(arduinoSettings).spr;
-  return Math.round(spr * deg / 360);
+  let result = Math.round(spr * deg / 360);
+  if (Math.abs(result) > (spr / 2)) {
+    result = (result > 0) ? result - spr : result + spr
+  }
+  return result
 }
 
 /**
