@@ -79,8 +79,8 @@
   let imageB = $state("starfield.jpg");
 
   onMount(() => {
-    // imageA = `${$locHost}:7777/stream_a.mjpg`;
-    // imageB = `${$locHost}:7777/stream_b.mjpg`;
+    imageA = `${$locHost}:7777/stream_a.mjpg`;
+    imageB = `${$locHost}:7777/stream_b.mjpg`;
 
     obelixAPI('/config/sphere/settings', data => {
       console.log('MOUNT ',data);
@@ -121,7 +121,7 @@
                       width={width * conf.CrosshairSize}
                       height={height * conf.CrosshairSize} />
                 {#if $displayCompass}
-                    <Sphere scale={conf.SphereScaleVF} steps="15" {width} {height} />
+                    <Sphere scale={conf.SphereScaleVF} steps="5" {width} {height} />
                 {/if}
             </g>
         </svg>
