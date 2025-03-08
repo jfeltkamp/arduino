@@ -2,17 +2,31 @@
   box-sizing: border-box;
 }
 
+:root {
+  --background: rgba(0,0,0,.3);
+  --color: #FFF;
+  --border-color: #FFF;
+  --text-shadow: 0 0 3px #000;
+}
+
+.daylight {
+  --background: rgba(255,255,255,.2);
+  --color: #000;
+  --border-color: #000;
+  --text-shadow: 0 0 3px #FFF;
+}
+
 html, body {
   margin: 0;
   padding: 0;
   background: #333;
-  color: #FFF;
-  text-shadow: 0 0 3px #000;
+  color: var(--color);
+  text-shadow: var(--text-shadow);
   font-family: sans-serif;
 }
 
 a {
-  color: #FFF;
+  color: var(--color);
   text-decoration: none;
 }
 
@@ -22,45 +36,4 @@ a {
   flex-direction: row;
   height: 100%;
   align-items: stretch;
-}
-
-.focus-wrapper {
-  flex: 1 1 20%;
-}
-
-.joystick {
-  box-sizing: border-box;
-  width: 100%;
-  position: relative;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  border: 3px solid rgba(0,0,0,.8);
-  background: rgba(0,0,0,.3);
-  border-radius: 50%;
-}
-
-.joystick img {
-  width: 100%;
-  height: auto;
-}
-
-#stick {
-  box-sizing: border-box;
-  position: absolute;
-  top: 37.5%;
-  left: 37.5%;
-  width: 25%;
-  height: 25%;
-  border: 3px solid rgba(0,0,0,.8);
-  background: rgba(0,0,0,.3);
-  border-radius: 50%;
-}
-
-
-.graticule {
-  fill: none;
-  stroke: #DDD;
-  stroke-width: .5;
-  stroke-opacity: .8;
 }
