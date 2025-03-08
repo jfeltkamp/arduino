@@ -55,8 +55,8 @@
 </script>
 
 {#if started}
-<div class="video-recorder">
-    <button onclick={stopStopwatch} aria-label="Stop video recording">
+<div>
+    <button class="task--button video-recorder" onclick={stopStopwatch} aria-label="Stop video recording">
         <span class="icon-stop"></span>
         <span class="time">{time}</span>
     </button>
@@ -73,7 +73,6 @@
         font-size: 1.5em;
         padding: .25em .5em .25em .125em;
         margin: 0 .5em;
-        background: #000;
         border-radius: 50px;
     }
 </style>

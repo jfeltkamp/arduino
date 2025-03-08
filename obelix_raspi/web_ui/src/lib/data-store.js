@@ -92,6 +92,7 @@ export const positions = writable({});
 export const toolTab = writable('');
 export const displayCompass = writable(true);
 export const swapPreview = writable('B');
+export const daylight = writable(false);
 export const videoRecord = writable(false);
 
 export const sphereControls =  writable([

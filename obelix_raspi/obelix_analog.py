@@ -51,3 +51,9 @@ class ObelixAnalog:
         return {
             "result": self.obelix.command_list_push(ObelixCommands(f"ard_{direction}", f"{length}", "await"))
         }
+
+    # Fire command GOTO for both axis.
+    def goto(self, azi, alt):
+        return {
+            "result": self.obelix.command_list_push(ObelixCommands("ard_goto", f"{azi},{alt}", "await"))
+        }
