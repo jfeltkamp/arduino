@@ -135,7 +135,7 @@ if __name__ == "__main__":
         return Response(obelix.camera.generate_frames(), mimetype='application/x-multipart-replace; boundary=frame')
 
     @app.route('/system/<string:command>')
-    def camera_stream(command):
+    def system(command):
         return system_cmd(command)
 
     app.run(host='0.0.0.0')
