@@ -193,14 +193,7 @@
         header input[type="text"] {
             margin: 0;
         }
-        .button {
-            border: .5px solid #999;
-            font-size: 1rem;
-            padding: .25rem .5rem;
-            background: #222;
-            border-radius: 5px;
-            color: inherit;
-        }
+
         .edit-button {
             all: unset;
             cursor: pointer;

@@ -6,6 +6,7 @@ from obelix_config import ObelixConfig
 from obelix_navigation import ObelixNavigation
 from flask import Flask, Response, render_template, send_from_directory, request
 from flask_socketio import SocketIO, emit, send
+from obelix_os import system_cmd
 from flask_cors import CORS
 
 if __name__ == "__main__":
@@ -133,6 +134,9 @@ if __name__ == "__main__":
         obelix.camera.start_stream()
         return Response(obelix.camera.generate_frames(), mimetype='application/x-multipart-replace; boundary=frame')
 
+    @app.route('/system/<string:command>')
+    def camera_stream(command):
+        return system_cmd(command)
 
     app.run(host='0.0.0.0')
 

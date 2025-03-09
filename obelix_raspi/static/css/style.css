@@ -7,6 +7,9 @@
   --color: #FFF;
   --border-color: #FFF;
   --text-shadow: 0 0 3px #000;
+  --color-danger: #E00;
+  --color-warn: #FC0;
+  --color-info: #090;
 }
 
 .daylight {
@@ -36,4 +39,30 @@ a {
   flex-direction: row;
   height: 100%;
   align-items: stretch;
+}
+
+.button {
+  border: 2px solid var(--border-color);
+  background: var(--background);
+  color: var(--color);
+  border-radius: .5em;
+  padding: .5em 1.5em;
+  font-size: 1.2em;
+
+  &.btn-danger {
+    border: 3px solid var(--color-danger);
+    color: var(--color-danger);
+  }
+  &.btn-warn {
+    border: 3px solid var(--color-warn);
+    color: var(--color-warn);
+  }
+  &.btn-info {
+    border: 3px solid var(--color-info);
+    color: var(--color-info);
+  }
+
+  > [class^="icon-"] {
+    margin-left: -.5em;
+  }
 }

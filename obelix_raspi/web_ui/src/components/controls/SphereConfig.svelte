@@ -38,6 +38,7 @@
 </script>
 
 <div class="sphere-config">
+
     {#if message}
         <h3 class="message">{@html message}</h3>
     {/if}
@@ -47,7 +48,8 @@
     {/each}
 
     <div class="actions-wrapper">
-        <button onclick={saveSettings}>Save settings</button>
+        <a href="/system" class="button"><span class="icon-settings"></span>System</a>
+        <button class="button" onclick={saveSettings}>Save settings</button>
     </div>
 </div>
 
@@ -68,12 +70,8 @@
         margin: .3em 0 .3em auto;
         padding: .3em 0;
         max-width: 350px;
-        text-align: center;
-    }
-    button {
-        border: 2px solid var(--border-color);
-        background: var(--background);
-        border-radius: 5px;
-        color: inherit;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
     }
 </style>
