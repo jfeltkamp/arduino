@@ -75,12 +75,15 @@
   let imageA = $state("starfield-zoom.jpg");
   let imageB = $state("starfield.jpg");
 
+  let clipAngVf = $derived(Math.ceil(angleRadToDeg(Math.asin(imgWidth/conf.SphereScaleVF))));
+  let clipAngTel = $derived(Math.ceil(angleRadToDeg(Math.asin(imgWidth/conf.SphereScaleTel))));
+
   onMount(() => {
     imageA = `${$locHost}:7777/stream_a.mjpg`;
     imageB = `${$locHost}:7777/stream_b.mjpg`;
 
     obelixAPI('/config/sphere/settings', data => {
-      console.log('MOUNT ',data);
+      console.log('MOUNT', data);
 
       sphereControls.update(controls => controls.map(
         control => (control?.id && Object.hasOwn(data, control.id)) ? {...control, value: data[control.id]} : {...control})
@@ -102,7 +105,7 @@
                 <img src={imageA} alt="Telescope" class="svg-img" />
             </foreignObject>
             {#if $displayCompass}
-                <Sphere scale={conf.SphereScaleTel} steps="1" {width} {height} />
+                <Sphere scale={conf.SphereScaleTel} steps="0.2" clipAngle={clipAngTel} {width} {height} />
             {/if}
         </svg>
     </button>
@@ -118,7 +121,7 @@
                       width={width * conf.CrosshairSize}
                       height={height * conf.CrosshairSize} />
                 {#if $displayCompass}
-                    <Sphere scale={conf.SphereScaleVF} steps="5" {width} {height} />
+                    <Sphere scale={conf.SphereScaleVF} steps="5" clipAngle={clipAngVf} {width} {height} />
                 {/if}
             </g>
         </svg>

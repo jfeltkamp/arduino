@@ -57,30 +57,40 @@
         position: fixed;
         bottom: 0;
         left: 0;
-        height: 52px;
+        height: 58px;
         width: 100vw;
     }
     ul {
         display: flex;
         flex-direction: row;
         justify-content: space-around;
-        align-items: center;
+        align-items: flex-start;
         margin: 0;
         padding: 0;
         list-style: none;
         height: 100%;
     }
-    li.active {
-        color: #FD0;
+    li {
+        flex: 1 1 15%;
+        &.active {
+            color: #FD0;
+        }
     }
     button {
         border: 0;
         background: transparent;
         color: inherit;
         font-size: 1.5em;
+        height: 52px;
+        width: 90%;
+        margin: 0 5%;
+        cursor: pointer;
 
         span {
             display: none;
+        }
+        @media (min-width: 500px) {
+            font-size: 2em;
         }
     }
 </style>

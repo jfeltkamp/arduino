@@ -31,7 +31,7 @@
                 <polygon class="compass--needle" points="-10,10 0,-30 0,0" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" fill="#000" />
                 <polygon class="compass--needle" points="10,10 0,-30 0,0" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" fill="#FFF" />
             </g>
-            <g transform="rotate(-{altitude})">
+            <g transform="rotate({-altitude})">
                 <use class="compass--alt" href="#altitude" />
                 <text class="compass--text" font-size="20">
                     <textPath href="#altitudeText" >{altitude}°</textPath>

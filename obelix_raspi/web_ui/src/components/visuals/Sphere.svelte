@@ -20,6 +20,7 @@
   const {
     scale = 2000,
     steps = 5,
+    clipAngle = 15
   } = $props();
 
   const graticule = geoGraticule()
@@ -31,7 +32,7 @@
       .scale(scale)
       .rotate([-azimuth, -altitude])
       .translate([1080 / 2, 810 / 2])
-      .clipAngle(40)
+      .clipAngle(clipAngle)
   );
 
   let path = $derived(
