@@ -1,3 +1,4 @@
 /navigation
 /config/*.*
 !/config/config.yml
+/static/images

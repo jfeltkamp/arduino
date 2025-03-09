@@ -17,9 +17,9 @@ class ObelixCamera:
     img_counter = 0
     vid_counter = 0
 
-    def __init__(self, obelix, base_path="/home/admin/OBELIX/"):
+    def __init__(self, obelix, base_path):
         self.obelix = obelix
-        self.base_path = base_path
+        self.base_path = os.path.abspath(base_path)
         self.picam_a = Picamera2(1)
         self.picam_b = Picamera2(0)
         self.stream = ObelixStream(self.picam_a, self.picam_b)
@@ -36,7 +36,7 @@ class ObelixCamera:
     def set_path(self):
         if self.path == "":
             try:
-                path = self.base_path + time.strftime("%Y_%m_%d_%H%M")
+                path = self.base_path + '/' + time.strftime("%Y_%m_%d_%H%M")
                 if not os.path.exists(path):
                     os.makedirs(path, exist_ok=True)
                 self.path = path

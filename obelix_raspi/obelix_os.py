@@ -2,7 +2,7 @@ from subprocess import Popen, PIPE
 
 def system_cmd(action):
     if action == "restart":
-        frags = ['sudo', 'systemctl', ' restart', 'arduino-raspi.service']
+        frags = ['sudo', 'systemctl', 'restart', 'arduino-raspi.service']
     elif action == "reboot":
         frags = ['sudo', 'shutdown', '-r', 'now']
     elif action == "shutdown":

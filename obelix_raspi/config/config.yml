@@ -5,3 +5,5 @@ camera:
   cam_b:
     step_width: 1000
     step_height: 750
+paths:
+  image_path: "/Users/jfeltkamp/Arduino_Sketches/arduino//OBELIX/"

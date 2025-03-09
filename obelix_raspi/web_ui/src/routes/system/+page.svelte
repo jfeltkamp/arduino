@@ -1,9 +1,14 @@
 <script>
+    import { goto } from '$app/navigation';
     import obelixAPI from "$lib/obelix-api.js";
     import { daylight } from '$lib/data-store.js';
 </script>
 
 <div class={'container' + ($daylight ? ' daylight' : '')}>
+    <div class="tasks">
+        <button onclick={() => goto('/')} class="task--button" aria-label="Goto home page"><span class="icon-home"></span></button>
+    </div>
+
     <div class="system-commands">
         <button class="button btn-danger" type="button" onclick={() => {obelixAPI('/system/shutdown')}}>Shutdown</button>
         <button class="button btn-warn" type="button" onclick={() => {obelixAPI('/system/reboot')}}>Reboot System</button>
