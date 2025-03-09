@@ -1,14 +1,26 @@
-from subprocess import call
+from subprocess import Popen, PIPE
 
 def system_cmd(action):
     if action == "restart":
-        response = call("sudo systemctl restart arduino-raspi.service")
-        return { "response": response }
+        frags = ['sudo', 'systemctl', ' restart', 'arduino-raspi.service']
     elif action == "reboot":
-        response = call("sudo shutdown -r now")
-        return { "response": response }
+        frags = ['sudo', 'shutdown', '-r', 'now']
     elif action == "shutdown":
-        response = call("sudo shutdown -h now")
-        return { "response": response }
+        frags = ['sudo', 'shutdown', '-h', 'now']
     else:
-        return { "response": "Command not found" }
+        frags = False
+    if frags:
+        p = Popen(frags, stdin=PIPE, stdout=PIPE, stderr=PIPE)
+        output, err = p.communicate(b"input data that is passed to subprocess' stdin")
+        rc = p.returncode
+        return {
+            "response": output,
+            "error": err,
+            "code": rc
+        }
+    else:
+        return {
+            "response": "Command not found",
+            "error": "Command not found",
+            "code": 0
+        }
