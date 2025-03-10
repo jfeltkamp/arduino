@@ -24,6 +24,7 @@ if __name__ == "__main__":
     joystick_analog.enable()
 
     navigation = ObelixNavigation(obelix)
+    gallery = ObelixGallery()
 
     @socketio.on('connect')
     def connect():
@@ -140,9 +141,12 @@ if __name__ == "__main__":
         return system_cmd(command)
 
     @app.route('/gallery/<string:type>')
-    def gallery(type):
-        gallery_inst = ObelixGallery()
-        return gallery_inst.get_images(type)
+    def gallery_route(type):
+        return gallery.get_images(type)
+
+    @app.route('/images/<path:name>')
+    def images(name):
+        return gallery.get_image(name)
 
     app.run(host='0.0.0.0')
 
