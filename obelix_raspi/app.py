@@ -9,6 +9,8 @@ from flask_socketio import SocketIO, emit, send
 from obelix_os import system_cmd
 from flask_cors import CORS
 
+from obelix_raspi.obelix_gallery import ObelixGallery
+
 if __name__ == "__main__":
     app = Flask(__name__, static_url_path='')
     app.config['SECRET_KEY'] = 'secret!'
@@ -137,6 +139,11 @@ if __name__ == "__main__":
     @app.route('/system/<string:command>')
     def system(command):
         return system_cmd(command)
+
+    @app.route('/gallery/<string:type>')
+    def gallery(type):
+        gallery_inst = ObelixGallery()
+        return gallery_inst.get_images(type)
 
     app.run(host='0.0.0.0')
 

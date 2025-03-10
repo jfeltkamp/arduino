@@ -10,7 +10,7 @@ class ObelixGallery:
         if not path.exists(self.sym_path) or path.realpath(self.sym_path) != self.real_path:
             symlink(self.real_path, self.sym_path)
 
-    def get_images(self):
+    def get_images(self, type):
         files = [path.join(dir_path,f) for (dir_path, dir_names, file_names) in walk(self.sym_path) for f in file_names]
         files = ['{0}'.format(self.remove_prefix(file, self.curr_path)) for file in files]
         return files
