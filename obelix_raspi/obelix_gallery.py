@@ -15,7 +15,7 @@ class ObelixGallery:
         return files
 
     def get_image(self, path):
-        return send_from_directory(self.real_path, path, as_attachment=True)
+        return send_from_directory(self.real_path, path, as_attachment=False)
 
     def remove_prefix(self, text, prefix):
         if text.startswith(prefix):
