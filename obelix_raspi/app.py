@@ -3,13 +3,12 @@ import traceback
 from obelix import Obelix
 from obelix_analog import ObelixAnalog
 from obelix_config import ObelixConfig
+from obelix_gallery import ObelixGallery
 from obelix_navigation import ObelixNavigation
 from flask import Flask, Response, render_template, send_from_directory, request
 from flask_socketio import SocketIO, emit, send
 from obelix_os import system_cmd
 from flask_cors import CORS
-
-from obelix_raspi.obelix_gallery import ObelixGallery
 
 if __name__ == "__main__":
     app = Flask(__name__, static_url_path='')
