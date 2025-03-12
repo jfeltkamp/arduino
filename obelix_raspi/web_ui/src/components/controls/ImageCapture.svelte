@@ -1,4 +1,5 @@
 <script>
+  import { goto } from '$app/navigation';
   import obelixAPI from "$lib/obelix-api.js";
   import { swapPreview } from '$lib/data-store.js';
 
@@ -22,7 +23,7 @@
 </script>
 
 <div id="image-capture">
-    <button onclick={ captureImage } aria-label="Capture image">
+    <button onclick={ captureImage } class="svg-btn" aria-label="Capture image">
         <svg  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 84 84" height="84" width="84">
             <g transform="translate(42,42)">
                 <circle r="28" fill="#C00" stroke="#C00" />
@@ -31,7 +32,7 @@
         </svg>
     </button>
 
-    <button onclick={ snailShot } aria-label="Snail shot">
+    <button onclick={ snailShot } class="svg-btn" aria-label="Snail shot">
         <svg  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 84 84" height="84" width="84">
             <g transform="translate(42,42)">
                 <polyline points="0,0 20,0 20,15 -20,15 -20,-15 40,-15 40,30 -20,30 -12,28 -12,32 -20,30" />
@@ -52,18 +53,20 @@
         </select></label>
     </div>
 
+    <button onclick={() => goto('/images')} class="ico-btn icon-gallery" aria-label="Image gallery"></button>
 </div>
 
 <style>
     #image-capture {
         display: flex;
-        justify-content: center;
+        justify-content: space-around;
+        align-items: center;
     }
-    button {
+    button.svg-btn {
         appearance: none;
         background: transparent;
         border: 0;
-        margin: 5vmin;
+        margin: 5vmin .5em;
         padding: 0;
     }
     svg {

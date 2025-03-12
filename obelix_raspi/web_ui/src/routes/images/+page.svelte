@@ -1,13 +1,21 @@
 <script>
-  import { goto } from '$app/navigation';
   import obelixAPI from "$lib/obelix-api.js";
   import { daylight } from '$lib/data-store.js';
+  import {onMount} from "svelte";
+  import Gallery from "../../components/gallery/Gallery.svelte";
+  import Tasks from "../../components/Tasks.svelte";
+
+  let items = $state([]);
+  onMount(() => {
+    obelixAPI('/gallery/images', (data) => {
+      items = data
+    })
+  })
 </script>
 
-<div class={'container' + ($daylight ? ' daylight' : '')}>
-    <div class="tasks">
-        <button onclick={() => goto('/')} class="task--button" aria-label="Goto home page"><span class="icon-home"></span></button>
-    </div>
+<div class="container {($daylight ? 'daylight' : '')}">
+    <Tasks />
+    <Gallery {items} />
 </div>
 
 <style>
@@ -16,19 +24,8 @@
         width: 100vw;
         height: 100vh;
         overflow: hidden;
+        overflow-y: auto;
         background: #333;
         color: var(--color);
     }
-
-    .system-commands {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        display: flex;
-        justify-content: space-around;
-        align-items: center;
-        height: 80px;
-    }
-
 </style>

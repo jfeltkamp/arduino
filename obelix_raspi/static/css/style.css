@@ -7,6 +7,7 @@
   --color: #FFF;
   --border-color: #FFF;
   --text-shadow: 0 0 3px #000;
+  --color-highlight: #FD0;
   --color-danger: #E00;
   --color-warn: #FC0;
   --color-info: #090;
@@ -65,4 +66,41 @@ a {
   > [class^="icon-"] {
     margin-left: -.5em;
   }
+}
+
+/* Button with just icon in it. */
+.ico-btn {
+  border: 3px solid var(--border-color);
+  background: var(--background);
+  color: var(--color);
+  border-radius: .3em;
+  width: 2em;
+  height: 2em;
+  font-size: 28px;
+}
+
+/* Tasks top right */
+.tasks {
+  position: fixed;
+  top: 3%;
+  right: 3%;
+  z-index: 10;
+  display: flex;
+  flex-wrap: nowrap;
+  background: var(--background);
+  justify-content: flex-end;
+  align-items: center;
+  height: 52px;
+}
+
+
+.task--button  {
+  display: block;
+  min-width: 52px;
+  height: 100%;
+  border-radius: 0;
+  background: transparent;
+  border: none;
+  font-size: 28px;
+  color: var(--color);
 }
