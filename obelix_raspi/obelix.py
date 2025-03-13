@@ -6,6 +6,7 @@ import time
 from obelix_tools import *
 from obelix_config import ObelixConfig
 from obelix_camera import ObelixCamera
+from obelix_navigation import ObelixNavigation
 
 """
 Structures and controls all communication with arduino and cameras.
@@ -28,6 +29,7 @@ class Obelix:
         self.config = ObelixConfig('config.yml')
         image_path = self.config.get('paths.image_path', "/home/admin/OBELIX")
         self.camera = ObelixCamera(self, image_path)
+        self.navigation = ObelixNavigation(self)
         self.camera.start_stream()
         self.socketio = socketio
         self.cmd_go_next = True

@@ -1,6 +1,5 @@
 #!/usr/bin/env_python3
-import time
-import os, errno, math
+import os, errno, math, yaml, datetime, pytz, time
 from picamera2 import Picamera2
 from picamera2.encoders import H264Encoder
 from libcamera import Transform
@@ -8,6 +7,12 @@ from libcamera import Transform
 from obelix_tools import ObelixCommands
 from obelix_stream import ObelixStream
 from obelix_snail_shot import get_snail_commands
+
+
+def remove_prefix(text, prefix):
+    if text.startswith(prefix):
+        return text[len(prefix):]
+    return text
 
 class ObelixCamera:
     base_path = ""
@@ -36,7 +41,7 @@ class ObelixCamera:
     def set_path(self):
         if self.path == "":
             try:
-                path = self.base_path + '/' + time.strftime("%Y_%m_%d_%H%M")
+                path = os.path.join(self.base_path, time.strftime("%Y_%m_%d_%H%M"))
                 if not os.path.exists(path):
                     os.makedirs(path, exist_ok=True)
                 self.path = path
@@ -46,6 +51,40 @@ class ObelixCamera:
 
     def start_stream(self):
         self.stream.start()
+
+    """
+        Write new image with position data to YAML file in image folder. 
+    """
+    def write_index(self, path, image_path, camera):
+        position = self.obelix.params.get_position()
+        location = self.obelix.navigation.location
+        if "geo" in location:
+            location = location.geo
+        try:
+            yaml_path = os.path.join(path, "index.yml")
+            if os.path.exists(yaml_path):
+                with open(yaml_path) as stream:
+                    data = yaml.safe_load(stream)
+                    stream.close()
+                    if not "images" in data:
+                        data["images"] = []
+            else:
+                data = {
+                    "location": location,
+                    "images": []
+                }
+            data["images"].append({
+                "path": os.path.join('/images{0}'.format(remove_prefix(image_path, self.base_path))),
+                "datetime": datetime.datetime.now(pytz.timezone('Europe/Berlin')).isoformat(),
+                "camera": camera,
+                "position": position,
+            })
+            with open(yaml_path, 'w') as stream:
+                yaml.dump(data, stream)
+                stream.close()
+        except OSError as e:
+            if e.errno != errno.EEXIST:
+                raise
 
     def set_control(self, param, value):
         control = self.cast_controls({param: value})
@@ -70,6 +109,7 @@ class ObelixCamera:
             self.picam_a.capture_file(image_name)
         self.img_counter += 1
         print(f"Captured image {image_name}")
+        self.write_index(self.path, image_name, cam)
         return {"image": image_name }
 
     def snail_shot(self, cols, rows, cam):
@@ -84,6 +124,7 @@ class ObelixCamera:
         self.vid_name = f"{self.path}/{name}_{self.vid_counter}.h264"
         self.picam_a.start_encoder(self.vid_encoder, self.vid_name)
         self.vid_counter += 1
+        self.write_index(self.path, self.vid_name, 'Cam A')
         print(f"Started capture video {self.vid_name}")
         return {"video": self.vid_name }
 

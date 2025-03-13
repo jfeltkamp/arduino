@@ -16,7 +16,7 @@
 1. [x] Build frontend in Svelte.
 1. [x] Connect to raspi independent from home net.
 1. [ ] Refresh images by get param.
-1. [ ] SVG controls: transparency, drop shadow, reduced size.  
+1. [x] SVG controls: transparency, drop shadow, reduced size.  
 
 ## Environment
 1. [ ] BACK-UPs for Raspi !!!!
@@ -28,8 +28,8 @@
 1. [x] Display camera stream in Browser.
 1. [x] Use camera settings (brightness, saturation, contrast)
 1. [x] Enable Snail-Shots.
-1. [ ] Display images in Browser UI.
-1. [ ] Option: adjust preview cam (yellow rect) to center.
+1. [x] Display images in Browser UI.
+1. [x] Option: adjust preview cam (yellow rect) to center.
 1. [ ] Option: Zoom in preview cam.
 
 ### Saving of positions.

@@ -4,7 +4,6 @@ from obelix import Obelix
 from obelix_analog import ObelixAnalog
 from obelix_config import ObelixConfig
 from obelix_gallery import ObelixGallery
-from obelix_navigation import ObelixNavigation
 from flask import Flask, Response, render_template, send_from_directory, request
 from flask_socketio import SocketIO, emit, send
 from obelix_os import system_cmd
@@ -23,7 +22,6 @@ if __name__ == "__main__":
     joystick_analog = ObelixAnalog(obelix)
     joystick_analog.enable()
 
-    navigation = ObelixNavigation(obelix)
     gallery = ObelixGallery()
 
     @socketio.on('connect')
@@ -85,26 +83,26 @@ if __name__ == "__main__":
     # Navigation
     @app.route('/navi/location-list')
     def get_location_list():
-        return navigation.get_location_list()
+        return obelix.navigation.get_location_list()
 
     @app.route('/navi/location/<string:fid>')
     def get_navigation(fid):
-        return navigation.get_navigation(fid)
+        return obelix.navigation.get_navigation(fid)
 
     @app.route('/navi/location/delete/<string:fid>')
     def delete_location(fid):
-        return navigation.delete_location(fid)
+        return obelix.navigation.delete_location(fid)
 
     @app.route('/navi/position/<string:nav_id>')
     def navigate(nav_id):
-        pos = navigation.navigate(nav_id)
+        pos = obelix.navigation.navigate(nav_id)
         obelix.params.get_deg_from_coords(pos)
         return pos
 
     @app.route('/navi/position/update/<string:file_id>', methods=['POST'])
     def position_update(file_id):
         data = request.json
-        return navigation.position_update(file_id, data)
+        return obelix.navigation.position_update(file_id, data)
 
     # Camera
     @app.route("/cam/ctrl/<string:param>/<string:value>")
@@ -140,13 +138,9 @@ if __name__ == "__main__":
     def system(command):
         return system_cmd(command)
 
-    @app.route('/gallery/<string:type>')
-    def gallery_route(type):
-        return gallery.get_images(type)
-
     @app.route('/images/<path:name>')
     def images(name):
-        return gallery.get_image(name)
+        return gallery.get_contents(name)
 
     app.run(host='0.0.0.0')
 
