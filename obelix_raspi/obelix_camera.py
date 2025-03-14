@@ -58,8 +58,6 @@ class ObelixCamera:
     def write_index(self, path, image_path, camera):
         position = self.obelix.params.get_position()
         location = self.obelix.navigation.location
-        if "geo" in location:
-            location = location.geo
         try:
             yaml_path = os.path.join(path, "index.yml")
             if os.path.exists(yaml_path):
@@ -70,7 +68,7 @@ class ObelixCamera:
                         data["images"] = []
             else:
                 data = {
-                    "location": location,
+                    "location": location.get("geo", {'addr': 'No address'}),
                     "images": []
                 }
             data["images"].append({
