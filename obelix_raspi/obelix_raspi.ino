@@ -374,6 +374,7 @@ void cmd_stop(String value) {
         stepperY.stop();
         stepperF.stop();
     }
+    sendStatus("success", true);
 }
 
 /* CMD moxe x axis analog */

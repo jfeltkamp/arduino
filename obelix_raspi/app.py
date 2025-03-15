@@ -44,7 +44,7 @@ if __name__ == "__main__":
 
     @app.route("/debug")
     def toggle_debug():
-        return obelix.analog.toggle_debug()
+        obelix.analog.toggle_debug()
 
     # Deliver static files.
     @app.route('/static/<path:path>')
