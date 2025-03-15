@@ -72,7 +72,7 @@ class ObelixCamera:
                     "images": []
                 }
             data["images"].append({
-                "path": os.path.join('/images{0}'.format(remove_prefix(image_path, self.base_path))),
+                "path": os.path.join('/gallery{0}'.format(remove_prefix(image_path, self.base_path))),
                 "datetime": datetime.datetime.now(pytz.timezone('Europe/Berlin')).isoformat(),
                 "camera": camera,
                 "position": position,

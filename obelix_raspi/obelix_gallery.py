@@ -21,7 +21,7 @@ class ObelixGallery:
         if sub_path.endswith(('.jpg', '.jpeg', '.JPG', '.JPEG', '.h264')):
             return send_from_directory(self.real_path, sub_path, as_attachment=False)
 
-    def get_contents(self, sub_path=''):
+    def get_contents(self, sub_path=None):
         if sub_path:
             return self.get_image(sub_path)
         refs = []
@@ -33,6 +33,13 @@ class ObelixGallery:
             if img_folder.is_dir():
                 index = path.join(self.real_path, img_folder.name, "index.yml")
                 if path.exists(index):
-                    with open(index, 'r') as yaml_file:
-                        result.append(yaml.safe_load(yaml_file))
+                    try:
+                        with open(index, 'r') as yaml_file:
+                            result.append(yaml.safe_load(yaml_file))
+                    except yaml.YAMLError as exc:
+                        print("Could net read file:", index, exc)
         return result
+
+# Debug code
+# gallery = ObelixGallery()
+# print(gallery.get_contents())

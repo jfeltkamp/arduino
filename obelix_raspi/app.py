@@ -143,8 +143,9 @@ if __name__ == "__main__":
     def system(command):
         return system_cmd(command)
 
-    @app.route('/images/<path:name>')
-    def images(name):
+    @app.route('/gallery', defaults={'name': None})
+    @app.route('/gallery/<path:name>')
+    def gallery(name):
         return gallery.get_contents(name)
 
     app.run(host='0.0.0.0')
