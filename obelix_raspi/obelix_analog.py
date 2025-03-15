@@ -40,6 +40,7 @@ class ObelixAnalog:
     # Danger stop for all steppers.
     def danger_stop(self):
         self.obelix.clear_list()
+        self.obelix.cmd_go_next = True
         if self.obelix.analog_command(ObelixCommands("ard_stop", "danger","-"), instantly=True):
             return {"message": "Stopped programm an sent danger_stop command."}
         else:

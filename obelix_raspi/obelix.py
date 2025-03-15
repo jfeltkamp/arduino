@@ -151,7 +151,7 @@ class Obelix:
 
     # Empty the command list instantly. E.g. for danger stops or programm breaks.
     def clear_list(self):
-        self.command_list = []
+        self.command_list.clear()
 
     def camera_command(self, prc, params, options):
         if prc == "cam_capimg":
