@@ -439,6 +439,9 @@ void cmd_interpreter(const String& cmd_raw) {
         else if (command == "ard_home") {
             cmd_set_home(params);
         }
+        else if (command == "ard_debug") {
+            debug = !debug;
+        }
         if (op_mode != MODE_ANALOG) {
             if (command == "ard_goto") {
                 cmd_goto(params, options);

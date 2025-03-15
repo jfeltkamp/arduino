@@ -46,6 +46,10 @@ class ObelixAnalog:
         else:
             return {"error": "Failed to send danger_stop command."}
 
+    # Toggle Arduino debug mode.
+    def toggle_debug(self):
+        self.obelix.analog_command(ObelixCommands("ard_debug", "debug","-"), instantly=True)
+
     # Fire command RUN SPEED for axis.
     def set_axis_speed(self, analog_x, analog_y):
         self.speed_x = get_val_from_analog(analog_x, self.obelix.params.va1, self.obelix.params.va2)

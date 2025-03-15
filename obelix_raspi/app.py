@@ -42,6 +42,10 @@ if __name__ == "__main__":
     def danger_stop():
         return obelix.analog.danger_stop()
 
+    @app.route("/debug")
+    def toggle_debug():
+        return obelix.analog.toggle_debug()
+
     # Deliver static files.
     @app.route('/static/<path:path>')
     def set_static(path):
