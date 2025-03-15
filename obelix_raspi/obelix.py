@@ -137,14 +137,21 @@ class Obelix:
                     self.cmd_go_next = True
 
     # Method to give access to analog commands (Joystick or webUI).
-    def analog_command(self, cmd):
-        # Just check if programm is not running.
-        if len(self.command_list) == 0:
+    def analog_command(self, cmd, instantly=False):
+        if instantly:
+            # Mode for interrupting commands e.g. danger stop.
+            self.command(cmd)
+            return True
+        elif len(self.command_list) == 0:
+            # Mode for analog controller commands (e.g. Joystick). Checks first if command list is in progress.
             self.command(cmd)
             return True
         else:
             return False
-        
+
+    # Empty the command list instantly. E.g. for danger stops or programm breaks.
+    def clear_list(self):
+        self.command_list = []
 
     def camera_command(self, prc, params, options):
         if prc == "cam_capimg":

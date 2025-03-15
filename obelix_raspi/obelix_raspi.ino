@@ -244,12 +244,11 @@ void resolveResponse() {
 void cmd_enable(String value) {
   if (value == "on") {
       digitalWrite(enablePin, LOW);
-      sendStatus("Drivers enabled", false);
-      
+      sendStatus("Enabled motor drivers.", false);
   }
   else {
       digitalWrite(enablePin, HIGH);
-      sendStatus("Drivers disabled", false);
+      sendStatus("Disabled motor drivers.", false);
   }
 }
 
@@ -368,6 +367,11 @@ void cmd_stop(String value) {
         stepperY.stop();
     }
     else if (value == "f") {
+        stepperF.stop();
+    }
+    else if (value == "danger") {
+        stepperX.stop();
+        stepperY.stop();
         stepperF.stop();
     }
 }

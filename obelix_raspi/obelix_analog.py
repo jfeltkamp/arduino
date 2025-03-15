@@ -25,11 +25,25 @@ class ObelixAnalog:
 
     # Enable Arduino steppers.
     def enable(self):
-        if self.obelix.analog_command(ObelixCommands("ard_enable", "on","-")):        
-            print('Enable drivers.')
+        enable_cmd = ObelixCommands("ard_enable", "on","-")
+        if self.obelix.analog_command(enable_cmd):
+            print('Try to enable motor drivers.')
         else:
-            self.obelix.command_list_push(ObelixCommands("ard_enable", "on","-"))
-            print('Failed enable drivers')
+            print('Waiting queue is ready. Then re-try to enable motor drivers. ')
+            self.obelix.command_list_push(enable_cmd)
+
+    # Disable Arduino steppers.
+    def disable(self):
+        print('Try to disable motor drivers')
+        self.obelix.command_list_push(ObelixCommands("ard_enable", "off","-"))
+
+    # Danger stop for all steppers.
+    def danger_stop(self):
+        self.obelix.clear_list()
+        if self.obelix.analog_command(ObelixCommands("ard_stop", "danger","-"), instantly=True):
+            return {"message": "Stopped programm an sent danger_stop command."}
+        else:
+            return {"error": "Failed to send danger_stop command."}
 
     # Fire command RUN SPEED for axis.
     def set_axis_speed(self, analog_x, analog_y):

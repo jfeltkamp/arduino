@@ -1,7 +1,6 @@
 #!/usr/bin/env_python3
 import traceback
 from obelix import Obelix
-from obelix_analog import ObelixAnalog
 from obelix_config import ObelixConfig
 from obelix_gallery import ObelixGallery
 from flask import Flask, Response, render_template, send_from_directory, request
@@ -14,7 +13,6 @@ if __name__ == "__main__":
     app.config['SECRET_KEY'] = 'secret!'
     socketio = SocketIO(app, cors_allowed_origins="*")
     cors = CORS(app)
-
 
     obelix = Obelix(socketio)
     obelix.run_listener()
@@ -39,6 +37,10 @@ if __name__ == "__main__":
     @app.route("/")
     def index():
         return render_template('index.html')
+
+    @app.route("/danger_stop")
+    def danger_stop():
+        return obelix.analog.danger_stop()
 
     # Deliver static files.
     @app.route('/static/<path:path>')
