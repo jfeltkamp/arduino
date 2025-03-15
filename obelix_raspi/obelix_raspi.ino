@@ -244,9 +244,12 @@ void resolveResponse() {
 void cmd_enable(String value) {
   if (value == "on") {
       digitalWrite(enablePin, LOW);
+      sendStatus("Drivers enabled", false);
+      
   }
   else {
       digitalWrite(enablePin, HIGH);
+      sendStatus("Drivers disabled", false);
   }
 }
 

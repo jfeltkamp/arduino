@@ -25,7 +25,11 @@ class ObelixAnalog:
 
     # Enable Arduino steppers.
     def enable(self):
-        self.obelix.analog_command(ObelixCommands("ard_enable", "on","-"))
+        if self.obelix.analog_command(ObelixCommands("ard_enable", "on","-")):        
+            print('Enable drivers.')
+        else:
+            self.obelix.command_list_push(ObelixCommands("ard_enable", "on","-"))
+            print('Failed enable drivers')
 
     # Fire command RUN SPEED for axis.
     def set_axis_speed(self, analog_x, analog_y):

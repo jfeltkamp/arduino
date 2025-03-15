@@ -4,6 +4,7 @@ import traceback
 import threading
 import time
 from obelix_tools import *
+from obelix_analog import ObelixAnalog
 from obelix_config import ObelixConfig
 from obelix_camera import ObelixCamera
 from obelix_navigation import ObelixNavigation
@@ -29,6 +30,7 @@ class Obelix:
         self.config = ObelixConfig('config.yml')
         image_path = self.config.get('paths.image_path', "/home/admin/OBELIX")
         self.camera = ObelixCamera(self, image_path)
+        self.analog = ObelixAnalog(self)
         self.navigation = ObelixNavigation(self)
         self.camera.start_stream()
         self.socketio = socketio
@@ -139,6 +141,10 @@ class Obelix:
         # Just check if programm is not running.
         if len(self.command_list) == 0:
             self.command(cmd)
+            return True
+        else:
+            return False
+        
 
     def camera_command(self, prc, params, options):
         if prc == "cam_capimg":

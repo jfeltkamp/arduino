@@ -19,8 +19,7 @@ if __name__ == "__main__":
     obelix = Obelix(socketio)
     obelix.run_listener()
 
-    joystick_analog = ObelixAnalog(obelix)
-    joystick_analog.enable()
+    obelix.analog.enable()
 
     gallery = ObelixGallery()
 
@@ -66,19 +65,19 @@ if __name__ == "__main__":
     # Receive signals from virtuell Joystick.
     @app.route("/joystick/<int:analog_x>/<int:analog_y>")
     def joystick(analog_x=0, analog_y=0):
-        return joystick_analog.set_axis_speed(analog_x, analog_y)
+        return obelix.analog.set_axis_speed(analog_x, analog_y)
 
     @app.route("/focus/<int:analog_f>")
     def focus(analog_f=0):
-        return joystick_analog.set_focus_speed(analog_f)
+        return obelix.analog.set_focus_speed(analog_f)
 
     @app.route("/adjust/<string:direction>/<string:length>")
     def adjust(direction="none", length="0"):
-        return joystick_analog.adjust(direction, int(length))
+        return obelix.analog.adjust(direction, int(length))
 
     @app.route("/goto/<string:azi>/<string:alt>")
     def goto(azi="0", alt="0"):
-        return joystick_analog.goto(int(azi), int(alt))
+        return obelix.analog.goto(int(azi), int(alt))
 
     # Navigation
     @app.route('/navi/location-list')
@@ -147,7 +146,6 @@ if __name__ == "__main__":
     # Fires commands.
     try:
         del obelix
-        del joystick_analog
         print("Program finished.")
     except Exception:
         traceback.print_exc()
