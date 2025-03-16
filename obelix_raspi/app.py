@@ -145,7 +145,7 @@ if __name__ == "__main__":
 
     @app.route('/gallery', defaults={'name': None})
     @app.route('/gallery/<path:name>')
-    def gallery(name):
+    def load_gallery(name):
         return gallery.get_contents(name)
 
     app.run(host='0.0.0.0')
