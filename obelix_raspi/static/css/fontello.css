@@ -1,7 +1,7 @@
 @font-face {
   font-family: 'fontello';
-  src: url('fontello.woff2?22748307') format('woff2'),
-       url('fontello.woff?22748307') format('woff');
+  src: url('./fontello.woff2?22748307') format('woff2'),
+       url('./fontello.woff?22748307') format('woff');
   font-weight: normal;
   font-style: normal;
 }
