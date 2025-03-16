@@ -1,5 +1,5 @@
 #!/usr/bin/env_python3
-import os, errno, math, yaml, datetime, pytz, time
+import os, errno, math, yaml, datetime, time
 from picamera2 import Picamera2
 from picamera2.encoders import H264Encoder
 from libcamera import Transform
@@ -73,7 +73,7 @@ class ObelixCamera:
                 }
             data["images"].append({
                 "path": os.path.join('/gallery{0}'.format(remove_prefix(image_path, self.base_path))),
-                "datetime": datetime.datetime.now(pytz.timezone('Europe/Berlin')).isoformat(),
+                "datetime": datetime.datetime.now().isoformat(),
                 "camera": camera,
                 "position": position,
             })
