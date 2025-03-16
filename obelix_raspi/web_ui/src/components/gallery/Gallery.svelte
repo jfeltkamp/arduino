@@ -1,31 +1,35 @@
 <script>
   import { locOrigin } from '$lib/data-store.js';
-  import Thumbnail from "./Thumbnail.svelte";
-  import Pager from "./Pager.svelte";
-  const {items = []} = $props();
+  import GalleryList from "./GalleryList.svelte";
+  import Breadcrumb from "./Breadcrumb.svelte";
+  const {
+    items = [],
+  } = $props();
 
-  const chunk =  10;
-  let page = $state(1);
-  let cluster = $derived(items.slice((page - 1) * chunk, page * chunk));
-  let pages = $derived(Math.ceil(items.length / chunk));
+  let itemNumber = $state();
+  let currentList = $derived((typeof itemNumber === 'number' && items[itemNumber]?.images) ? items[itemNumber].images : items);
+  let enlarged = $state();
 
-  let enlarged = $state('../starfield-zoom.jpg');
+  const reset = () => { itemNumber = null;}
 
-  function thumbClick(path) {
-    enlarged = path;
+  function thumbClick(param) {
+    if (typeof param === 'number') {
+      itemNumber = param
+    } else {
+      enlarged = param;
+    }
   }
 </script>
 
 <div class="gallery">
-    <div class="gallery-enlarged">
-        <img src={enlarged} alt="enlarged" />
-    </div>
-    <div class="gallery-items">
-        {#each cluster as image}
-            <Thumbnail path={$locOrigin + image} {thumbClick} />
-        {/each}
-    </div>
-    <Pager {pages} callback={(i) => {page = i}} />
+    {#if enlarged}
+        <div class="gallery-enlarged">
+            <img src={$locOrigin + enlarged} alt="enlarged" />
+        </div>
+    {/if}
+
+    <Breadcrumb item={items[itemNumber]} {reset} />
+    <GalleryList items={currentList} {thumbClick} />
 </div>
 
 <style>
@@ -34,9 +38,8 @@
         height: 100vh;
         margin: auto;
         display: flex;
-        flex-direction: row;
-        justify-content: stretch;
-        flex-wrap: wrap;
+        flex-direction: column;
+        justify-content: flex-start;
         gap: 20px;
     }
     .gallery-enlarged {
@@ -51,14 +54,5 @@
             object-position: center center;
             margin: auto;
         }
-    }
-    .gallery-items {
-        width: 100%;
-        height: 50vh;
-        display: flex;
-        flex-direction: row;
-        justify-content: stretch;
-        flex-wrap: wrap;
-        gap: 20px;
     }
 </style>

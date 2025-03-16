@@ -68,6 +68,7 @@ class ObelixCamera:
                         data["images"] = []
             else:
                 data = {
+                    "datetime": datetime.datetime.now().isoformat(),
                     "location": location.get("geo", {'addr': 'No address'}),
                     "images": []
                 }

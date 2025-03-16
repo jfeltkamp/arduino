@@ -2,12 +2,15 @@
   import obelixAPI from "$lib/obelix-api.js";
   import { daylight } from '$lib/data-store.js';
   import {onMount} from "svelte";
+  // import galleries from './images.json'
   import Gallery from "../../components/gallery/Gallery.svelte";
   import Tasks from "../../components/Tasks.svelte";
 
+  /*
+  * */
   let items = $state([]);
   onMount(() => {
-    obelixAPI('/gallery/images', (data) => {
+    obelixAPI('/gallery', (data) => {
       items = data
     })
   })
@@ -25,7 +28,5 @@
         height: 100vh;
         overflow: hidden;
         overflow-y: auto;
-        background: #333;
-        color: var(--color);
     }
 </style>

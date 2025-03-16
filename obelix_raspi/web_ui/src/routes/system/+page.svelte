@@ -12,6 +12,7 @@
         <button class="button btn-danger" type="button" onclick={() => {obelixAPI('/system/shutdown')}}>Shutdown</button>
         <button class="button btn-warn" type="button" onclick={() => {obelixAPI('/system/reboot')}}>Reboot System</button>
         <button class="button btn-info" type="button" onclick={() => {obelixAPI('/system/restart')}}>Restart Service</button>
+        <button class="button" type="button" onclick={() => {obelixAPI('/debug')}}>Debug Mode</button>
     </div>
 </div>
 
@@ -21,8 +22,6 @@
         width: 100vw;
         height: 100vh;
         overflow: hidden;
-        background: #333;
-        color: var(--color);
     }
 
     .system-commands {

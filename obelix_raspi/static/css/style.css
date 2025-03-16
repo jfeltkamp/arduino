@@ -3,6 +3,7 @@
 }
 
 :root {
+  --daylight-bg: #333;
   --background: rgba(0,0,0,.3);
   --color: #FFF;
   --border-color: #FFF;
@@ -13,20 +14,25 @@
   --color-info: #090;
 }
 
-.daylight {
-  --background: rgba(255,255,255,.2);
-  --color: #000;
-  --border-color: #000;
-  --text-shadow: 0 0 3px #FFF;
-}
-
 html, body {
   margin: 0;
   padding: 0;
   background: #333;
+  font-family: sans-serif;
+
+  &:has(.daylight) {
+    --daylight-bg: #94EAFF;
+    --background: rgba(255,255,255,.2);
+    --color: #000;
+    --border-color: #000;
+    --text-shadow: 0 0 3px #FFF;
+  }
+}
+
+.container {
+  background: var(--daylight-bg);
   color: var(--color);
   text-shadow: var(--text-shadow);
-  font-family: sans-serif;
 }
 
 a {
