@@ -104,6 +104,10 @@
             <foreignObject class="img-wrap" x="0" y="0" width={imgWidth} height={imgHeight}>
                 <img src={imageA} alt="Telescope" class="svg-img" />
             </foreignObject>
+            <g transform="translate({imgWidth/2} {imgHeight/2})">
+                <circle class="crosshair" r="1"/>
+                <path class="crosshair" d="M10 0 50 0zM-10 0 -50 0zM0 10 0 50zM0 -10 0 -50zM15 0 A15 15 0 0 0 -15 0A15 15 0 0 0 15 0" />
+            </g>
             {#if $displayCompass}
                 <Sphere scale={conf.SphereScaleTel} steps="0.2" clipAngle={clipAngTel} {width} {height} />
             {/if}
@@ -197,7 +201,7 @@
     }
 
     .crosshair {
-        stroke: yellow;
+        stroke: var(--color-highlight);
         fill: none;
     }
 

@@ -3,7 +3,7 @@
   import Pager from "./Pager.svelte";
 
   const {
-    items,
+    items = [],
     thumbClick
   } = $props()
 
@@ -11,6 +11,10 @@
   let page = $state(1);
   let cluster = $derived(items.slice((page - 1) * chunk, page * chunk));
   let pages = $derived(Math.ceil(items.length / chunk));
+
+  // Reset page whenever items are updated.
+  const reset = () => page = 1
+  $effect(() => { if (items.length >= 0) {reset()}});
 </script>
 
 <div class="gallery-items">
