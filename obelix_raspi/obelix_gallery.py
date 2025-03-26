@@ -1,4 +1,5 @@
 import yaml
+import shutil
 from flask import send_from_directory
 from os import path
 from pathlib import Path
@@ -20,6 +21,9 @@ class ObelixGallery:
     def get_image(self, sub_path=''):
         if sub_path.endswith(('.jpg', '.jpeg', '.JPG', '.JPEG', '.h264')):
             return send_from_directory(self.real_path, sub_path, as_attachment=False)
+        if sub_path.endswith(('.zip', '.ZIP')):
+            archive_path = self.get_archive(sub_path)
+            return send_from_directory(self.real_path, archive_path, as_attachment=True)
 
     def get_contents(self, sub_path=None):
         if sub_path:
@@ -39,6 +43,14 @@ class ObelixGallery:
                     except yaml.YAMLError as exc:
                         print("Could net read file:", index, exc)
         return result
+
+    def get_archive(self, subpath=''):
+        file_name = subpath[:-4]
+        to_be_zipped_path = path.join(self.real_path, file_name)
+        if path.isdir(to_be_zipped_path):
+            zipped_path = shutil.make_archive(file_name, format='zip', root_dir=to_be_zipped_path, base_dir=file_name)
+            if isinstance(zipped_path, str):
+                return subpath
 
 # Debug code
 # gallery = ObelixGallery()
