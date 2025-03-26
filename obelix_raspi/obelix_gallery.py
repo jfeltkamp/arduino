@@ -39,7 +39,9 @@ class ObelixGallery:
                 if path.exists(index):
                     try:
                         with open(index, 'r') as yaml_file:
-                            result.append(yaml.safe_load(yaml_file))
+                            yml_content = yaml.safe_load(yaml_file)
+                            yml_content['folder'] = '/images/' + img_folder.name
+                            result.append(yml_content)
                     except yaml.YAMLError as exc:
                         print("Could net read file:", index, exc)
         return result
