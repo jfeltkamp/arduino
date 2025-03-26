@@ -40,7 +40,7 @@ class ObelixGallery:
                     try:
                         with open(index, 'r') as yaml_file:
                             yml_content = yaml.safe_load(yaml_file)
-                            yml_content['folder'] = '/images/' + img_folder.name
+                            yml_content['folder'] = '/gallery/' + img_folder.name
                             result.append(yml_content)
                     except yaml.YAMLError as exc:
                         print("Could net read file:", index, exc)
