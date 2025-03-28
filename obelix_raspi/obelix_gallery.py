@@ -23,7 +23,8 @@ class ObelixGallery:
             return send_from_directory(self.real_path, sub_path, as_attachment=False)
         if sub_path.endswith(('.zip', '.ZIP')):
             archive_path = self.get_archive(sub_path)
-            return send_from_directory(self.real_path, archive_path, as_attachment=True)
+            if archive_path:
+                return send_from_directory(self.real_path, sub_path, as_attachment=True)
 
     def get_contents(self, sub_path=None):
         if sub_path:
