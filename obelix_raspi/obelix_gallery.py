@@ -48,11 +48,14 @@ class ObelixGallery:
 
     def get_archive(self, subpath=''):
         file_name = subpath[:-4]
-        to_be_zipped_path = path.join(self.real_path, file_name)
-        if path.isdir(to_be_zipped_path):
-            zipped_path = shutil.make_archive(file_name, format='zip', root_dir=self.real_path, base_dir=file_name)
-            if isinstance(zipped_path, str):
-                return subpath
+        base_name = path.join(self.real_path, file_name)
+        if path.isdir(base_name):
+            return shutil.make_archive(
+                base_name=base_name,
+                format='zip',
+                root_dir=self.real_path,
+                base_dir=file_name
+            )
         return ''
 
 # Debug code
