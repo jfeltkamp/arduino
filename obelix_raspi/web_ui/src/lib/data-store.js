@@ -1,8 +1,8 @@
 import { writable } from "svelte/store";
 import { dev } from '$app/environment';
 
-export const locHost = writable(dev ? 'http://192.168.178.33' : `${location.protocol}//${location.hostname}`);
-export const locOrigin = writable(dev ? 'http://192.168.178.33:5000' : location.origin);
+export const locHost = writable(dev ? 'http://192.168.178.67' : `${location.protocol}//${location.hostname}`);
+export const locOrigin = writable(dev ? 'http://192.168.178.67:5000' : location.origin);
 
 export const arduinoSettings = writable({
   x: 0,

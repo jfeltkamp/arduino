@@ -15,30 +15,35 @@
     })
 </script>
 
-<button class="thumbnail" type="button" onclick={() => thumbClick(param)} aria-label="select item">
-    {#if data.isImage}
-        <figure>
-            <img src={$locOrigin + param} class="thumbnail--img" alt={param} loading="lazy" />
-            <figcaption>{(new Date(data.datetime).toLocaleString())}</figcaption>
-        </figure>
-        <div class="thumbnail--overlay">
-            <dl>
-                {#if data?.position?.deg_x}<dt>Azimuth</dt><dd>{data.position.deg_x}°</dd>{/if}
-                {#if data?.position?.deg_y}<dt>Altitude</dt><dd>{data.position.deg_y}°</dd>{/if}
-            </dl>
-        </div>
-    {/if}
+<div class="thumbnail">
+    <button type="button" onclick={() => thumbClick(param)} aria-label="select item">
+        {#if data.isImage}
+            <figure>
+                <img src={$locOrigin + param} class="thumbnail--img" alt={param} loading="lazy" />
+                <figcaption>{(new Date(data.datetime).toLocaleString())}</figcaption>
+            </figure>
+            <div class="thumbnail--overlay">
+                <dl>
+                    {#if data?.position?.deg_x}<dt>Azimuth</dt><dd>{data.position.deg_x}°</dd>{/if}
+                    {#if data?.position?.deg_y}<dt>Altitude</dt><dd>{data.position.deg_y}°</dd>{/if}
+                </dl>
+            </div>
+        {/if}
+        {#if data.isCollection}
+            <div class="collection">
+                <h3 class="header">{data.location?.addr}</h3>
+                <p>{(new Date(data.datetime).toLocaleString())}</p>
+                <dl>
+                    {#if data.location?.lat}<dt>Lat: {data.location.lat}°</dt>{/if}
+                    {#if data.location?.lon}<dt>Lon: {data.location.lon}°</dt>{/if}
+                </dl>
+            </div>
+        {/if}
+    </button>
     {#if data.isCollection}
-        <div class="collection">
-            <h3>{data.location?.addr}</h3>
-            <p>{(new Date(data.datetime).toLocaleString())}</p>
-            <dl>
-                {#if data.location?.lat}<dt>Lat: {data.location.lat}°</dt>{/if}
-                {#if data.location?.lon}<dt>Lon: {data.location.lon}°</dt>{/if}
-            </dl>
-        </div>
+        <div class="download-link"><a href={$locOrigin + item.folder + '.zip'} download="download">Download ZIP</a></div>
     {/if}
-</button>
+</div>
 
 <style>
     .thumbnail {
@@ -77,6 +82,11 @@
         text-align: center;
         padding: .5em;
     }
+    .header {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
     .thumbnail--img {
         display: block;
         width: 100%;
@@ -95,6 +105,19 @@
     button:hover .thumbnail--overlay {
         top: 0;
         opacity: 1;
+    }
+
+    .download-link {
+        display: block;
+        text-align: center;
+        padding: .25em;
+        a {
+            display: inline-block;
+            height: 1.5em;
+            padding: .25em .5em;
+            border: 1px solid var(--border-color);
+            border-radius: 1em;
+        }
     }
 
 </style>
